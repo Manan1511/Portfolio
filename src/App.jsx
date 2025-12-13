@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import TopographyMap from './components/TopographyMap';
 import Stats from './components/Stats';
 import Projects from './components/Projects';
@@ -7,9 +7,12 @@ import Footer from './components/Footer';
 import TechArsenal from './components/TechArsenal';
 import Testimonials from './components/Testimonials';
 import Terminal from './components/Terminal';
+import MissionModal from './components/MissionModal';
 import { motion } from 'framer-motion';
 
 function App() {
+  const [isMissionOpen, setIsMissionOpen] = useState(false);
+
   return (
     <div id="canvas-container" className="bg-dark-base min-h-screen text-white overflow-x-hidden relative selection:bg-neon-purple selection:text-white">
 
@@ -53,20 +56,31 @@ function App() {
               Building <span className="text-white font-medium">scalable things</span> & <span className="text-white font-medium">breaking production</span> on Fridays.
             </p>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <button
+                  onClick={() => document.getElementById('project-logs').scrollIntoView({ behavior: 'smooth' })}
+                  className="px-8 py-3 bg-neon-purple/10 border border-neon-purple/50 rounded-full hover:bg-neon-purple/20 transition-all text-neon-purple font-mono text-sm hover:shadow-[0_0_20px_rgba(208,0,255,0.3)] backdrop-blur-sm cursor-pointer"
+                >
+                  View Projects
+                </button>
+                <button
+                  onClick={() => document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' })} // Added smooth scroll
+                  className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all font-mono text-sm backdrop-blur-sm text-gray-300 cursor-pointer"
+                >
+                  Contact Me
+                </button>
+              </div>
+
               <button
-                onClick={() => document.getElementById('project-logs').scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-3 bg-neon-purple/10 border border-neon-purple/50 rounded-full hover:bg-neon-purple/20 transition-all text-neon-purple font-mono text-sm hover:shadow-[0_0_20px_rgba(208,0,255,0.3)] backdrop-blur-sm cursor-pointer"
+                onClick={() => setIsMissionOpen(true)}
+                className="text-sm font-mono text-gray-500 hover:text-fluoro-green transition-colors cursor-pointer flex items-center gap-2 group"
               >
-                View Projects
-              </button>
-              <button
-                onClick={() => document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' })} // Added smooth scroll
-                className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all font-mono text-sm backdrop-blur-sm text-gray-300 cursor-pointer"
-              >
-                Contact Me
+                <span className="opacity-50 group-hover:opacity-100 transition-opacity">&gt;</span>
+                Access Source Code
               </button>
             </div>
+
           </motion.div>
         </div>
 
@@ -93,6 +107,7 @@ function App() {
       </div>
 
       <Terminal />
+      <MissionModal isOpen={isMissionOpen} onClose={() => setIsMissionOpen(false)} />
 
     </div>
   );

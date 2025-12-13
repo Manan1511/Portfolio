@@ -40,7 +40,8 @@ const Footer = () => {
         <footer id="contact-section" className="py-20 relative z-10 border-t border-white/5 bg-black/50 backdrop-blur-lg">
             <div className="max-w-6xl mx-auto px-4 flex flex-col items-center">
 
-                <div className="mb-12">
+                <div className="mb-12 flex flex-col items-center">
+                    <p className="text-gray-400 text-sm font-mono mb-4 text-center">For the ones who want my credit card details:</p>
                     <CreditCard />
                 </div>
 
