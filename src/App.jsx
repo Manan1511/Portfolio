@@ -60,7 +60,10 @@ function App() {
               >
                 View Projects
               </button>
-              <button className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all font-mono text-sm backdrop-blur-sm text-gray-300">
+              <button
+                onClick={() => document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' })} // Added smooth scroll
+                className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all font-mono text-sm backdrop-blur-sm text-gray-300 cursor-pointer"
+              >
                 Contact Me
               </button>
             </div>
