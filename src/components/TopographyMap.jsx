@@ -85,8 +85,8 @@ const TopographyMap = () => {
 
     return (
         <mesh ref={meshRef} rotation={[-Math.PI / 3, 0, 0]} position={[0, -2, -5]}>
-            {/* Reduced geometry segments for performance: 96x96 is plenty */}
-            <planeGeometry args={[40, 40, 96, 96]} />
+            {/* Increased geometry segments for smoother visuals */}
+            <planeGeometry args={[40, 40, 128, 128]} />
             <shaderMaterial
                 vertexShader={VertexShader}
                 fragmentShader={FragmentShader}
