@@ -3,7 +3,7 @@ import { ExternalLink, Github, Figma, Layers } from 'lucide-react';
 
 const projects = [
     {
-        title: "Khel-Mitra",
+        title: "Khet-Mitra",
         category: "Accessibility Tech",
         description: "Empowering farmers with accessibility tools. Winner @ Startup Street.",
         tech: ["React", "Node.js", "IoT"],
