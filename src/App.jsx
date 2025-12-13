@@ -4,6 +4,9 @@ import TopographyMap from './components/TopographyMap';
 import Stats from './components/Stats';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
+import TechArsenal from './components/TechArsenal';
+import Testimonials from './components/Testimonials';
+import Terminal from './components/Terminal';
 import { motion } from 'framer-motion';
 
 function App() {
@@ -67,6 +70,11 @@ function App() {
         <div className="mt-32 w-full max-w-7xl mx-auto px-4 pointer-events-auto">
           <Stats />
         </div>
+
+        <div className="mt-20 pointer-events-auto">
+          <TechArsenal />
+        </div>
+
       </main>
 
       <div className="relative z-10 pointer-events-auto bg-dark-base/80 backdrop-blur-xl border-t border-white/5">
@@ -74,8 +82,14 @@ function App() {
       </div>
 
       <div className="relative z-10 pointer-events-auto">
+        <Testimonials />
+      </div>
+
+      <div className="relative z-10 pointer-events-auto">
         <Footer />
       </div>
+
+      <Terminal />
 
     </div>
   );
