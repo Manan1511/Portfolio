@@ -7,12 +7,13 @@ const inventoryItems = [
         id: 1,
         name: "Python",
         type: "Main Weapon",
-        level: 99,
+        level: 80,
         description: "Excellent for scripts, bad for speed battles.",
         icon: Terminal,
         color: "text-yellow-400",
         bg: "bg-yellow-400/10",
-        border: "border-yellow-400/50"
+        border: "border-yellow-400/50",
+        barColor: "bg-yellow-400"
     },
     {
         id: 2,
@@ -23,7 +24,8 @@ const inventoryItems = [
         icon: Zap,
         color: "text-blue-400",
         bg: "bg-blue-400/10",
-        border: "border-blue-400/50"
+        border: "border-blue-400/50",
+        barColor: "bg-blue-400"
     },
     {
         id: 3,
@@ -33,7 +35,8 @@ const inventoryItems = [
         icon: Coffee,
         color: "text-amber-700",
         bg: "bg-amber-700/10",
-        border: "border-amber-700/50"
+        border: "border-amber-700/50",
+        barColor: "bg-amber-700"
     },
     {
         id: 4,
@@ -43,7 +46,8 @@ const inventoryItems = [
         icon: Database,
         color: "text-orange-500",
         bg: "bg-orange-500/10",
-        border: "border-orange-500/50"
+        border: "border-orange-500/50",
+        barColor: "bg-orange-500"
     },
     {
         id: 5,
@@ -53,7 +57,8 @@ const inventoryItems = [
         icon: Box,
         color: "text-purple-400",
         bg: "bg-purple-400/10",
-        border: "border-purple-400/50"
+        border: "border-purple-400/50",
+        barColor: "bg-purple-400"
     },
     {
         id: 6,
@@ -63,7 +68,8 @@ const inventoryItems = [
         icon: AlertTriangle,
         color: "text-red-500",
         bg: "bg-red-500/10",
-        border: "border-red-500/50"
+        border: "border-red-500/50",
+        barColor: "bg-red-500"
     }
 ];
 
@@ -141,7 +147,7 @@ const TechArsenal = () => {
                                             </div>
                                             <div className="h-2 bg-dark-base rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full ${selectedItem.color.replace('text-', 'bg-')}`}
+                                                    className={`h-full ${selectedItem.barColor}`}
                                                     style={{ width: `${selectedItem.level}%` }}
                                                 />
                                             </div>
