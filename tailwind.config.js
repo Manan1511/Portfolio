@@ -12,6 +12,7 @@ export default {
         'card-charcoal': '#1A1A1A',
         'neon-purple': '#D000FF', // Vivid purple
         'electric-blue': '#00FFFF', // Cyan/Electric Blue
+        'fluoro-green': '#39FF14', // Fluoro Green
         'glass': 'rgba(255, 255, 255, 0.05)',
       },
       fontFamily: {

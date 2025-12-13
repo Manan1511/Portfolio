@@ -43,7 +43,7 @@ function App() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-gray-400 mb-8 font-mono text-sm md:text-base">
               <span className="px-3 py-1 bg-white/5 rounded-full border border-white/10">CSE Core @ VIT</span>
               <span className="hidden md:inline text-gray-700">•</span>
-              <span className="text-neon-purple animate-pulse">● Open to work</span>
+              <span className="text-fluoro-green animate-pulse">● Open to work</span>
             </div>
 
             <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-12">

@@ -11,20 +11,20 @@ const projects = [
         color: "from-green-500 to-emerald-700"
     },
     {
-        title: "AquaSafe",
-        category: "Smart City",
-        description: "A smart-city water testing web app measuring pH, turbidity, and quality.",
-        tech: ["React", "Supabase", "Tailwind"],
-        link: "#",
-        color: "from-blue-500 to-cyan-700"
-    },
-    {
         title: "Sentiment Stocker",
         category: "FinTech",
         description: "Stock market sentiment analysis tool using NLP to predict trends.",
         tech: ["Python", "NLP", "Flask"],
-        link: "#",
+        link: "https://github.com/Manan1511/Sentiment_Stocker",
         color: "from-purple-500 to-indigo-700"
+    },
+    {
+        title: "VIT-DormFresh",
+        category: "University Utility",
+        description: "All-in-one housekeeping solution for VIT with student and staff dashboards for managing cleaning requests.",
+        tech: ["React", "Dashboard", "Management"],
+        link: "https://github.com/Manan1511/Dormfresh",
+        color: "from-blue-500 to-cyan-700"
     },
     {
         title: "The Lost Chronicles",
