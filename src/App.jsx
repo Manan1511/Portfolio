@@ -51,7 +51,10 @@ function App() {
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-8 py-3 bg-neon-purple/10 border border-neon-purple/50 rounded-full hover:bg-neon-purple/20 transition-all text-neon-purple font-mono text-sm hover:shadow-[0_0_20px_rgba(208,0,255,0.3)] backdrop-blur-sm">
+              <button
+                onClick={() => document.getElementById('project-logs').scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 py-3 bg-neon-purple/10 border border-neon-purple/50 rounded-full hover:bg-neon-purple/20 transition-all text-neon-purple font-mono text-sm hover:shadow-[0_0_20px_rgba(208,0,255,0.3)] backdrop-blur-sm cursor-pointer"
+              >
                 View Projects
               </button>
               <button className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all font-mono text-sm backdrop-blur-sm text-gray-300">
