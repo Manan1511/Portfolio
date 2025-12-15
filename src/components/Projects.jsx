@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, Figma, Layers } from 'lucide-react';
+import { ExternalLink, Github, Figma, Layers, Presentation } from 'lucide-react';
 
 const projects = [
     {
         title: "Khet-Mitra",
         category: "Accessibility Tech",
         description: "Empowering farmers with accessibility tools. Winner @ Startup Street.",
-        tech: ["React", "Node.js", "IoT"],
-        link: "#",
-        color: "from-green-500 to-emerald-700"
+        tech: ["Pitch Deck", "Startup", "Social Impact"],
+        link: "https://docs.google.com/presentation/d/1z_Zgl3zTXlnauaMUJ0iUvR1wKntYZwfqgWTYR1ovJgo/edit?usp=sharing",
+        color: "from-green-500 to-emerald-700",
+        icon: "Slides"
     },
     {
         title: "Sentiment Stocker",
@@ -60,6 +61,8 @@ const ProjectCard = ({ project, index }) => (
                         <div className="flex space-x-2">
                             {project.icon === 'Figma' ? (
                                 <Figma size={18} className="text-gray-400 hover:text-white" />
+                            ) : project.icon === 'Slides' ? (
+                                <Presentation size={18} className="text-gray-400 hover:text-white" />
                             ) : (
                                 <Github size={18} className="text-gray-400 hover:text-white" />
                             )}
