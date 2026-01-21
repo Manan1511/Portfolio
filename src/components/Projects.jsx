@@ -20,12 +20,12 @@ const projects = [
         color: "from-purple-500 to-indigo-700"
     },
     {
-        title: "VIT-DormFresh",
-        category: "University Utility",
-        description: "All-in-one housekeeping solution for VIT with student and staff dashboards for managing cleaning requests.",
-        tech: ["React", "Dashboard", "Management"],
-        link: "https://github.com/Manan1511/Dormfresh",
-        color: "from-blue-500 to-cyan-700"
+        title: "Neurological Condition Detection",
+        category: "Healthcare AI",
+        description: "Diagnostic suite for detecting neurological conditions using rapid tap tests and tremor monitoring.",
+        tech: ["Python", "ML", "Healthcare"],
+        link: "https://github.com/Manan1511/Neurological-Condition-Detection",
+        color: "from-teal-500 to-blue-700"
     },
     {
         title: "The Lost Chronicles",
