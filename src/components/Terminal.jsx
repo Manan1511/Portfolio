@@ -34,7 +34,7 @@ const Terminal = () => {
                     break;
                 case 'contact':
                     response = "Opening mail client...";
-                    window.location.href = "mailto:hello@manan.dev"; // Replace with actual email
+                    window.location.href = "mailto:mananshah1511@gmail.com";
                     break;
                 case 'sudo hack-nasa':
                     response = "Access Denied. I'm on the AI Whitelist, I can't risk it. 🚨";
