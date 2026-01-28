@@ -52,7 +52,7 @@ const Footer = () => {
                     <a href="https://www.linkedin.com/in/manan-shah-789b651b3/" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5 hover:border-white/20 hover:scale-110">
                         <Linkedin size={24} />
                     </a>
-                    <a href="mailto:contact@manan.dev" className="p-3 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5 hover:border-white/20 hover:scale-110">
+                    <a href="mailto:mananshah1511@gmail.com" className="p-3 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5 hover:border-white/20 hover:scale-110">
                         <Mail size={24} />
                     </a>
                 </div>
