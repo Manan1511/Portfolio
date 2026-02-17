@@ -28,13 +28,13 @@ const projects = [
         color: "from-teal-500 to-blue-700"
     },
     {
-        title: "The Lost Chronicles",
-        category: "Interactive Web",
-        description: "An interactive horror-themed website. Design-a-thon 3rd Place.",
-        tech: ["Figma", "UI/UX", "Prototype"],
-        link: "https://www.figma.com/proto/PL929mWkGdJY12H8i6faTU/The-Lost-Chronicles?node-id=24-2&starting-point-node-id=24%3A2&t=5iI1PjDndXx8xASu-1",
-        color: "from-red-500 to-rose-900",
-        icon: "Figma"
+        title: "Partial-Merger",
+        category: "Developer Tools",
+        description: "A precision tool for cherry-picking specific lines from GitHub PRs without cloning.",
+        tech: ["React", "Vite", "Octokit"],
+        link: "https://partialmerger.netlify.app/",
+        repo: "https://github.com/Manan1511/Partial-Merger",
+        color: "from-sky-500 to-blue-600"
     }
 ];
 
@@ -45,8 +45,9 @@ const ProjectCard = ({ project, index }) => (
         transition={{ delay: index * 0.1 }}
         whileHover={{ y: -10 }}
         className="relative group h-full cursor-pointer"
+        onClick={() => window.open(project.link, '_blank')}
     >
-        <a href={project.link} target="_blank" rel="noopener noreferrer" className="block h-full">
+        <div className="block h-full">
             <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/20 to-electric-blue/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative h-full bg-card-charcoal/40 backdrop-blur-md border border-white/10 p-6 rounded-2xl overflow-hidden hover:border-white/20 transition-all flex flex-col justify-between">
 
@@ -58,11 +59,21 @@ const ProjectCard = ({ project, index }) => (
                         <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300">
                             {project.category}
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 z-10 relative">
                             {project.icon === 'Figma' ? (
                                 <Figma size={18} className="text-gray-400 hover:text-white" />
                             ) : project.icon === 'Slides' ? (
                                 <Presentation size={18} className="text-gray-400 hover:text-white" />
+                            ) : project.repo ? (
+                                <a
+                                    href={project.repo}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-gray-400 hover:text-white"
+                                >
+                                    <Github size={18} />
+                                </a>
                             ) : (
                                 <Github size={18} className="text-gray-400 hover:text-white" />
                             )}
@@ -88,7 +99,7 @@ const ProjectCard = ({ project, index }) => (
                 </div>
 
             </div>
-        </a>
+        </div>
     </motion.div>
 );
 
