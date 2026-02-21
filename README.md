@@ -43,6 +43,10 @@ To run this project locally, follow these steps:
    ```bash
    npm run dev
    ```
+4. **Deploy server:**
+   ```bash
+   npm run deploy
+   ```
 
 ## 📬 Contact Me
 
