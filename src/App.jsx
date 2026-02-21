@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useRef } from 'react';
 import TopographyMap from './components/TopographyMap';
 import Stats from './components/Stats';
 import Projects from './components/Projects';
@@ -12,13 +12,16 @@ import { motion } from 'framer-motion';
 
 function App() {
   const [isMissionOpen, setIsMissionOpen] = useState(false);
+  const containerRef = useRef();
 
   return (
-    <div id="canvas-container" className="bg-dark-base min-h-screen text-white overflow-x-hidden relative selection:bg-neon-purple selection:text-white">
+    <div id="canvas-container" ref={containerRef} className="bg-dark-base min-h-screen text-white overflow-x-hidden relative selection:bg-neon-purple selection:text-white">
 
       {/* 3D Background */}
       <div className="fixed inset-0 z-0">
         <Canvas
+          eventSource={containerRef}
+          eventPrefix="client"
           camera={{ position: [0, 5, 5], fov: 45 }}
           style={{ background: '#0A0A0A' }}
         >
