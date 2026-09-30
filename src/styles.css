@@ -1,3 +1,16 @@
 :root { font-family: monospace; color: #283a35; background: #d2e9e7; }
 * { box-sizing: border-box; }
 body { margin: 0; }
+.character-sprite { display: block; flex: none; }
+.sprite-motion { width: fit-content; }
+.sprite-preview { max-width: 840px; margin: auto; padding: 40px 24px; }
+.sprite-preview a { color: inherit; }
+.sprite-preview h1 { margin-top: 32px; }
+.preview-stage { min-height: 360px; display: grid; place-items: center; background: #e7f0dd; border: 1px solid #adc6a1; margin: 24px 0; overflow: hidden; }
+.preview-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.preview-controls button { border: 1px solid #839a82; padding: 10px 16px; border-radius: 4px; background: #f4f6e9; color: inherit; font: inherit; cursor: pointer; }
+.preview-controls button[aria-pressed="true"] { background: #2e493b; color: white; }
+.preview-note { font-size: 12px; opacity: .7; }
+.demo-moving { animation: stroll 4s ease-in-out infinite alternate; }
+@keyframes stroll { from { translate: -80px 0; } to { translate: 80px 0; } }
+@media (prefers-reduced-motion: reduce) { .demo-moving { animation: none; } }
