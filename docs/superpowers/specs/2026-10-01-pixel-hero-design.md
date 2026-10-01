@@ -2,7 +2,7 @@
 
 Build only one casual hero, not a résumé. Daylight pixel sky and grass frame a three-quarter desk vignette. Greeting: “hey, I’m Manan”.
 
-The original character is based on the supplied photos: curly black hair, clear glasses, charcoal tee, dark trousers. Deliver standing idle, seated idle, portrait, thumbs-up and typing. Full-body character is approximately 64 logical pixels tall, enlarged without smoothing. Character contains no laptop, furniture or crown. Frame timing and attachment metadata allow future clips without changing the renderer. Movement belongs to an outer wrapper.
+The original character is based on the supplied photos: curly black hair, clear glasses, charcoal tee, dark trousers. Deliver standing idle, seated idle, portrait, thumbs-up, typing and talking. Following preview feedback, the full-body character is approximately 100 native pixels tall on a 120px canvas, enlarged without smoothing. Character contains no laptop, furniture or crown. Frame timing and attachment metadata allow future clips without changing the renderer. Movement belongs to an outer wrapper.
 
 Separate chair, desk and laptop compose the hero. Two seconds typing alternate with three seconds rest. Five upright, readable glass cards orbit around the head every 24 seconds, with front/back depth. Content is placeholder gaming, coffee and coding jokes. Hover/focus pauses; horizontal drag rotates; mobile tap toggles pause. Distinguish taps from drags at 8px, preserve vertical scrolling, expose keyboard rotation and visible pause/resume. Reduced motion disables automatic orbit and sprite animation.
 
@@ -13,7 +13,11 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 ## User revisions during implementation
 - Greeting must visibly speak: add open/closed mouth talking clip while greeting reveals, pause typing, then resume typing/rest. Greeting can be replayed.
 - Initial 64px character was too pixelated in preview. Increase to approximately 96 native pixels tall, preserving crisp edges and integer enlargement. Use 120px frame canvas and updated anchors.
-- Talking, typing and seated rest must share exact same body pixels and registration; changes confined to mouth/hands.
+- Talking, typing and seated rest must maintain consistent body proportions and whole-frame registration, with small changes confined to the intended gesture/expression.
 - Use approved Pixelify font throughout, including glass cards.
-- Remove independent fingertip presses. Typing uses gentle connected forearm motion around a fixed elbow, with in-between frames.
-- Replace procedural mouth shapes with registered raster expression artwork. Keep one shared head/body across seated states; confine expression changes to the mouth to prevent incidental artwork jitter. Use irregular speech pauses with no tongue shape.
+- Remove independent fingertip presses. Typing uses gentle connected hand/forearm movement around the elbows, with in-between frames.
+- Speech uses natural drawn mouth expressions with pauses and no protruding tongue shapes.
+
+## Approved complete sprite rebuild
+
+User requested a complete rebuild of the pieced character and selected subtle, relaxed motion. Rebuild the six poses around one coherent continuous character design with natural neck, shoulders, sleeves, elbows and hands. Use complete raster frames for animation; remove the earlier head overlays, mouth patches and arm deformation. Typing and dialogue use one shared seated sheet, with identical neutral artwork at the beginning and end of each one-second cycle. The two-second talking/typing activity windows therefore finish at a common resting pose. Playback follows browser repaint timing. Register the crown, hands, greeting and floor against the new head/mouth/hand/foot anchors. Retain the existing hero, font and separate scene props.

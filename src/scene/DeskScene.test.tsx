@@ -4,12 +4,12 @@ import { DeskScene } from './DeskScene';
 
 afterEach(() => vi.useRealTimers());
 
-it('opens mouth while greeting appears, then starts typing and rests', () => {
+it('animates speech while greeting appears, then starts typing and rests', () => {
   vi.useFakeTimers();
   render(<DeskScene scale={3} />);
   expect(screen.getByRole('img', { name: /Manan/ })).toHaveAttribute('data-clip', 'talking');
   act(() => vi.advanceTimersByTime(240));
-  expect(screen.getByRole('img', { name: /Manan/ })).toHaveAttribute('data-frame', '1');
+  expect(screen.getByRole('img', { name: /Manan/ })).not.toHaveAttribute('data-frame', '0');
   act(() => vi.advanceTimersByTime(1760));
   expect(screen.getByRole('img', { name: /Manan/ })).toHaveAttribute('data-clip', 'typing');
   act(() => vi.advanceTimersByTime(2000));

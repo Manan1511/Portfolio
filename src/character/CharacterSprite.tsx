@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { frameAt, resolveClip, type SpriteDefinition } from './animation';
 import { useReducedMotion } from '../shared/useReducedMotion';
-import { animatePixels } from './pixels';
 
 const pictures = new Map<string, Promise<HTMLImageElement>>();
 function loadPicture(url: string) {
@@ -46,49 +45,33 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
     if (!playing || reduced) return;
     let last = performance.now();
     const duration = selected.frames.reduce((sum, item) => sum + item.duration, 0);
-    const timer = window.setInterval(() => {
-      const now = performance.now();
+    let timer = 0;
+    const tick = (now: number) => {
       elapsed.current += now - last;
       last = now;
       setFrameIndex(frameAt(selected, elapsed.current));
       if (!selected.loop && elapsed.current >= duration && !completion.current) {
         completion.current = true;
         callback.current?.();
-        window.clearInterval(timer);
+        return;
       }
-    }, 40);
-    return () => window.clearInterval(timer);
+      timer = window.requestAnimationFrame(tick);
+    };
+    timer = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(timer);
   }, [selected, playing, reduced]);
 
   useEffect(() => {
-    const context = canvas.current?.getContext('2d', { willReadFrequently: true });
+    const context = canvas.current?.getContext('2d');
     if (!context) return;
     let cancelled = false;
-    const layers = frame.layers ?? [];
-    Promise.all([loadPicture(frame.image ?? definition.image), ...layers.map(layer => loadPicture(layer.image ?? definition.image))]).then(([picture, ...layerPictures]) => {
+    loadPicture(frame.image ?? definition.image).then(picture => {
       if (cancelled) return;
       context.clearRect(0, 0, definition.width, definition.height);
       context.imageSmoothingEnabled = false;
       const target = frame.target ?? { x: 0, y: 0, width: definition.width, height: definition.height };
       context.drawImage(picture, frame.x, frame.y, frame.width ?? definition.width, frame.height ?? definition.height,
         target.x, target.y, target.width, target.height);
-      layers.forEach((layer, index) => {
-        const dest = layer.target;
-        context.save();
-        if (layer.clip) {
-          context.beginPath();
-          context.rect(layer.clip.x, layer.clip.y, layer.clip.width, layer.clip.height);
-          context.clip();
-        }
-        if (layer.replace) context.clearRect(dest.x, dest.y, dest.width, dest.height);
-        context.drawImage(layerPictures[index], layer.x, layer.y, layer.width, layer.height, dest.x, dest.y, dest.width, dest.height);
-        context.restore();
-      });
-      if (frame.pixels?.length) {
-        const native = context.getImageData(0, 0, definition.width, definition.height);
-        native.data.set(animatePixels(native.data, definition.width, definition.height, frame.pixels));
-        context.putImageData(native, 0, 0);
-      }
     }).catch(error => { if (!cancelled) console.error('Unable to draw sprite frame', error); });
     return () => { cancelled = true; };
   }, [definition, frame]);

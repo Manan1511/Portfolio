@@ -54,7 +54,9 @@ export function DeskScene({ scale }: { scale: number }) {
         <path fill="#886850" d="M77 42H80V43H77Z" />
       </svg>
     </div>
-    <button className={`hello-bubble ${activity === 'talking' ? 'is-speaking' : ''}`} onClick={() => { setElapsed(0); setGreetingRun(run => run + 1); }} aria-label="Replay greeting: hey, I’m Manan">
+    <button className={`hello-bubble ${activity === 'talking' ? 'is-speaking' : ''}`}
+      style={{ top: 200 + manan.anchors.mouth.y * scale - 30 }}
+      onClick={() => { setElapsed(0); setGreetingRun(run => run + 1); }} aria-label="Replay greeting: hey, I’m Manan">
       <span aria-hidden="true">{visibleText}<span className="greeting-cursor">{activity === 'talking' && !reduced ? '▌' : ''}</span></span>
     </button>
   </>;

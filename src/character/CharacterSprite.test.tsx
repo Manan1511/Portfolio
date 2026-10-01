@@ -13,6 +13,22 @@ const definition: SpriteDefinition = {
 afterEach(() => vi.useRealTimers());
 
 describe('CharacterSprite', () => {
+  it('advances short in-between frames on the next browser repaint', () => {
+    vi.useFakeTimers();
+    const quick: SpriteDefinition = {
+      ...definition,
+      clips: { idle: { loop: true, frames: [
+        { x: 0, y: 0, duration: 83 },
+        { x: 80, y: 0, duration: 83 },
+        { x: 160, y: 0, duration: 83 },
+      ] } },
+    };
+    render(<CharacterSprite definition={quick} clip="idle" />);
+    act(() => vi.advanceTimersByTime(96));
+    expect(screen.getByRole('img')).toHaveAttribute('data-frame', '1');
+    act(() => vi.advanceTimersByTime(80));
+    expect(screen.getByRole('img')).toHaveAttribute('data-frame', '2');
+  });
   it('pauses on current frame, resumes and resets when clip changes', () => {
     vi.useFakeTimers();
     const { rerender } = render(<CharacterSprite definition={definition} clip="idle" scale={2} />);
