@@ -12,7 +12,7 @@ export default function SpritePreview() {
     <p>Same character. Different moods. No furniture attached.</p>
     <div className="preview-stage">
       <SpriteMotion className={move ? 'demo-moving' : ''}>
-        <CharacterSprite clip={clip} definition={manan} playing={playing} key={clip} scale={4} />
+        <CharacterSprite clip={clip} definition={manan} playing={playing} key={clip} scale={3} />
       </SpriteMotion>
     </div>
     <div className="preview-controls">

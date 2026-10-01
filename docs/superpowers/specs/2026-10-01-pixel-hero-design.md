@@ -9,3 +9,9 @@ Separate chair, desk and laptop compose the hero. Two seconds typing alternate w
 React, Vite, TypeScript, npm; static frontend, no routing, audio or backend. Sprite inspection is development-only. Verify 320/390/768/1440px, behavior tests, typecheck, production build and repository-subpath assets. Commit each verified milestone locally. No remote, push or publish in this milestone. Source photos remain outside Git.
 
 Approved in chat by user, then explicitly supplied as implementation request on 2026-10-01.
+
+## User revisions during implementation
+- Greeting must visibly speak: add open/closed mouth talking clip while greeting reveals, pause typing, then resume typing/rest. Greeting can be replayed.
+- Initial 64px character was too pixelated in preview. Increase to approximately 96 native pixels tall, preserving crisp edges and integer enlargement. Use 120px frame canvas and updated anchors.
+- Talking, typing and seated rest must share exact same body pixels and registration; changes confined to mouth/hands.
+- Use approved Pixelify font throughout, including glass cards.

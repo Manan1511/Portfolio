@@ -11,7 +11,14 @@ Object.defineProperty(window, 'matchMedia', {
     addListener() {}, removeListener() {}, dispatchEvent: () => true,
   })),
 });
-if (!window.PointerEvent) window.PointerEvent = MouseEvent as typeof PointerEvent;
+if (!window.PointerEvent) {
+  window.PointerEvent = class extends MouseEvent {
+    pointerId: number; pointerType: string;
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init); this.pointerId = init.pointerId ?? 0; this.pointerType = init.pointerType ?? 'mouse';
+    }
+  } as typeof PointerEvent;
+}
 HTMLElement.prototype.setPointerCapture = () => {};
 HTMLElement.prototype.releasePointerCapture = () => {};
 // jsdom has no graphics backend; canvas rendering is checked in the real browser.
