@@ -2,7 +2,7 @@
 
 Build only one casual hero, not a résumé. Daylight pixel sky and grass frame a three-quarter desk vignette. Greeting: “hey, I’m Manan”.
 
-The original character is based on the supplied photos: curly black hair, clear glasses, charcoal tee, dark trousers. Deliver standing idle, seated idle, portrait, thumbs-up, typing and talking. Following preview feedback, the full-body character is approximately 100 native pixels tall on a 120px canvas, enlarged without smoothing. Character contains no laptop, furniture or crown. Frame timing and attachment metadata allow future clips without changing the renderer. Movement belongs to an outer wrapper.
+The original character is based on the supplied photos: curly black hair, clear glasses, charcoal tee, dark trousers. Deliver standing idle, seated idle, portrait, thumbs-up, typing and talking. The full-body character occupies approximately 100 logical pixels on a 120px layout grid. Following finer-detail feedback, the preview/desktop raster is 180×180, enlarged by exactly 2 to the existing 360px display. Display pixels stay at most 2px, with no smoothing. Character contains no laptop, furniture or crown. Frame timing and attachment metadata allow future clips without changing the renderer. Movement belongs to an outer wrapper.
 
 Separate chair, desk and laptop compose the hero. Two seconds typing alternate with three seconds rest. Five upright, readable glass cards orbit around the head every 24 seconds, with front/back depth. Content is placeholder gaming, coffee and coding jokes. Hover/focus pauses; horizontal drag rotates; mobile tap toggles pause. Distinguish taps from drags at 8px, preserve vertical scrolling, expose keyboard rotation and visible pause/resume. Reduced motion disables automatic orbit and sprite animation.
 
@@ -17,6 +17,7 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Use approved Pixelify font throughout, including glass cards.
 - Remove independent fingertip presses. Typing uses gentle connected hand/forearm movement around the elbows, with in-between frames.
 - Speech uses natural drawn mouth expressions with pauses and no protruding tongue shapes.
+- Rebuilt sprite still felt too pixelated: use finer sampling of its existing complete drawings, limiting display pixels to 2px while retaining display size, integer enlargement, animation timing and attachment registration.
 
 ## Approved complete sprite rebuild
 

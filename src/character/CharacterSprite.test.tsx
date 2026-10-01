@@ -10,9 +10,28 @@ const definition: SpriteDefinition = {
     hello: { loop: false, frames: [{ x: 0, y: 80, duration: 100 }, { x: 80, y: 80, duration: 100 }] },
   },
 };
-afterEach(() => vi.useRealTimers());
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe('CharacterSprite', () => {
+  it('preserves fractional target coordinates for definitions using native sampling', async () => {
+    vi.stubGlobal('Image', class {
+      onload?: () => void;
+      set src(_url: string) { queueMicrotask(() => this.onload?.()); }
+    });
+    const context = { clearRect: vi.fn(), drawImage: vi.fn(), imageSmoothingEnabled: true };
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(context as unknown as CanvasRenderingContext2D);
+    const fractional: SpriteDefinition = {
+      ...definition, image: 'fractional-target.png',
+      clips: { idle: { loop: true, frames: [{
+        x: 0, y: 0, duration: 100,
+        target: { x: 10.25, y: 7.5, width: 21.5, height: 30.25 },
+      }] } },
+    };
+    await act(async () => { render(<CharacterSprite definition={fractional} clip="idle" scale={3} playing={false} />); });
+    expect(screen.getByRole('img')).toHaveAttribute('width', '80');
+    expect(screen.getByRole('img')).toHaveStyle({ width: '240px' });
+    expect(context.drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 80, 80, 10.25, 7.5, 21.5, 30.25);
+  });
   it('advances short in-between frames on the next browser repaint', () => {
     vi.useFakeTimers();
     const quick: SpriteDefinition = {

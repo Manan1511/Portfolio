@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { createElement } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { CharacterSprite } from './CharacterSprite';
@@ -39,4 +39,32 @@ it('starts and ends seated animation cycles on the same registered neutral pose'
     // A complete cycle returns to rest exactly twice in each 2-second activity.
     expect(frames.reduce((total, frame) => total + frame.duration, 0)).toBe(1000);
   }
+});
+
+it('keeps character size and foot registration while using finer whole-pixel sampling', async () => {
+  vi.stubGlobal('Image', class {
+    onload?: () => void;
+    set src(_url: string) { queueMicrotask(() => this.onload?.()); }
+  });
+  const context = { clearRect: vi.fn(), drawImage: vi.fn(), imageSmoothingEnabled: true };
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(context as unknown as CanvasRenderingContext2D);
+  let view: ReturnType<typeof render>;
+  await act(async () => { view = render(createElement(CharacterSprite, { definition: manan, clip: 'seated-idle', scale: 3, playing: false })); });
+  const canvas = screen.getByRole('img');
+  expect(canvas).toHaveStyle({ width: '360px', height: '360px' });
+  expect(canvas).toHaveAttribute('width', '180');
+  expect(canvas).toHaveAttribute('height', '180');
+  expect(context.drawImage).toHaveBeenLastCalledWith(expect.anything(), 88, 6, 330, 442, 42, 20, 113, 151);
+  expect(context.imageSmoothingEnabled).toBe(false);
+
+  // Switching to a speaking drawing keeps its foot baseline at 171 raster px.
+  const speaking = { ...manan, clips: { speech: { loop: false, frames: [manan.clips.talking.frames[1]] } } };
+  await act(async () => { view!.rerender(createElement(CharacterSprite, { definition: speaking, clip: 'speech', scale: 3, playing: false })); });
+  expect(context.drawImage).toHaveBeenLastCalledWith(expect.anything(), 525, 452, 330, 435, 42, 21, 113, 150);
+
+  // A responsive scale change must redraw the cleared canvas at its new density.
+  await act(async () => { view!.rerender(createElement(CharacterSprite, { definition: manan, clip: 'seated-idle', scale: 2, playing: false })); });
+  expect(canvas).toHaveStyle({ width: '240px', height: '240px' });
+  expect(canvas).toHaveAttribute('width', '120');
+  expect(context.drawImage).toHaveBeenLastCalledWith(expect.anything(), 88, 6, 330, 442, 28, 13, 75, 101);
 });

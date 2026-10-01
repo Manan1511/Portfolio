@@ -10,6 +10,8 @@ export interface SpriteDefinition {
   height: number;
   sourceWidth?: number;
   sourceHeight?: number;
+  // Optional cap on displayed pixel size. Layout and anchors still use width/height.
+  maxPixelSize?: number;
   clips: Record<string, SpriteClip>;
   anchors: Record<string, Point>;
 }

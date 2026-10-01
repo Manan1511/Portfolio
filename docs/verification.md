@@ -1,6 +1,6 @@
 # Hero verification — 2026-10-01
 
-- `npm test`: 7 files, 24 tests passed after the complete character rebuild.
+- `npm test`: 7 files, 26 tests passed after the finer pixel sampling correction.
 - `npm run typecheck`: passed.
 - `npm run build`: passed, relative asset paths in `dist/index.html`.
 - Production hero inspected at 320, 390, 768 and 1440 CSS pixels wide. No horizontal document overflow or overflowing card content. Character enlargement uses whole-pixel multiples.
@@ -27,3 +27,14 @@ The user requested a coherent replacement character and chose subtle motion. Rep
 - Updated head/hand/foot anchors align the crown, keyboard and floor. New mouth anchor positions the greeting beside the face. Captures: `.verification/hero-sprite-rebuilt-mobile.jpg` and `hero-sprite-rebuilt-desktop.jpg`.
 - Independent read-only review reported no Critical, Important or Minor code issues. Latest greeting anchor then verified in production preview.
 - Artwork and exact generation prompt set recorded in `src/assets/character/ARTWORK.md`. Only original generated artwork is included; source photos remain outside Git.
+
+## Finer sprite detail
+
+User found the rebuilt character too pixelated. The source seated drawings were being reduced to 75px wide before 3× enlargement. Added optional `maxPixelSize` metadata and capped Manan's display pixels at 2px: desktop/preview now samples a 180×180 raster and enlarges it by exactly 2 to the existing 360×360 display. Mobile already uses 2px pixels, so its 240×240 display remains unchanged. Layout coordinates, anchors, source artwork, complete-frame animation and timing stay unchanged.
+
+- Regression observed failing on the old 120px canvas, then passing at the finer resolution. It checks unchanged display size, integer enlargement, shared foot-edge registration through a speaking pose, disabled smoothing and redraw after a responsive scale change.
+- Fresh `npm test`: 7 files / 26 tests passed. `npm run typecheck`, `npm run build` and `git diff --check` passed.
+- Browser inspected finer typing in-betweens, speech, portrait, standing and thumbs-up. Neutral artwork is shared with seated idle. Source anatomy remains continuous; finer sampling retains more hair, glasses, hands and shoe detail.
+- Live mobile hero inspected at 419px; production hero inspected at 1280px. Canvas/display measurements were 120/240px on mobile and 180/360px in production. No horizontal document overflow or production console errors. Desk, greeting and crown retain their placement.
+- Proof captures: `.verification/sprite-finer-detail.jpg`, `.verification/sprite-finer-detail-crop.jpg`, `.verification/hero-finer-detail.jpg`.
+- Independent review found native fractional target coordinates were being rounded. Preserved exact target coordinates whenever sampling density is unchanged; a second regression was observed failing before this correction, then passing. Definitions without the detail option retain their original placement and proportions.
