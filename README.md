@@ -22,7 +22,7 @@ npm run preview
 
 See [character documentation](src/character/README.md) for poses, clip metadata, playback, attachment anchors and independent movement. `OrbitCrown` accepts `{ id, label, text }` cards, a head anchor, available width, and an orbit duration in milliseconds. Edit hero placeholders in `src/hero/Hero.tsx`.
 
-Hover or keyboard focus holds the crown still. Drag horizontally to rotate; tap on touch screens to pause/resume. Visible buttons and arrow keys also rotate. Reduced-motion preferences disable automatic movement.
+Hover or keyboard focus holds automatic rotation still. Drag horizontally to rotate; a quick flick carries momentum, then eases back toward the 24-second orbit (or stops under the pointer). Front and rear cards follow the hand from their respective side of the ring. Tap on touch screens to pause/resume. Visible buttons and arrow keys also rotate. Explicit pause and reduced-motion preferences disable momentum as well as automatic movement.
 
 ## Hosting later
 

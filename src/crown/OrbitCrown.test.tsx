@@ -1,10 +1,19 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { OrbitCrown } from './OrbitCrown';
 
 const cards = [{ id: 'coffee', label: 'Caffeine', text: 'one more cup' }, { id: 'git', label: 'Git', text: 'push and pray' }];
 afterEach(() => vi.useRealTimers());
 const angle = () => Number(screen.getByRole('group', { name: 'Orbiting thoughts' }).getAttribute('data-angle'));
+
+function swipe(duration = 60, target?: HTMLElement, dx = 60) {
+  const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+  fireEvent.pointerDown(target ?? ring, { pointerId: 10, pointerType: 'touch', clientX: 120, clientY: 100 });
+  act(() => vi.advanceTimersByTime(duration / 2));
+  fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'touch', clientX: 120 + dx / 2, clientY: 100 });
+  act(() => vi.advanceTimersByTime(duration / 2));
+  fireEvent.pointerUp(ring, { pointerId: 10, pointerType: 'touch', clientX: 120 + dx, clientY: 100 });
+}
 
 describe('OrbitCrown interaction', () => {
   it('orbits, pauses on hover, and resumes without resetting angle', () => {
@@ -94,5 +103,184 @@ describe('OrbitCrown interaction', () => {
     fireEvent.blur(articles[1], { relatedTarget: null });
     act(() => vi.advanceTimersByTime(200));
     expect(angle()).toBeGreaterThan(start);
+  });
+  it('continues a flick under the mouse without jumping at release', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerEnter(ring, { pointerType: 'mouse' });
+    fireEvent.pointerDown(ring, { pointerId: 10, pointerType: 'mouse', clientX: 120, clientY: 100 });
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 150, clientY: 100 });
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 180, clientY: 100 });
+    const released = angle();
+    fireEvent.pointerUp(ring, { pointerId: 10, pointerType: 'mouse', clientX: 180, clientY: 100 });
+    expect(angle()).toBe(released);
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - released).toBeGreaterThan(.2);
+    const early = angle();
+    act(() => vi.advanceTimersByTime(2000));
+    const late = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - late).toBeLessThan((early - released) / 4);
+  });
+  it('gives faster swipes more momentum and eases back to the 24 second orbit', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe(600);
+    const slowRelease = angle();
+    act(() => vi.advanceTimersByTime(200));
+    const slowTravel = angle() - slowRelease;
+    cleanup();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe(60);
+    const fastRelease = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - fastRelease).toBeGreaterThan(slowTravel * 3);
+    act(() => vi.advanceTimersByTime(6000));
+    const settled = angle();
+    act(() => vi.advanceTimersByTime(240));
+    expect(angle() - settled).toBeCloseTo(Math.PI * 2 * 240 / 24000, 2);
+  });
+  it('keeps leftward momentum after release', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe(60, undefined, -60);
+    const released = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle()).toBeLessThan(released - .2);
+  });
+  it('uses the up position even if a fast swipe delivers no move event', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerDown(ring, { pointerId: 10, pointerType: 'touch', clientX: 100, clientY: 100 });
+    act(() => vi.advanceTimersByTime(60));
+    fireEvent.pointerUp(window, { pointerId: 10, pointerType: 'touch', clientX: 160, clientY: 100 });
+    expect(angle()).toBeGreaterThan(.4);
+    const released = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle()).toBeGreaterThan(released + .2);
+  });
+  it('makes a dragged rear card follow the hand instead of mirroring it', () => {
+    vi.useFakeTimers();
+    const five = Array.from({ length: 5 }, (_, i) => ({ id: String(i), label: `Card ${i}`, text: 'thought' }));
+    render(<OrbitCrown cards={five} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    for (let i = 0; i < 6; i++) fireEvent.keyDown(ring, { key: 'ArrowRight' });
+    const rear = screen.getAllByRole('article')[2];
+    const start = rear.style.transform;
+    swipe(60, rear, 20);
+    const translatedX = (transform: string) => Number(transform.match(/translate\(([-\d.]+)px,/)![1]);
+    expect(translatedX(rear.style.transform)).toBeGreaterThan(translatedX(start));
+  });
+  it('stops a fling on explicit pause and does not replay momentum on resume', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe();
+    act(() => vi.advanceTimersByTime(80));
+    fireEvent.click(screen.getByRole('button', { name: 'Pause orbit' }));
+    const paused = angle();
+    act(() => vi.advanceTimersByTime(1000));
+    expect(angle()).toBe(paused);
+    fireEvent.click(screen.getByRole('button', { name: 'Resume orbit' }));
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - paused).toBeLessThan(.07);
+  });
+  it('preserves direct drag but disables momentum for reduced motion', () => {
+    vi.useFakeTimers();
+    vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ matches: true, media: query, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent: () => true }));
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe();
+    const released = angle();
+    expect(released).toBeGreaterThan(.4);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(angle()).toBe(released);
+  });
+  it('does not fling a drag held still before release', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerEnter(ring, { pointerType: 'mouse' });
+    fireEvent.pointerDown(ring, { pointerId: 10, pointerType: 'mouse', clientX: 100, clientY: 100 });
+    act(() => vi.advanceTimersByTime(40));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 160, clientY: 100 });
+    act(() => vi.advanceTimersByTime(300));
+    fireEvent.pointerUp(ring, { pointerId: 10, pointerType: 'mouse', clientX: 160, clientY: 100 });
+    const released = angle();
+    act(() => vi.advanceTimersByTime(300));
+    expect(angle()).toBe(released);
+  });
+  it('measures the recent flick after a long press rather than the whole hold', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerEnter(ring, { pointerType: 'mouse' });
+    fireEvent.pointerDown(ring, { pointerId: 10, pointerType: 'mouse', clientX: 100, clientY: 100 });
+    act(() => vi.advanceTimersByTime(2000));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 130, clientY: 100 });
+    act(() => vi.advanceTimersByTime(40));
+    fireEvent.pointerUp(ring, { pointerId: 10, pointerType: 'mouse', clientX: 160, clientY: 100 });
+    const released = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - released).toBeGreaterThan(.2);
+  });
+  it('lets a new press or keyboard focus stop coasting immediately', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    swipe();
+    act(() => vi.advanceTimersByTime(100));
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerDown(ring, { pointerId: 11, pointerType: 'touch', clientX: 100, clientY: 100 });
+    const held = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle()).toBe(held);
+    fireEvent.pointerCancel(ring, { pointerId: 11, pointerType: 'touch', clientX: 100, clientY: 100 });
+    swipe();
+    fireEvent.focus(screen.getAllByRole('article')[0]);
+    const focused = angle();
+    act(() => vi.advanceTimersByTime(300));
+    expect(angle()).toBe(focused);
+  });
+  it('continues a touch drag when implicit capture transfers from card to ring', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    const card = screen.getAllByRole('article')[0];
+    fireEvent.pointerDown(card, { pointerId: 10, pointerType: 'touch', clientX: 100, clientY: 100 });
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'touch', clientX: 120, clientY: 100 });
+    const firstMove = angle();
+    fireEvent.lostPointerCapture(card, { pointerId: 10 });
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'touch', clientX: 140, clientY: 100 });
+    expect(angle() - firstMove).toBeGreaterThan(.1);
+    fireEvent.pointerUp(ring, { pointerId: 10, pointerType: 'touch', clientX: 140, clientY: 100 });
+    const released = angle();
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle() - released).toBeGreaterThan(.2);
+  });
+  it('ends a drag when its own ring capture is lost', () => {
+    vi.useFakeTimers();
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const ring = screen.getByRole('group', { name: 'Orbiting thoughts' });
+    fireEvent.pointerEnter(ring, { pointerType: 'mouse' });
+    fireEvent.pointerDown(ring, { pointerId: 10, pointerType: 'mouse', clientX: 100, clientY: 100 });
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 130, clientY: 100 });
+    fireEvent.lostPointerCapture(ring, { pointerId: 10 });
+    const stopped = angle();
+    fireEvent.pointerMove(ring, { pointerId: 10, pointerType: 'mouse', clientX: 160, clientY: 100 });
+    act(() => vi.advanceTimersByTime(200));
+    expect(angle()).toBe(stopped);
+  });
+  it('suppresses pointer-generated mouse focus on cards but keeps controls native', () => {
+    render(<OrbitCrown cards={cards} headAnchor={{ x: 180, y: 200 }} width={360} />);
+    const card = screen.getAllByRole('article')[0];
+    const allowedDefault = fireEvent.pointerDown(card, { pointerId: 10, pointerType: 'touch', clientX: 100, clientY: 100 });
+    expect(allowedDefault).toBe(false);
+    fireEvent.pointerCancel(card, { pointerId: 10, pointerType: 'touch', clientX: 100, clientY: 100 });
+    expect(fireEvent.pointerDown(screen.getByRole('button', { name: 'Pause orbit' }), { pointerId: 11, pointerType: 'touch' })).toBe(true);
   });
 });

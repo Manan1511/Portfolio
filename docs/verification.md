@@ -1,6 +1,6 @@
 # Hero verification — 2026-10-01
 
-- `npm test`: 7 files, 26 tests passed after the finer pixel sampling correction.
+- `npm test`: 7 files, 40 tests passed after the orbit momentum and furniture correction.
 - `npm run typecheck`: passed.
 - `npm run build`: passed, relative asset paths in `dist/index.html`.
 - Production hero inspected at 320, 390, 768 and 1440 CSS pixels wide. No horizontal document overflow or overflowing card content. Character enlargement uses whole-pixel multiples.
@@ -11,6 +11,20 @@
 - Local proof captures are in ignored `.verification/`: `hero-desktop.jpg`, `hero-mobile.jpg`, `sprite-fixed.jpg`. Reference photos remain outside the repository.
 
 The milestone contains only the hero and reusable character. Walking clips, audio, additional sections, backend and publishing remain outside the approved scope.
+
+## Orbit momentum and coherent furniture — latest correction
+
+User reported reversed rotation, wanted speed from a swipe, and showed the table rail crossing the thighs. Earlier furniture alignment did not resolve that composition. The tabletop and laptop also used opposing perspective directions, while the chair was still stretched from its old 80px grid.
+
+- Corrected horizontal orbit direction. Front cards follow the drag and arrow direction; grabbing a rear card fixes input direction to its starting side of the ring.
+- Release retains the final angle, including a skipped final move or release outside the crown. Velocity comes from the last 100ms of input, is capped at 6 radians/second, and decays with 650ms exponential friction toward the signed 24-second orbit. A flick under the pointer eases to rest; a new press, focus/hover entry, explicit pause and reduced motion clear momentum.
+- Regressions were observed failing for mirrored front movement, absent inertia, ignored up coordinates, held-press velocity sampling, and bubbled child capture loss. They pass after correction. Card-to-root implicit touch capture transfer no longer ends the drag; losing the root's own capture still cancels it.
+- Pointer-managed card presses suppress compatibility mouse focus, while buttons retain native focus/activation. Vertical panning remains controlled by `touch-action: pan-y`, as specified by [W3C Pointer Events](https://www.w3.org/TR/pointerevents3/#declaring-direct-manipulation-behavior). Touch threshold, vertical gesture classification, tap pause, capture transfer and reduced motion are covered by behavior tests.
+- Rebuilt chair, desk and laptop on the same 120px grid and matching perspective. The chair supports the hips around y=88; keyboard meets the hand anchor at (83,74); screen, hinge and keyboard remain connected. All furniture sits behind the complete character frame, so the tabletop rail cannot cross the thighs.
+- Fresh `npm test`: 7 files / 40 tests passed. `npm run typecheck`, `npm run build` and `git diff --check` passed. Independent read-only review found the capture-transfer issue; it was fixed, and final review reported no material findings.
+- Latest production output served with `vite preview --base /revamped-portfolio/`. Browser inspection at 320, 390, 768 and 1440px confirmed no horizontal document overflow, fitting card contents, Pixelify typography and exact 2× canvas enlargement (120→240px mobile; 180→360px desktop). Furniture and hand contact inspected at each width.
+- Direct production-page browser checks confirmed flick continuation after release, suppressed pointer focus, pause holding the same angle, right arrow moving the front card right, left button restoring the previous angle, resume and greeting replay. Direct production browser error log was empty. Mobile touch behavior is covered by the synthetic pointer tests above; responsive screenshots use actual nested browser viewports.
+- Current captures in ignored `.verification/`: `momentum-layouts-production.jpg`, `momentum-furniture-production.jpg`, `momentum-furniture-mobile.jpg`. No character artwork, source photos, external services or deployment changed.
 
 ## Glass clipping correction
 

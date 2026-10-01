@@ -29,12 +29,6 @@ export function DeskScene({ scale }: { scale: number }) {
 
   return <>
     <div className="desk-scene" style={{ '--sprite-scale': scale, left: `calc(50% - ${manan.anchors.head.x * scale}px)`, width: scale * manan.width, height: scale * manan.height } as CSSProperties}>
-      <svg className="scene-prop scene-chair" viewBox="0 0 80 80" aria-hidden="true" shapeRendering="crispEdges">
-        <path fill="#283c38" d="M22 37H33V40H35V60H39V64H22V61H20V40H22Z" />
-        <path fill="#477061" d="M23 39H32V60H23Z" />
-        <path fill="#23362f" d="M23 60H44V65H23ZM30 64H34V74H30ZM24 73H40V75H24Z" />
-        <path fill="#5d8570" d="M24 61H43V63H24Z" />
-      </svg>
       <CharacterSprite definition={manan} clip={activity} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
       <DeskFurniture />
     </div>

@@ -25,4 +25,12 @@ describe('orbit geometry and gestures', () => {
     expect(draggedAngle(1.2, 50, 100)).toBeCloseTo(1.7);
     expect(draggedAngle(1.7, 0, 100)).toBeCloseTo(1.7);
   });
+  it('makes a front card follow the horizontal drag direction', () => {
+    const start = Math.PI / 2;
+    const before = orbitPoint(0, 5, start, 200, 40);
+    const right = orbitPoint(0, 5, draggedAngle(start, 40, 200), 200, 40);
+    const left = orbitPoint(0, 5, draggedAngle(start, -40, 200), 200, 40);
+    expect(right.x).toBeGreaterThan(before.x);
+    expect(left.x).toBeLessThan(before.x);
+  });
 });

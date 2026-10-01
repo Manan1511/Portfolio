@@ -18,7 +18,9 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Remove independent fingertip presses. Typing uses gentle connected hand/forearm movement around the elbows, with in-between frames.
 - Speech uses natural drawn mouth expressions with pauses and no protruding tongue shapes.
 - Rebuilt sprite still felt too pixelated: use finer sampling of its existing complete drawings, limiting display pixels to 2px while retaining display size, integer enlargement, animation timing and attachment registration.
-- Align desk/laptop to the rebuilt seated pose. Furniture uses the same 120px logical grid, with keyboard contact at the hand anchor, connected screen/hinge/base, cup on the tabletop, legs on the foot baseline and a foreground table apron below the hands. User clarified this correction concerns desk/laptop alignment only.
+- Align desk/laptop to the rebuilt seated pose. Furniture uses the same 120px logical grid, with keyboard contact at the hand anchor, connected screen/hinge/base, cup on the tabletop and legs on the floor. User clarified the first correction concerns desk/laptop alignment only.
+- Further furniture correction: chair, desk and laptop share one three-quarter perspective on the 120px grid. Fit the chair seat to the hips; keep the complete character in front of furniture so no table rail crosses the thighs.
+- Add swipe momentum proportional to recent gesture speed. Preserve the released angle and ease toward the slow orbit in the gesture's direction. Under hover/focus a deliberate flick eases to rest; subsequent focus/hover, a new press, explicit pause and reduced motion stop momentum. Correct mirrored input: front cards and keyboard arrows move in the indicated horizontal direction; a grabbed rear card uses its starting side of the ring.
 
 ## Approved complete sprite rebuild
 

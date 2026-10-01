@@ -1,33 +1,39 @@
-// Furniture uses the character's 120px logical grid. The keyboard meets hands
-// at (83, 74), and the table legs meet the shared floor at y=114.
+// All props share the character's 120px grid and one three-quarter perspective.
+// The keyboard meets hands at (83, 74); the seat supports hips around y=88.
+// Props stay behind the complete character frame, including the table edge.
 export function DeskFurniture() {
   return <>
+    <svg className="scene-prop scene-chair" viewBox="0 0 120 120" aria-hidden="true" shapeRendering="crispEdges">
+      <path fill="#283c38" d="M30 50H37V52H40V84H43V89H32V86H30Z" />
+      <path fill="#477061" d="M32 53H37V84H34V86H32Z" />
+      <path fill="#23362f" d="M33 86H59V89H62V92H35V90H33ZM43 92H47V112H43ZM34 112H57V114H34Z" />
+      <path fill="#5d8570" d="M35 86H59V89H35Z" />
+      <path fill="#477061" d="M44 94H46V111H44Z" />
+    </svg>
     <svg className="scene-prop scene-desk" viewBox="0 0 120 120" aria-hidden="true" shapeRendering="crispEdges">
-      <path fill="#6e4933" d="M64 84H68V114H64ZM111 84H115V114H111Z" />
-      <path fill="#8f6340" d="M111 86H113V112H111Z" />
-      <path fill="#553c2f" d="M64 111H68V114H64ZM111 111H115V114H111Z" />
-      <path fill="#bf8c58" d="M55 74H113V76H115V78H117V80H119V83H61V81H59V79H57V77H55Z" />
-      <path fill="#dab57b" d="M55 74H113V76H57V77H55ZM59 79H117V80H61V81H59Z" />
+      <path fill="#553c2f" d="M115 76H118V109H115ZM72 85H75V112H72Z" />
+      <path fill="#6e4933" d="M108 84H112V114H108Z" />
+      <path fill="#8f6340" d="M108 86H110V112H108Z" />
+      <path fill="#553c2f" d="M108 112H112V114H108Z" />
+      <path fill="#bf8c58" d="M78 71H120V73H118V75H116V78H114V81H112V83H69V81H71V79H73V77H75V74H78Z" />
+      <path fill="#dab57b" d="M78 71H120V72H79V74H77V77H75V79H73V81H71V82H69V81H71V79H73V77H75V74H78Z" />
+      <path fill="#6e4933" d="M69 83H112V86H69Z" />
+      <path fill="#8f6340" d="M69 83H112V84H69Z" />
+      <path fill="#553c2f" d="M69 85H112V86H69Z" />
     </svg>
     <svg className="scene-prop scene-laptop" viewBox="0 0 120 120" aria-hidden="true" shapeRendering="crispEdges">
-      <path fill="#304447" d="M84 52H112V73H81V56H84Z" />
-      <path fill="#4d6667" d="M86 54H110V70H84V58H86Z" />
-      <path fill="#a4cfc0" d="M87 56H108V68H86V60H87Z" />
-      <path fill="#dde7c9" d="M89 58H91V60H89ZM94 61H105V63H94ZM90 65H103V66H90Z" />
-      <path fill="#23383b" d="M81 71H112V75H80Z" />
-      <path fill="#304447" d="M81 73H112V75H110V77H108V79H106V82H69V80H71V78H73V76H77V74H81Z" />
-      <path fill="#718784" d="M81 74H110V76H108V78H106V80H71V78H75V76H79V75H81Z" />
-      <path fill="#405b5d" d="M80 75H103V76H80ZM77 77H104V78H77Z" />
-      <path fill="#9cae9f" d="M80 79H89V80H80Z" />
-      <path fill="#faf0d1" d="M112 68H116V78H112ZM116 70H119V75H116V73H117V72H116Z" />
-      <path fill="#886850" d="M112 68H116V70H112Z" />
-      <path fill="#d3cfad" d="M112 77H116V78H112Z" />
-    </svg>
-    {/* The apron sits in front of the lap, below the animated hands. */}
-    <svg className="scene-prop scene-desk-front" viewBox="0 0 120 120" aria-hidden="true" shapeRendering="crispEdges">
-      <path fill="#6e4933" d="M61 83H119V86H61Z" />
-      <path fill="#8f6340" d="M61 83H119V84H61Z" />
-      <path fill="#553c2f" d="M61 85H119V86H61Z" />
+      <path fill="#304447" d="M88 51H114V69H112V73H83V71H84V62H86V54H88Z" />
+      <path fill="#4d6667" d="M90 53H112V68H110V71H86V62H88V56H90Z" />
+      <path fill="#a4cfc0" d="M91 55H110V67H108V69H88V62H90V56H91Z" />
+      <path fill="#dde7c9" d="M92 57H94V59H92ZM95 61H106V63H95ZM91 65H104V66H91Z" />
+      <path fill="#23383b" d="M84 71H112V73H83Z" />
+      <path fill="#304447" d="M83 72H112V73H110V75H108V77H106V81H73V79H75V77H77V75H80V73H83Z" />
+      <path fill="#718784" d="M83 73H110V74H108V76H106V79H75V78H77V76H79V74H83Z" />
+      <path fill="#405b5d" d="M81 74H107V75H81ZM79 76H105V77H79Z" />
+      <path fill="#9cae9f" d="M79 78H88V79H79Z" />
+      <path fill="#faf0d1" d="M113 66H117V75H113ZM117 68H120V73H117V71H118V70H117Z" />
+      <path fill="#886850" d="M113 66H117V68H113Z" />
+      <path fill="#d3cfad" d="M113 74H117V75H113Z" />
     </svg>
   </>;
 }
