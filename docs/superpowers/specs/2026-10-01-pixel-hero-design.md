@@ -15,3 +15,5 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Initial 64px character was too pixelated in preview. Increase to approximately 96 native pixels tall, preserving crisp edges and integer enlargement. Use 120px frame canvas and updated anchors.
 - Talking, typing and seated rest must share exact same body pixels and registration; changes confined to mouth/hands.
 - Use approved Pixelify font throughout, including glass cards.
+- Remove independent fingertip presses. Typing uses gentle connected forearm motion around a fixed elbow, with in-between frames.
+- Replace procedural mouth shapes with registered raster expression artwork. Keep one shared head/body across seated states; confine expression changes to the mouth to prevent incidental artwork jitter. Use irregular speech pauses with no tongue shape.

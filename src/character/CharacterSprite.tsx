@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { frameAt, resolveClip, type SpriteDefinition } from './animation';
 import { useReducedMotion } from '../shared/useReducedMotion';
+import { animatePixels } from './pixels';
 
 const pictures = new Map<string, Promise<HTMLImageElement>>();
 function loadPicture(url: string) {
@@ -60,7 +61,7 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
   }, [selected, playing, reduced]);
 
   useEffect(() => {
-    const context = canvas.current?.getContext('2d');
+    const context = canvas.current?.getContext('2d', { willReadFrequently: true });
     if (!context) return;
     let cancelled = false;
     const layers = frame.layers ?? [];
@@ -73,10 +74,22 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
         target.x, target.y, target.width, target.height);
       layers.forEach((layer, index) => {
         const dest = layer.target;
+        context.save();
+        if (layer.clip) {
+          context.beginPath();
+          context.rect(layer.clip.x, layer.clip.y, layer.clip.width, layer.clip.height);
+          context.clip();
+        }
         if (layer.replace) context.clearRect(dest.x, dest.y, dest.width, dest.height);
         context.drawImage(layerPictures[index], layer.x, layer.y, layer.width, layer.height, dest.x, dest.y, dest.width, dest.height);
+        context.restore();
       });
-    }).catch(() => { /* Canvas keeps last successful frame; its accessible label remains available. */ });
+      if (frame.pixels?.length) {
+        const native = context.getImageData(0, 0, definition.width, definition.height);
+        native.data.set(animatePixels(native.data, definition.width, definition.height, frame.pixels));
+        context.putImageData(native, 0, 0);
+      }
+    }).catch(error => { if (!cancelled) console.error('Unable to draw sprite frame', error); });
     return () => { cancelled = true; };
   }, [definition, frame]);
 

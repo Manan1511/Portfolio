@@ -3,10 +3,12 @@ export interface SpriteFrame {
   x: number; y: number; duration: number; width?: number; height?: number; image?: string;
   target?: { x: number; y: number; width: number; height: number };
   layers?: SpriteLayer[];
+  pixels?: PixelPatch[];
 }
 export interface SpriteLayer {
   image?: string; x: number; y: number; width: number; height: number;
   target: { x: number; y: number; width: number; height: number }; replace?: boolean;
+  clip?: { x: number; y: number; width: number; height: number };
 }
 export interface SpriteClip { frames: SpriteFrame[]; loop: boolean; anchors?: Record<string, Point> }
 export interface SpriteDefinition {
@@ -38,3 +40,4 @@ export function resolveClip(definition: SpriteDefinition, name: string): SpriteC
   }
   return clip;
 }
+import type { PixelPatch } from './pixels';

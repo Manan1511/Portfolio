@@ -36,19 +36,20 @@ export function DeskScene({ scale }: { scale: number }) {
       </svg>
       <CharacterSprite definition={manan} clip={activity} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
       <svg className="scene-prop scene-desk" viewBox="0 0 80 80" aria-hidden="true" shapeRendering="crispEdges">
-        <path fill="#6e4933" d="M45 49H78V54H45ZM49 54H53V75H49ZM73 54H77V75H73Z" />
-        <path fill="#bf8c58" d="M43 46H74L79 50H47Z" />
-        <path fill="#dab57b" d="M43 46H74V48H45Z" />
-        <path fill="#8f6340" d="M47 51H79V54H47Z" />
+        <path fill="#6e4933" d="M37 52H78V56H37ZM49 56H53V75H49ZM73 56H77V75H73Z" />
+        <path fill="#bf8c58" d="M36 50H74L79 54H39Z" />
+        <path fill="#dab57b" d="M36 50H74V52H38Z" />
+        <path fill="#8f6340" d="M39 54H79V56H39Z" />
         <path fill="#553c2f" d="M49 72H53V75H49ZM73 72H77V75H73Z" />
       </svg>
       <svg className="scene-prop scene-laptop" viewBox="0 0 80 80" aria-hidden="true" shapeRendering="crispEdges">
-        <path fill="#304447" d="M63 34H78V47H62ZM52 47H76V49H52Z" />
+        <path fill="#304447" d="M63 34H78V47H62ZM43 48H65L77 52V54H40V52Z" />
         <path fill="#4d6667" d="M65 35H77V45H65Z" />
         <path fill="#a4cfc0" d="M66 36H76V44H66Z" />
         <path fill="#dde7c9" d="M67 37H68V38H67ZM69 39H74V40H69ZM68 41H73V42H68Z" />
-        <path fill="#718784" d="M53 46H64L76 48H53Z" />
-        <path fill="#c3d1bd" d="M59 47H63V48H59Z" />
+        <path fill="#718784" d="M43 48H64L76 52H40Z" />
+        <path fill="#526966" d="M47 49H62V50H47ZM45 50H65V51H45Z" />
+        <path fill="#c3d1bd" d="M54 51H60V52H54Z" />
         <path fill="#faf0d1" d="M77 42H80V46H77Z" />
         <path fill="#886850" d="M77 42H80V43H77Z" />
       </svg>

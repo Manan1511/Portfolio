@@ -15,7 +15,7 @@ import { manan } from './manan';
 
 Scale rounds to a positive whole number. Source PNG atlas frames are sampled into a 120×120 native canvas with no smoothing, then enlarged in whole multiples. Full-body standing character is about 96 native pixels tall (increased after the user's preview feedback). Each frame has source bounds and registered target bounds; anchors are native coordinates. Clip-specific anchors override character defaults.
 
-Typing, resting, and talking use the exact same body artwork and target bounds. Only small hand and mouth layers change. Never substitute separately generated full-body frames for these states; that changes the silhouette during transitions. `layers` can draw registered patches over a frame; `replace` clears that patch's destination before drawing it.
+Typing, resting, and talking use the exact same body artwork, closed expression head, and target bounds. Typing gently bends a connected forearm around its elbow, with one-pixel in-between positions; no independent fingertip cutouts. Talking samples a drawn open-mouth expression, confined to the mouth region, with irregular pauses. Hair, glasses, jaw, neck and body stay fixed. Never substitute separately generated full-body frames for these states; that changes the silhouette during transitions. `layers` draw registered raster artwork; `replace` clears the destination and optional `clip` confines drawing to native bounds.
 
 ## New animations
 
