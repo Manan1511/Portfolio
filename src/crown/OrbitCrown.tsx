@@ -107,6 +107,7 @@ export function OrbitCrown({ cards, headAnchor, width, orbitDuration = 24000 }: 
       return <article className="thought-card" key={card.id} tabIndex={0}
         style={{ left: headAnchor.x, top: centerY, width: cardWidth, zIndex: point.zIndex,
           transform: `translate(-50%, -50%) translate(${point.x}px, ${point.y}px) scale(${point.scale})` }}>
+        <span className="thought-glass" aria-hidden="true" />
         <span className={`thought-icon thought-icon-${index % 5}`} aria-hidden="true"><CardIcon index={index} /></span>
         <div className="thought-copy"><span className="thought-label">{card.label}</span><span className="thought-text">{card.text}</span></div>
       </article>;

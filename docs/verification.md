@@ -11,3 +11,7 @@
 - Local proof captures are in ignored `.verification/`: `hero-desktop.jpg`, `hero-mobile.jpg`, `sprite-fixed.jpg`. Reference photos remain outside the repository.
 
 The milestone contains only the hero and reusable character. Walking clips, audio, additional sections, backend and publishing remain outside the approved scope.
+
+## Glass clipping correction
+
+User supplied an intermittent blur spill below a card during interaction. Moved the backdrop filter from the moving article to a separate, rounded inner surface with explicit clipping and paint containment. The outer article retains its shadow, depth and focus outline; the non-blur fallback follows the inner surface. Browser checks at 320, 390 and 1440px confirmed all five surfaces remain within card bounds, with no visible spill during drag/release, keyboard rotation and focus changes. Existing 24 behavior tests and production build pass. Capture: `.verification/glass-clipping-fixed.jpg`.

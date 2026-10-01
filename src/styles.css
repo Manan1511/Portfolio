@@ -23,7 +23,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .orbit-crown { position: absolute; inset: 0; pointer-events: none; touch-action: pan-y; user-select: none; outline: none; }
 .orbit-zone { position: absolute; pointer-events: auto; cursor: grab; touch-action: pan-y; }
 .orbit-crown.is-dragging .orbit-zone, .orbit-crown.is-dragging .thought-card { cursor: grabbing; }
-.thought-card { position: absolute; height: 108px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 9px; padding: 12px 14px; pointer-events: auto; cursor: grab; touch-action: pan-y; border-radius: 12px; border: 1px solid rgb(255 255 255 / .8); background: rgb(255 255 244 / .65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 6px 18px rgb(48 71 54 / .09), inset 0 1px 0 rgb(255 255 255 / .55); will-change: transform; }
+.thought-card { position: absolute; height: 108px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 9px; padding: 12px 14px; pointer-events: auto; cursor: grab; touch-action: pan-y; border-radius: 12px; border: 1px solid rgb(255 255 255 / .8); isolation: isolate; box-shadow: 0 6px 18px rgb(48 71 54 / .09), inset 0 1px 0 rgb(255 255 255 / .55); will-change: transform; }
+/* Keep filtered pixels inside a dedicated surface while the outer card moves,
+   changes depth, and retains its external shadow and keyboard focus outline. */
+.thought-glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; overflow: hidden; clip-path: inset(0 round 12px); contain: paint; background: rgb(255 255 244 / .65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .thought-icon { width: 18px; height: 18px; color: #526d56; display: block; }
 .thought-icon svg { width: 100%; height: 100%; display: block; }
 .thought-icon-1 { color: #95684e; }
@@ -54,7 +57,7 @@ button { -webkit-tap-highlight-color: transparent; }
   .pixel-shadow { height: 24px; }
   .orbit-hint { font-size: 14px; }
 }
-@supports not (backdrop-filter: blur(1px)) { .thought-card { background: rgb(248 249 226 / .92); } }
+@supports not (backdrop-filter: blur(1px)) { .thought-glass { background: rgb(248 249 226 / .92); } }
 .character-sprite { display: block; flex: none; }
 .sprite-motion { width: fit-content; }
 .sprite-preview { max-width: 840px; margin: auto; padding: 40px 24px; }
