@@ -18,6 +18,7 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Remove independent fingertip presses. Typing uses gentle connected hand/forearm movement around the elbows, with in-between frames.
 - Speech uses natural drawn mouth expressions with pauses and no protruding tongue shapes.
 - Rebuilt sprite still felt too pixelated: use finer sampling of its existing complete drawings, limiting display pixels to 2px while retaining display size, integer enlargement, animation timing and attachment registration.
+- Align desk/laptop to the rebuilt seated pose. Furniture uses the same 120px logical grid, with keyboard contact at the hand anchor, connected screen/hinge/base, cup on the tabletop, legs on the foot baseline and a foreground table apron below the hands. User clarified this correction concerns desk/laptop alignment only.
 
 ## Approved complete sprite rebuild
 

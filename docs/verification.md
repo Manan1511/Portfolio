@@ -38,3 +38,13 @@ User found the rebuilt character too pixelated. The source seated drawings were 
 - Live mobile hero inspected at 419px; production hero inspected at 1280px. Canvas/display measurements were 120/240px on mobile and 180/360px in production. No horizontal document overflow or production console errors. Desk, greeting and crown retain their placement.
 - Proof captures: `.verification/sprite-finer-detail.jpg`, `.verification/sprite-finer-detail-crop.jpg`, `.verification/hero-finer-detail.jpg`.
 - Independent review found native fractional target coordinates were being rounded. Preserved exact target coordinates whenever sampling density is unchanged; a second regression was observed failing before this correction, then passing. Definitions without the detail option retain their original placement and proportions.
+
+## Desk and laptop alignment
+
+User supplied a hero screenshot and clarified the issue was desk/laptop alignment. The older furniture used an 80px source grid stretched into the 120px character grid; its disconnected laptop hinge, floating cup and rear-layer table apron no longer fitted the rebuilt pose. Replaced only the desk/laptop artwork with `DeskFurniture`, drawn directly on the shared 120px logical grid. Keyboard contact is at the hand anchor `(83, 74)`, screen/hinge/base overlap, cup rests on the tabletop, legs reach floor `y=114`, and the apron renders ahead of the lap at `y=83–86`, below the hands.
+
+- Fresh `npm test`: 7 files / 26 tests passed. `npm run typecheck` and `npm run build` passed. Existing speech, typing, pose, movement and crown checks remain green.
+- Real browser inspected the hero at 320, 390, 768 and 1440px using fixed-size nested viewports after the app's resizing control stalled. Browser reported the exact requested inner dimensions, correct 240/360px character displays, foreground apron depth above the sprite, and no horizontal document overflow.
+- Visual checks confirmed keyboard contact, connected laptop, cup placement and table/leg depth through typing and seated rest. Independent read-only review found no material issues.
+- Proof: `.verification/desk-layouts-verified.jpg` and `.verification/desk-alignment-fixed.jpg`. Temporary viewport harness remains in ignored `.verification/` and is excluded from production.
+- Latest production build inspected at 1280px: correct foreground apron and 360px character display, connected laptop and no horizontal overflow. Capture: `.verification/desk-alignment-production.jpg`.
