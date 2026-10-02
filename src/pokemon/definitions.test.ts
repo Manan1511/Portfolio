@@ -2,6 +2,22 @@ import { expect, it } from 'vitest';
 import { pokemon, flameFrames } from './definitions';
 import { frameAt } from '../character/animation';
 
+it('maps Bulbasaur and Squirtle whole walking rows without recolours or editing parts', () => {
+  const bulbasaur = Object.values(pokemon).find(species => species.id === 'bulbasaur');
+  const squirtle = Object.values(pokemon).find(species => species.id === 'squirtle');
+  expect(bulbasaur).toBeDefined();
+  expect(squirtle).toBeDefined();
+  expect(bulbasaur!.sprite.clips.walk.frames.map(frame => [frame.x, frame.y, frame.width, frame.height]))
+    .toEqual([[1, 63, 36, 31], [38, 62, 34, 30], [74, 61, 34, 33], [109, 63, 34, 31], [144, 63, 34, 31]]);
+  expect(squirtle!.sprite.clips.walk.frames.map(frame => [frame.x, frame.y, frame.width, frame.height]))
+    .toEqual([[2, 95, 45, 36], [49, 94, 47, 35], [100, 96, 44, 34], [146, 95, 45, 35], [193, 94, 47, 36], [243, 96, 44, 35]]);
+  for (const species of [bulbasaur!, squirtle!]) {
+    expect(species.nativeFacing).toBe(-1);
+    expect(species.sprite.clips.walk.loop).toBe(true);
+    expect(species.sprite.clips.idle.frames).toHaveLength(1);
+  }
+});
+
 it('keeps every complete frame in its native canvas without scaling or clipping', () => {
   for (const species of Object.values(pokemon)) for (const clip of Object.values(species.sprite.clips)) {
     expect(clip.frames.length).toBeGreaterThan(0);

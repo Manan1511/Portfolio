@@ -23,7 +23,8 @@ def main():
     parser.add_argument('--output', type=Path, default=Path('src/assets/pokemon'))
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    for name, pattern in [('pikachu', '*#0025 Pikachu.png'), ('charizard', '*#0006 Charizard.png')]:
+    for name, pattern in [('pikachu', '*#0025 Pikachu.png'), ('charizard', '*#0006 Charizard.png'),
+                          ('bulbasaur', '*#0001 Bulbasaur.png'), ('squirtle', '*#0007 Squirtle.png')]:
         matches = list(args.source_directory.glob(pattern))
         if len(matches) != 1:
             raise ValueError(f'Expected exactly one {name} source sheet, found {len(matches)}')

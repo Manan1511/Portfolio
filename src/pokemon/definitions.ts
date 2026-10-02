@@ -1,8 +1,10 @@
 import pikachuSheet from '../assets/pokemon/pikachu.png';
 import charizardSheet from '../assets/pokemon/charizard.png';
+import bulbasaurSheet from '../assets/pokemon/bulbasaur.png';
+import squirtleSheet from '../assets/pokemon/squirtle.png';
 import type { Point, SpriteDefinition, SpriteFrame } from '../character/animation';
 
-export type PokemonId = 'pikachu' | 'charizard';
+export type PokemonId = 'pikachu' | 'charizard' | 'bulbasaur' | 'squirtle';
 export interface PokemonDefinition {
   id: PokemonId; name: string; sprite: SpriteDefinition;
   habitat: 'ground' | 'sky'; speed: readonly [number, number]; rest: readonly [number, number];
@@ -38,6 +40,13 @@ const wingCycle = [0, 1, 2, 3, 2, 1].map(index => flight[index]);
 const feet = { x: 24, y: 40 };
 const walkRects = [[1, 42, 45, 36], [47, 44, 46, 30], [94, 41, 44, 36],
   [139, 41, 44, 36], [184, 45, 45, 32], [230, 45, 46, 32]] as const;
+// Complete locomotion rows, checked against the original sheets. A shared
+// floor baseline retains the small drawn gait bob without shifting the canvas.
+const bulbasaurWalk = [[1, 63, 36, 31], [38, 62, 34, 30], [74, 61, 34, 33],
+  [109, 63, 34, 31], [144, 63, 34, 31]] as const;
+const squirtleWalk = [[2, 95, 45, 36], [49, 94, 47, 35], [100, 96, 44, 34],
+  [146, 95, 45, 35], [193, 94, 47, 36], [243, 96, 44, 35]] as const;
+const bulbasaurFeet = { x: 20, y: 34 }, squirtleFeet = { x: 24, y: 40 };
 
 export const pokemon: Record<PokemonId, PokemonDefinition> = {
   pikachu: { id: 'pikachu', name: 'Pikachu', habitat: 'ground', nativeFacing: -1,
@@ -55,6 +64,24 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
       anchors: { body, mouth: { x: 24, y: 34 } }, clips: {
         flight: { loop: true, frames: wingCycle }, hover: { loop: true, frames: wingCycle },
         attack: { loop: false, frames: attack },
+      },
+    } },
+  bulbasaur: { id: 'bulbasaur', name: 'Bulbasaur', habitat: 'ground', nativeFacing: -1,
+    speed: [20, 30], rest: [1800, 3200], sprite: {
+      image: bulbasaurSheet, width: 40, height: 36, sourceWidth: 296, sourceHeight: 159,
+      anchors: { feet: bulbasaurFeet }, clips: {
+        idle: { loop: true, frames: [frame([1, 1, 34, 31], { x: 19, y: 32 }, bulbasaurFeet, 1000)] },
+        walk: { loop: true, frames: bulbasaurWalk.map(rect => frame(rect,
+          { x: rect[0] + 18, y: 94 }, bulbasaurFeet, 90)) },
+      },
+    } },
+  squirtle: { id: 'squirtle', name: 'Squirtle', habitat: 'ground', nativeFacing: -1,
+    speed: [24, 34], rest: [1500, 2800], sprite: {
+      image: squirtleSheet, width: 52, height: 44, sourceWidth: 713, sourceHeight: 293,
+      anchors: { feet: squirtleFeet }, clips: {
+        idle: { loop: true, frames: [frame([7, 2, 42, 39], { x: 27, y: 41 }, squirtleFeet, 1000)] },
+        walk: { loop: true, frames: squirtleWalk.map(rect => frame(rect,
+          { x: rect[0] + 20, y: 131 }, squirtleFeet, 80)) },
       },
     } },
 };
