@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { OrbitCrown, type OrbitCard } from '../crown/OrbitCrown';
 import { DeskScene } from '../scene/DeskScene';
 import { manan } from '../character/manan';
 import { PixelLandscape } from './PixelLandscape';
-
-const thoughts: OrbitCard[] = [
-  { id: 'valorant', label: 'VALORANT', text: 'rank: loading…' },
-  { id: 'coffee', label: 'CAFFEINE', text: 'one more cup' },
-  { id: 'git', label: 'GIT HABITS', text: 'push. pray. repeat.' },
-  { id: 'late-night', label: 'AFTER HOURS', text: 'one last commit' },
-  { id: 'side-quests', label: 'SIDE QUESTS', text: 'too many tabs' },
-];
 
 export function Hero() {
   const scene = useRef<HTMLDivElement>(null);
@@ -22,7 +13,6 @@ export function Hero() {
     return () => observer.disconnect();
   }, []);
   const scale = width < 500 ? 2 : 3;
-  const headAnchor = { x: width / 2, y: 200 + manan.anchors.head.y * scale };
   return <main className="hero" aria-label="Manan's little pixel world">
     <h1 className="sr-only">hey, I’m Manan</h1>
     <PixelLandscape />
@@ -32,7 +22,6 @@ export function Hero() {
         <path fill="#527447" opacity=".3" d="M14 2H76V4H87V6H95V11H84V13H70V15H17V13H7V10H0V6H7V4H14Z" />
       </svg>
       <DeskScene scale={scale} />
-      <OrbitCrown cards={thoughts} headAnchor={headAnchor} width={width} />
     </div>
   </main>;
 }

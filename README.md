@@ -1,6 +1,6 @@
 # Manan's pixel world
 
-One casual portfolio hero, built with React, Vite and TypeScript. Original reusable character artwork, separate desk props, a speaking greeting, and five orbiting frosted-glass thoughts.
+One casual portfolio hero, built with React, Vite and TypeScript. Original reusable character artwork, separate desk props and a speaking greeting. The rotating glass cards and their controls are temporarily removed from the hero.
 
 ## Local development
 
@@ -20,13 +20,13 @@ npm run preview
 
 ## Reuse
 
-See [character documentation](src/character/README.md) for poses, clip metadata, playback, attachment anchors and independent movement. `OrbitCrown` accepts `{ id, label, text }` cards, a head anchor, available width, and an orbit duration in milliseconds. Edit hero placeholders in `src/hero/Hero.tsx`.
+See [character documentation](src/character/README.md) for poses, clip metadata, playback, attachment anchors and independent movement. The reusable `OrbitCrown` remains available in `src/crown/OrbitCrown.tsx`, but is not currently mounted. It accepts `{ id, label, text }` cards, a head anchor, available width, and an orbit duration in milliseconds.
 
 Character, furniture and scenery share 2 CSS pixels per native pixel, defined in `src/shared/pixelGrid.ts`. The landscape recalculates its native grid when the hero resizes instead of stretching its pixels. Furniture retains the character's 120px layout coordinates while snapping its drawing to the same display density.
 
 The desk uses original raster artwork with separate rear and forward depth passes; the character stays one complete sprite. Furniture generation and registration are documented in [scene artwork](src/assets/SCENE_ARTWORK.md). Follow the [development standards](docs/development-standards.md) for future components.
 
-Hover or keyboard focus holds automatic rotation still. Drag horizontally to rotate; a quick flick carries momentum, then eases back toward the 24-second orbit (or stops under the pointer). Front and rear cards follow the hand from their respective side of the ring. Tap on touch screens to pause/resume. Visible buttons and arrow keys also rotate. Explicit pause and reduced-motion preferences disable momentum as well as automatic movement.
+When mounted, the crown supports hover/focus pause, horizontal dragging, flick momentum, touch pause/resume, visible controls and keyboard rotation. Explicit pause and reduced-motion preferences disable momentum as well as automatic movement.
 
 ## Hosting later
 

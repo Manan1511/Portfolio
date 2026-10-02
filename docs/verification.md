@@ -1,5 +1,14 @@
 # Hero verification — 2026-10-02
 
+## Cards temporarily removed — 2026-10-02
+
+Removed the crown from the hero, including its drag hint and rotation controls. The reusable crown implementation and behavior tests remain available for later use. Character, greeting, furniture and landscape retain their existing layout and animation.
+
+- Fresh suite: 8 files / 46 tests passed; typecheck and production build passed.
+- Browser inspection confirmed the card-free hero and greeting replay control, with no browser errors. Proof: ignored `.verification/hero-without-crown.jpg`.
+
+## Previous hero verification
+
 - `npm test`: 8 files, 46 tests passed after the forward furniture and keyboard correction.
 - `npm run typecheck`: passed.
 - `npm run build`: passed, relative asset paths in `dist/index.html`.
