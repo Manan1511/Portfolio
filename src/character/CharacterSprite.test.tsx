@@ -13,6 +13,15 @@ const definition: SpriteDefinition = {
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe('CharacterSprite', () => {
+  it('renders a controlled frame without starting its own clock', () => {
+    vi.useFakeTimers();
+    const { rerender } = render(<CharacterSprite definition={definition} clip="idle" frameIndex={1} />);
+    expect(screen.getByRole('img')).toHaveAttribute('data-frame', '1');
+    act(() => vi.advanceTimersByTime(500));
+    expect(screen.getByRole('img')).toHaveAttribute('data-frame', '1');
+    rerender(<CharacterSprite definition={definition} clip="hello" frameIndex={0} />);
+    expect(screen.getByRole('img')).toHaveAttribute('data-frame', '0');
+  });
   it('preserves fractional target coordinates for definitions using native sampling', async () => {
     vi.stubGlobal('Image', class {
       onload?: () => void;

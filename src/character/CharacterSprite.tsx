@@ -20,8 +20,10 @@ function loadPicture(url: string) {
 export interface CharacterSpriteProps {
   clip?: string; playing?: boolean; scale?: number; definition: SpriteDefinition;
   className?: string; style?: CSSProperties; onComplete?: () => void; label?: string;
+  /** External clock owns playback/completion when supplied. */
+  frameIndex?: number;
 }
-export function CharacterSprite({ clip = 'standing-idle', playing = true, scale = 4, definition, className = '', style, onComplete, label = 'Pixel Manan' }: CharacterSpriteProps) {
+export function CharacterSprite({ clip = 'standing-idle', playing = true, scale = 4, definition, className = '', style, onComplete, label = 'Pixel Manan', frameIndex: controlledFrame }: CharacterSpriteProps) {
   const selected = resolveClip(definition, clip);
   const reduced = useReducedMotion();
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -47,10 +49,13 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
   const rasterWidth = displayWidth / enlargement;
   const rasterHeight = displayHeight / enlargement;
   const density = pixelScale / enlargement;
-  const frame = selected.frames[reduced ? 0 : frameIndex] ?? selected.frames[0];
+  const displayedFrame = controlledFrame !== undefined
+    ? Math.max(0, Math.min(selected.frames.length - 1, Math.floor(controlledFrame)))
+    : reduced ? 0 : frameIndex;
+  const frame = selected.frames[displayedFrame] ?? selected.frames[0];
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing || reduced || controlledFrame !== undefined) return;
     let last = performance.now();
     const duration = selected.frames.reduce((sum, item) => sum + item.duration, 0);
     let timer = 0;
@@ -67,7 +72,7 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
     };
     timer = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(timer);
-  }, [selected, playing, reduced]);
+  }, [selected, playing, reduced, controlledFrame]);
 
   useEffect(() => {
     const context = canvas.current?.getContext('2d');
@@ -92,7 +97,7 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
 
   return <canvas ref={canvas} width={rasterWidth} height={rasterHeight}
     className={`character-sprite ${className}`} role="img" aria-label={label}
-    data-clip={clip} data-frame={reduced ? 0 : frameIndex}
+    data-clip={clip} data-frame={displayedFrame}
     style={{ width: displayWidth, height: displayHeight, imageRendering: 'pixelated', ...style }} />;
 }
 

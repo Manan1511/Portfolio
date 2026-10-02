@@ -4,3 +4,4 @@ dist/
 *.tsbuildinfo
 .superpowers/
 .verification/
+__pycache__/

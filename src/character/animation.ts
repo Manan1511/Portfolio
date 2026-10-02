@@ -2,6 +2,7 @@ export interface Point { x: number; y: number }
 export interface SpriteFrame {
   x: number; y: number; duration: number; width?: number; height?: number; image?: string;
   target?: { x: number; y: number; width: number; height: number };
+  anchors?: Record<string, Point>;
 }
 export interface SpriteClip { frames: SpriteFrame[]; loop: boolean; anchors?: Record<string, Point> }
 export interface SpriteDefinition {
