@@ -1,5 +1,9 @@
 # Hero verification — 2026-10-02
 
+## Complete desk leg occlusion — 2026-10-02
+
+The preceding side-apron correction left the far left desk leg in the rear pass, so trousers could still paint over its wood. Restored the complete lower desk foreground coverage, retaining the new chair/desk spacing. Browser close-up confirms an uninterrupted wooden leg and apron in front of the trousers. Proof: ignored `.verification/desk-leg-occlusion.jpg`. Fresh 46 tests, typecheck and production build passed.
+
 ## Diagonal apron occlusion — 2026-10-02
 
 The preceding depth mask ended the desk's side apron at the horizontal front rail, exposing trouser pixels through its lower diagonal area. Extended the foreground clip along that side panel while retaining the far leg behind the chair. Browser close-up confirms the wood panel now covers the trousers; artwork and furniture offsets are unchanged. Proof: ignored `.verification/desk-side-occlusion.jpg`. Fresh 46 tests, typecheck and production build passed.

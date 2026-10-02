@@ -36,14 +36,12 @@ function snapRect(rect: Rect, density: number) {
 }
 
 // Only furniture is depth-clipped. The character is rendered once, complete.
-// Front apron/near legs cover the lap; the far left leg stays behind the chair.
-// The diagonal side apron extends below the front rail and must stay forward.
+// The complete apron and legs stay forward of the trousers. A far leg cannot
+// share the rear tabletop pass: otherwise the character paints over its wood.
 // Rear tabletop/keyboard stay under the hands.
 // Laptop's rear lid stands forward of fingertips without cutting the forearms.
 const foreground = [
-  [[40, 76], [132, 76], [132, 86], [40, 86]],
-  [[46, 76], [64, 82], [64, 96], [46, 86]],
-  [[60, 86], [132, 86], [132, 120], [60, 120]],
+  [[40, 76], [132, 76], [132, 120], [40, 120]],
   [[92, 76], [94, 60], [111, 57], [108, 74]],
 ] as const;
 
