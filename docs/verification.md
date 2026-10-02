@@ -1,5 +1,9 @@
 # Hero verification — 2026-10-02
 
+## Requested downward desk nudge — 2026-10-02
+
+Lowered both desk passes by two logical pixels (4px mobile / 6px desktop), keeping their shared registration and prior left nudge. Browser close-ups inspected the far desk foot relative to the chair base and hand contact on the keyboard at desktop and mobile sizes. Foreground coverage remains complete. Proof: ignored `.verification/desk-lowered.jpg`. Fresh 46 tests, typecheck and production build passed.
+
 ## Requested left desk nudge — 2026-10-02
 
 Removed the desk's four-logical-pixel right offset, shifting both furniture passes left by 8px on mobile and 12px on desktop. Chair position and complete wood foreground coverage remain unchanged. Browser close-up inspected keyboard contact and the resulting overlap. Proof: ignored `.verification/desk-left-nudge.jpg`. Typecheck and production build passed.
