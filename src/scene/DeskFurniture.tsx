@@ -6,7 +6,8 @@ type Rect = { x: number; y: number; width: number; height: number };
 type FurniturePart = 'chair' | 'desk-rear' | 'desk-front';
 
 // Source artwork stays intact. Targets use the character's 120px layout:
-// keyboard contact ~ (83, 74), seat ~ y=87, common floor y=114.
+// CSS offsets separate the chair and desk; keyboard still spans hand contact
+// around (83, 74). Seat ~ y=87, common floor y=114.
 const artwork = {
   chair: { source: { x: 110, y: 127, width: 514, height: 714 }, target: { x: 28, y: 50, width: 46, height: 64 } },
   desk: { source: { x: 703, y: 140, width: 1044, height: 708 }, target: { x: 46, y: 57, width: 84, height: 57 } },
@@ -35,10 +36,12 @@ function snapRect(rect: Rect, density: number) {
 }
 
 // Only furniture is depth-clipped. The character is rendered once, complete.
-// Front apron/legs cover the lap; rear tabletop/keyboard stay under the hands.
+// Front apron/near legs cover the lap; the far left leg stays behind the chair.
+// Rear tabletop/keyboard stay under the hands.
 // Laptop's rear lid stands forward of fingertips without cutting the forearms.
 const foreground = [
-  [[40, 76], [132, 76], [132, 120], [40, 120]],
+  [[40, 76], [132, 76], [132, 86], [40, 86]],
+  [[60, 86], [132, 86], [132, 120], [60, 120]],
   [[92, 76], [94, 60], [111, 57], [108, 74]],
 ] as const;
 

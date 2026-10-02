@@ -1,5 +1,12 @@
 # Hero verification — 2026-10-02
 
+## Chair and desk clearance — 2026-10-02
+
+The desk's far left leg was drawn over the chair seat/base by the broad foreground mask. Separated the furniture horizontally (chair -10 logical px, desk +4 logical px), placed rear furniture behind the chair, and restricted the lower foreground mask to the near legs. The tabletop/apron retain their forward depth. Character artwork and animation are unchanged.
+
+- Fresh 46 tests, typecheck and production build passed.
+- Browser checks at 320, 390, 768 and 1440px confirmed matching viewport/document widths, scaled offsets and rear/seat/front depth order. Mobile composition and desktop keyboard contact inspected. Proof: ignored `.verification/desk-chair-spacing.jpg`.
+
 ## Cards temporarily removed — 2026-10-02
 
 Removed the crown from the hero, including its drag hint and rotation controls. The reusable crown implementation and behavior tests remain available for later use. Character, greeting, furniture and landscape retain their existing layout and animation.

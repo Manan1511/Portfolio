@@ -13,9 +13,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .desk-scene { position: absolute; left: calc(50% - 37px * var(--sprite-scale)); top: 200px; z-index: 20; }
 .desk-scene .character-sprite { position: relative; z-index: 2; }
 .scene-prop { width: 100%; height: 100%; position: absolute; inset: 0; pointer-events: none; }
-.scene-chair { z-index: 1; transform: translateX(calc(-4px * var(--sprite-scale))); }
-.scene-desk-rear { z-index: 1; }
+.scene-chair { z-index: 1; transform: translateX(calc(-10px * var(--sprite-scale))); }
+.scene-desk-rear { z-index: 0; }
 .scene-desk-front { z-index: 3; }
+.scene-desk-rear, .scene-desk-front { transform: translateX(calc(4px * var(--sprite-scale))); }
 .hello-bubble { position: absolute; top: 348px; left: calc(50% - 250px); z-index: 40; width: 188px; min-height: 60px; border: 0; background: #fff9e7; color: #334438; box-shadow: 4px 0 #334438, -4px 0 #334438, 0 4px #334438, 0 -4px #334438; font: 400 21px Pixelify, monospace; text-align: center; cursor: pointer; padding: 14px 8px; }
 .hello-bubble::after { content: ''; position: absolute; right: -16px; bottom: 12px; width: 16px; height: 8px; background: #fff9e7; border-bottom: 4px solid #334438; box-shadow: 4px 0 #334438; }
 .hello-bubble:focus-visible { outline: 3px solid #497c59; outline-offset: 8px; }
