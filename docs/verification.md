@@ -1,6 +1,6 @@
 # Hero verification — 2026-10-02
 
-- `npm test`: 8 files, 45 tests passed after matching environment and sprite pixel density.
+- `npm test`: 8 files, 46 tests passed after the forward furniture and keyboard correction.
 - `npm run typecheck`: passed.
 - `npm run build`: passed, relative asset paths in `dist/index.html`.
 - Production hero inspected at 320, 390, 768 and 1440 CSS pixels wide. No horizontal document overflow or overflowing card content. Character enlargement uses whole-pixel multiples.
@@ -11,6 +11,18 @@
 - Local proof captures are in ignored `.verification/`: `hero-desktop.jpg`, `hero-mobile.jpg`, `sprite-fixed.jpg`. Reference photos remain outside the repository.
 
 The milestone contains only the hero and reusable character. Walking clips, audio, additional sections, backend and publishing remain outside the approved scope.
+
+## Forward raster furniture and keyboard contact — 2026-10-02
+
+User approved the sprite and requested furniture matching its shading, with a grounded diagonal side view and desk/laptop in the foreground. Replaced the flat SVG props with an original transparent raster atlas: warm wooden desk, connected rear-facing laptop, cream mug and upholstered chair. A subsequent user screenshot showed hands left of the small keyboard; a localized imagegen edit extended the laptop base and keys left beneath both hands.
+
+- Character artwork, renderer, pose metadata and animation timing are unchanged. One complete character canvas renders between rear and forward furniture passes. Only furniture is clipped: the tabletop/apron cover the lap naturally, hands stay on the keyboard, and the rear lid sits forward of the fingertips. Chair retains its left nudge.
+- Source rectangles retain the full laptop outline and legs. Furniture uses a 132×120 logical canvas to fit the broad desk, with the existing hand/floor registration and the same 2px display pixels as the character.
+- Shared artwork loading is cached, decoding is asynchronous, cancelled effects cannot paint after unmount, and static props are memoized independently of the activity timer. Decorative canvases are hidden from assistive technology.
+- Updated density checks and a source-registration/foreground-clip regression were observed failing against the previous SVG implementation, then passing. The full-outline crop regression also failed before its correction. Fresh full suite: 8 files / 46 tests passed; typecheck, production build and diff whitespace checks passed.
+- Latest production output inspected beneath `/revamped-portfolio/` at 320, 390, 768 and 1440px. Every character/furniture canvas measured 2 CSS px per native pixel, exactly one character rendered, document widths matched viewport widths, card content fit, and Pixelify loaded. Foreground furniture measured z=3 above the character at z=2; rear furniture remained z=1.
+- Direct production inspection confirmed greeting replay, typing frame2 with both hands above the extended keyboard, and coherent desk/leg/floor contact. No production browser errors. Proofs in ignored `.verification/`: `forward-keyboard-production.jpg`, `forward-furniture-production.jpg`, `forward-furniture-layouts-production.jpg`.
+- Independent read-only review found no material issue with loading, cancellation, responsive sampling or furniture depth clipping. User's ongoing website-quality request is recorded in `docs/development-standards.md`. Original asset and complete built-in imagegen prompts are documented in `src/assets/SCENE_ARTWORK.md`.
 
 ## Matched environment pixel density — 2026-10-02
 

@@ -22,6 +22,8 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Further furniture correction: chair, desk and laptop share one three-quarter perspective on the 120px grid. Fit the chair seat to the hips; keep the complete character in front of furniture so no table rail crosses the thighs.
 - Move the chair four logical pixels left, equivalent to 8px on mobile and 12px on desktop.
 - Environment pixelation must match the finer sprite. Use a shared 2 CSS px display grid for the character, furniture and responsive landscape. Refine cloud/tree detail and hill/clearing contours while retaining the daylight palette and scene placement.
+- Sprite is approved and must remain untouched. Replace furniture with detailed original raster artwork matching its shading. Use a grounded, shallow diagonal side view with a broad wooden desk and rear-facing laptop in the foreground. Chair stays behind; keyboard rests beneath both hands; forward tabletop/apron naturally cover the lap. Maintain common floor contact and 2px display detail.
+- Apply the repository's development standards across future website work: typed reusable components, semantic accessible interfaces, reduced motion, responsive behavior, local assets and verified production milestones.
 - Add swipe momentum proportional to recent gesture speed. Preserve the released angle and ease toward the slow orbit in the gesture's direction. Under hover/focus a deliberate flick eases to rest; subsequent focus/hover, a new press, explicit pause and reduced motion stop momentum. Correct mirrored input: front cards and keyboard arrows move in the indicated horizontal direction; a grabbed rear card uses its starting side of the ring.
 
 ## Approved complete sprite rebuild
