@@ -37,3 +37,16 @@ furniture and greeting retain their existing composition.
   production console reported no errors. Proof captures are in `.verification/`.
 - Fresh independent review found no Critical or Important defects. Decorative
   Pikachu was hidden from assistive technology after the review's minor note.
+- Follow-up flight correction: the first mapped cell had extended legs and a
+  hanging belly, breaking the airborne posture every loop. Removed it from both
+  flight and hover. The four airborne cells now run up/middle/flat/down/flat/middle
+  with 120ms stroke extremes and 100ms intermediate frames (640ms total).
+- Replaced the shared sheet-row baseline with per-pose chest registration.
+  Mouth/head position is stable across the cycle. Attack wind-up and recovery
+  use airborne poses; recovery ends on the same pose that resumes the wing loop.
+  Fire still uses the original whole exhale drawing and 240/600/360ms phases.
+- Three regressions failed before the correction, then passed. Fresh 70 tests,
+  typecheck and build passed. Browser inspected each wing phase, mirrored hover,
+  fire attachment and resumed flight under the production repository subpath.
+  Production layouts at 320/390/768/1440px retain 2x pixels without overflow.
+  Pikachu, source artwork and movement/controller logic are unchanged.

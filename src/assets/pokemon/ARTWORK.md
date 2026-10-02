@@ -15,8 +15,11 @@ python scripts/prepare_pokemon.py "path/to/source/folder"
 ```
 
 Frames are mapped manually in `src/pokemon/definitions.ts`. Pikachu uses the
-upper idle pose and six poses on the next row. Charizard uses five complete
-flight frames on the third row and whole attack poses on the next row. Tail
+upper idle pose and six poses on the next row. Charizard uses the four tucked-leg
+airborne frames on the third row, passing through the intermediate wing phases
+in both directions. The standing/takeoff cell at the start of that row is excluded.
+A whole fire pose from the next row provides exhale; wind-up and recovery use
+airborne frames. Chest registration keeps the head and mouth stable. Tail
 flames at the sheet's right edge provide the separate breath effect. Recolours,
 spare body parts and unrelated actions are excluded. Source artist information
 was not included with these files; these are supplied assets, not generated art.

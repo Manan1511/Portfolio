@@ -18,25 +18,23 @@ function frame(rect: readonly [number, number, number, number], pivot: Point, an
     anchors: mouth ? { mouth: { x: anchor.x + mouth.x - pivot.x, y: anchor.y + mouth.y - pivot.y } } : undefined };
 }
 const body = { x: 64, y: 56 };
+// Only the four tucked-leg airborne poses belong in flight. Register at the
+// chest below the jaw, rather than the sheet's shared row baseline: the latter
+// made the head drop ten native pixels as the wings moved down.
 const flight = [
-  frame([1, 172, 124, 73], { x: 55, y: 211 }, body, 110, { x: 15, y: 197 }),
-  frame([126, 168, 123, 65], { x: 178, y: 211 }, body, 110, { x: 140, y: 195 }),
-  frame([251, 168, 129, 63], { x: 304, y: 211 }, body, 110, { x: 266, y: 196 }),
-  frame([381, 168, 129, 61], { x: 434, y: 211 }, body, 110, { x: 396, y: 206 }),
-  frame([511, 167, 126, 64], { x: 561, y: 211 }, body, 110, { x: 525, y: 204 }),
+  frame([126, 168, 123, 65], { x: 178, y: 205 }, body, 120, { x: 140, y: 195 }),
+  frame([251, 168, 129, 63], { x: 304, y: 206 }, body, 100, { x: 266, y: 196 }),
+  frame([381, 168, 129, 61], { x: 434, y: 216 }, body, 100, { x: 396, y: 206 }),
+  frame([511, 167, 126, 64], { x: 563, y: 214 }, body, 120, { x: 525, y: 204 }),
 ];
-const attackPoses = [
-  frame([3, 254, 104, 78], { x: 57, y: 298 }, body, 120, { x: 17, y: 270 }),
-  frame([108, 246, 87, 86], { x: 151, y: 298 }, body, 120, { x: 122, y: 255 }),
-  frame([459, 254, 103, 78], { x: 512, y: 298 }, body, 180, { x: 474, y: 271 }),
-  frame([563, 256, 116, 76], { x: 624, y: 298 }, body, 100, { x: 576, y: 282 }),
-  frame([680, 259, 122, 73], { x: 744, y: 298 }, body, 100, { x: 694, y: 286 }),
-];
-const attack = [attackPoses[0], { ...attackPoses[3], duration: 120 },
-  { ...attackPoses[3], duration: 600 },
-  attackPoses[2], { ...flight[0], duration: 180 }];
-// Return through intermediate wing positions instead of jumping to wings-up.
-const wingCycle = [0, 1, 2, 3, 4, 3, 2, 1].map(index => ({ ...flight[index], duration: 80 }));
+const exhale = frame([563, 256, 116, 76], { x: 614, y: 292 }, body, 120, { x: 576, y: 282 });
+// Keep the existing 240/600/360ms attack phases. Wind-up and recovery use
+// airborne poses; recovery ends on the exact pose that resumes the wing loop.
+const attack = [flight[0], exhale, { ...exhale, duration: 600 },
+  { ...flight[1], duration: 180 }, { ...flight[0], duration: 180 }];
+// Hold the two stroke extremes slightly longer; pass through the middle in
+// both directions. No standing/takeoff frame, blending or altered sprite art.
+const wingCycle = [0, 1, 2, 3, 2, 1].map(index => flight[index]);
 const feet = { x: 24, y: 40 };
 const walkRects = [[1, 42, 45, 36], [47, 44, 46, 30], [94, 41, 44, 36],
   [139, 41, 44, 36], [184, 45, 45, 32], [230, 45, 46, 32]] as const;

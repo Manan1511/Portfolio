@@ -1,5 +1,26 @@
 # Hero verification — 2026-10-02
 
+## Charizard airborne frame correction — 2026-10-02
+
+The ambient flight/hover loop included a standing/takeoff pose, changing leg and
+belly posture once per cycle. Removed that pose and registered the four complete
+airborne cells around the chest below the jaw. The head/mouth now stays aligned
+through up/middle/flat/down/flat/middle wing motion. Stroke extremes last 120ms;
+intermediate poses last 100ms. No sprite artwork or Pikachu behavior changed.
+
+Attack wind-up and recovery now use airborne cells, with recovery ending on the
+exact pose that resumes the ambient loop. The existing whole exhale drawing,
+1.2-second attack, 600ms fire interval and per-frame mouth attachment remain.
+
+- Three regressions observed failing for the ground cell, head drift and ground
+  recovery; after correction all 11 files / 70 tests passed. Typecheck/build passed.
+- Browser inspected the intermediate/flat/down poses and mirrored hover.
+  Production fire and return to roaming checked; console reported no errors.
+- Production under `/revamped-portfolio/` inspected at 320, 390, 768 and 1440px.
+  Sprites remain 2x and document widths match viewports. Full layouts also show
+  the 320x650 and 532x740 minimum-height compositions remain clear.
+- Proof: ignored `.verification/charizard-flight-fixed.jpg`.
+
 ## Roaming Pokémon and smoother playback — 2026-10-02
 
 Added local transparent Pikachu and Charizard sheets with exact foreground RGB
