@@ -1,5 +1,9 @@
 # Hero verification — 2026-10-02
 
+## Requested left desk nudge — 2026-10-02
+
+Removed the desk's four-logical-pixel right offset, shifting both furniture passes left by 8px on mobile and 12px on desktop. Chair position and complete wood foreground coverage remain unchanged. Browser close-up inspected keyboard contact and the resulting overlap. Proof: ignored `.verification/desk-left-nudge.jpg`. Typecheck and production build passed.
+
 ## Complete desk leg occlusion — 2026-10-02
 
 The preceding side-apron correction left the far left desk leg in the rear pass, so trousers could still paint over its wood. Restored the complete lower desk foreground coverage, retaining the new chair/desk spacing. Browser close-up confirms an uninterrupted wooden leg and apron in front of the trousers. Proof: ignored `.verification/desk-leg-occlusion.jpg`. Fresh 46 tests, typecheck and production build passed.
