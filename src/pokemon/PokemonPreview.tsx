@@ -3,6 +3,7 @@ import { CharacterSprite } from '../character/CharacterSprite';
 import { frameAt } from '../character/animation';
 import { pokemon, type PokemonId } from './definitions';
 import { useReducedMotion } from '../shared/useReducedMotion';
+import { FireBreath } from './FireBreath';
 
 export default function PokemonPreview() {
   const [id, setId] = useState<PokemonId>('charizard');
@@ -30,13 +31,16 @@ export default function PokemonPreview() {
     <div className="preview-stage"><div style={{ position: 'relative', transform: mirror ? 'scaleX(-1)' : undefined }}>
       <CharacterSprite definition={definition} clip={clip} frameIndex={index} scale={2} label={pokemon[id].name} />
       {anchor && <span className="anchor-marker" style={{ left: anchor.x * 2, top: anchor.y * 2 }} aria-hidden="true" />}
+      {clip === 'attack' && anchor && (inspect === 2 || (inspect === null && elapsed >= 240 && elapsed < 840))
+        && <FireBreath mouth={anchor} length={Math.max(8, Math.min(100, Math.floor((window.innerWidth - 280) / 4 - 16) * 2))}
+          elapsed={inspect === null ? elapsed - 240 : 160} still={inspect !== null || reduced} />}
     </div></div>
     <div className="preview-controls">{Object.values(pokemon).map(species => <button key={species.id}
       aria-pressed={id === species.id} onClick={() => { setId(species.id); setClip(species.habitat === 'sky' ? 'flight' : 'walk'); setElapsed(0); setInspect(null); }}>{species.name}</button>)}</div>
     <div className="preview-controls">{Object.keys(definition.clips).map(name => <button key={name} aria-pressed={clip === name}
       onClick={() => { setClip(name); setElapsed(0); setInspect(null); }}>{name}</button>)}</div>
     <div className="preview-controls">
-      <button onClick={() => { setElapsed(0); setPlaying(!playing); }}>{playing ? 'Pause frames' : 'Play frames'}</button>
+      <button onClick={() => { if (!playing) setElapsed(0); setPlaying(!playing); }}>{playing ? 'Pause frames' : 'Play frames'}</button>
       <button aria-pressed={mirror} onClick={() => setMirror(!mirror)}>Mirror</button>
       <button aria-pressed={inspect !== null} onClick={() => setInspect(inspect === null ? 0 : null)}>Inspect frames</button>
     </div>

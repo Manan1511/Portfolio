@@ -1,5 +1,26 @@
 # Hero verification — 2026-10-02
 
+## Roaming Pokémon and smoother playback — 2026-10-02
+
+Added local transparent Pikachu and Charizard sheets with exact foreground RGB
+preservation, registered whole-frame clips and a development-only preview.
+One shared clock drives roaming and Charizard's 1.2-second fire attack. Movement
+eases into each trip; 80ms frame cadence and an eight-frame wing return cycle
+reduce abrupt transitions while keeping crisp sprite pixels.
+
+- Fresh 11 files / 67 tests, typecheck and production build passed.
+- Production beneath `/revamped-portfolio/` inspected at 320, 390, 768 and
+  1440px; minimum-height 320x650 and 532x740 layouts also checked. Exact 2x
+  sprite enlargement and no horizontal document overflow confirmed.
+- Enter and Space fire attacks checked with ambient movement paused, followed
+  by Resume. Repeated activation during recovery is ignored. Production browser
+  console contains no errors. Unit coverage includes hidden/offscreen recovery,
+  touch focus, reduced motion, attack timing, mirroring and safe movement bounds.
+- Independent review found no Critical or Important issues. Existing character,
+  furniture, greeting and card-free composition remain unchanged.
+- Proof: ignored `.verification/pokemon-responsive.jpg` and
+  `.verification/pokemon-production-fire.jpg`.
+
 ## Requested downward desk nudge — 2026-10-02
 
 Lowered both desk passes by two logical pixels (4px mobile / 6px desktop), keeping their shared registration and prior left nudge. Browser close-ups inspected the far desk foot relative to the chair base and hand contact on the keyboard at desktop and mobile sizes. Foreground coverage remains complete. Proof: ignored `.verification/desk-lowered.jpg`. Fresh 46 tests, typecheck and production build passed.

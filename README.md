@@ -1,6 +1,6 @@
 # Manan's pixel world
 
-One casual portfolio hero, built with React, Vite and TypeScript. Original reusable character artwork, separate desk props and a speaking greeting. The rotating glass cards and their controls are temporarily removed from the hero.
+One casual portfolio hero, built with React, Vite and TypeScript. Original reusable character artwork, separate desk props, a speaking greeting and roaming Pikachu/Charizard. Click or tap Charizard for fire breath. The rotating glass cards and their controls are temporarily removed from the hero.
 
 ## Local development
 
@@ -10,6 +10,7 @@ npm run dev
 ```
 
 Hero: `http://127.0.0.1:5173/`. Character inspection: `http://127.0.0.1:5173/?sprite-preview=1` (development only).
+Pokémon frames and mouth-anchor inspection: `http://127.0.0.1:5173/?pokemon-preview=1` (development only).
 
 ```sh
 npm test
@@ -21,6 +22,14 @@ npm run preview
 ## Reuse
 
 See [character documentation](src/character/README.md) for poses, clip metadata, playback, attachment anchors and independent movement. The reusable `OrbitCrown` remains available in `src/crown/OrbitCrown.tsx`, but is not currently mounted. It accepts `{ id, label, text }` cards, a head anchor, available width, and an orbit duration in milliseconds.
+
+`PokemonRoamer` uses species definitions and an independent movement controller.
+One habitat clock drives body frames, travel and fire. Hover/keyboard focus holds
+Charizard for interaction; pointer-created touch focus does not lock roaming.
+The pause control stops ambient activity while explicit attacks remain available.
+Reduced motion provides stationary sprites and a short static attack. Hidden or
+offscreen heroes preserve elapsed time. See [Pokémon implementation](docs/pokemon.md)
+and [supplied-sheet provenance](src/assets/pokemon/ARTWORK.md).
 
 Character, furniture and scenery share 2 CSS pixels per native pixel, defined in `src/shared/pixelGrid.ts`. The landscape recalculates its native grid when the hero resizes instead of stretching its pixels. Furniture retains the character's 120px layout coordinates while snapping its drawing to the same display density.
 

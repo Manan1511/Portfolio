@@ -27,3 +27,13 @@ furniture and greeting retain their existing composition.
   production build passed. Development preview inspected complete flight,
   attack and Pikachu walk poses; a neighbouring-row speck was excluded from
   the flight crop. No character or furniture asset was changed.
+- Integration verified: 67 tests across 11 files, typecheck and production build
+  passed. Bounds, easing, attack timing, mirrored fire, resize, pause, touch
+  focus, hidden/offscreen recovery and reduced motion have behavior coverage.
+- Browser production checks under `/revamped-portfolio/` inspected 320, 390,
+  768 and 1440px, plus minimum-height 320x650 and 532x740 layouts. Both species
+  retain exact 2x enlargement; no horizontal document overflow occurred.
+  Enter and Space trigger fire while ambient roaming is paused. Resume works;
+  production console reported no errors. Proof captures are in `.verification/`.
+- Fresh independent review found no Critical or Important defects. Decorative
+  Pikachu was hidden from assistive technology after the review's minor note.

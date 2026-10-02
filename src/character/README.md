@@ -40,3 +40,10 @@ Development preview: `/?sprite-preview=1`. Choose a pose, pause playback, or use
 Source: original generated artwork guided by the user's reference photos. The source photographs are not bundled or committed.
 
 Artwork files and generation prompts: [ARTWORK.md](../assets/character/ARTWORK.md).
+# Controlled playback
+
+`CharacterSprite` also accepts optional `frameIndex` for an external animation
+clock. This disables its internal playback and completion callback. The owner
+must supply a static frame under reduced motion and handle one-shot completion.
+Frames may include `anchors` for effects that follow a moving mouth or hand.
+Existing autonomous playback remains unchanged when `frameIndex` is omitted.

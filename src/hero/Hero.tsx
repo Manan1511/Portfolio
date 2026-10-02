@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DeskScene } from '../scene/DeskScene';
 import { manan } from '../character/manan';
 import { PixelLandscape } from './PixelLandscape';
+import { PokemonHabitat } from '../pokemon/PokemonHabitat';
 
 export function Hero() {
   const scene = useRef<HTMLDivElement>(null);
@@ -16,6 +17,7 @@ export function Hero() {
   return <main className="hero" aria-label="Manan's little pixel world">
     <h1 className="sr-only">hey, I’m Manan</h1>
     <PixelLandscape />
+    <PokemonHabitat />
     <div className="hero-scene" ref={scene}>
       <svg className="pixel-shadow" viewBox="0 0 96 16" aria-hidden="true" shapeRendering="crispEdges"
         style={{ width: scale * 96, left: `calc(50% - ${scale * 24}px)`, top: 200 + manan.anchors.feet.y * scale - 4 }}>

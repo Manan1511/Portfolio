@@ -3,7 +3,7 @@ import { frameAt, resolveClip, type SpriteDefinition } from './animation';
 import { useReducedMotion } from '../shared/useReducedMotion';
 
 const pictures = new Map<string, Promise<HTMLImageElement>>();
-function loadPicture(url: string) {
+export function loadSpriteImage(url: string) {
   let pending = pictures.get(url);
   if (!pending) {
     pending = new Promise<HTMLImageElement>((resolve, reject) => {
@@ -78,7 +78,7 @@ export function CharacterSprite({ clip = 'standing-idle', playing = true, scale 
     const context = canvas.current?.getContext('2d');
     if (!context) return;
     let cancelled = false;
-    loadPicture(frame.image ?? definition.image).then(picture => {
+    loadSpriteImage(frame.image ?? definition.image).then(picture => {
       if (cancelled) return;
       context.clearRect(0, 0, rasterWidth, rasterHeight);
       context.imageSmoothingEnabled = false;
