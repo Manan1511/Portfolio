@@ -24,7 +24,7 @@ it('fits the scene to viewport height and recalculates integer scale and desk pl
   });
   const { container } = render(<Hero />);
   expect(container.querySelector<HTMLElement>('.hero-scene')!.style.left).toBe('16px');
-  expect(container.querySelector('.desk-clearing')).toHaveAttribute('transform', 'translate(2 -18)');
+  expect(container.querySelector('.desk-clearing')).toHaveAttribute('transform', 'translate(-6 -18)');
   const sprite = () => screen.getByRole('img', { name: /Manan/ });
   expect(sprite().style.width).toBe('240px');
   const resizeTo = (width: number, height: number) => act(() => {

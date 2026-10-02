@@ -1,5 +1,14 @@
 # Hero verification — 2026-10-02
 
+## Keep clearing centered in viewport — 2026-10-03
+
+Removed the clearing's horizontal scene offset as requested. Its horizontal
+anchor is again half the viewport width; vertical floor registration is retained.
+The desk scene, greeting and character shadow keep their 16px rightward shift.
+The updated Hero regression failed before the fix, then passed. TypeScript and
+production build pass. Desktop browser render inspected; proof is ignored
+`.verification/circle-viewport-centered.jpg`.
+
 ## Wider desktop greeting and scene shift — 2026-10-03
 
 Expanded desktop greeting widths by 20px to the right (184px regular, 144px
