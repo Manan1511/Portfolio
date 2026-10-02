@@ -12,7 +12,6 @@ function setup(reduced = false) {
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: HTMLElement) {
     if (this.classList.contains('pokemon-layer') || this.classList.contains('hero')) return rect(0, 0, 390, 844);
     if (this.classList.contains('hello-bubble')) return rect(16, 320, 120, 65);
-    if (this.classList.contains('pokemon-pause')) return rect(224, 792, 150, 36);
     return rect(100, 310, 240, 244);
   });
   return render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button><PokemonHabitat /></main>);
@@ -31,16 +30,16 @@ it('allows click/keyboard-compatible attack, ignores repeat activation and retur
   expect(container.querySelector('.fire-breath')).toBeNull();
 });
 
-it('pauses ambient positions but permits an explicit attack', () => {
+it('roams without a pause button and still permits an explicit attack', () => {
+  vi.spyOn(Math, 'random').mockReturnValue(.9);
   const { container } = setup();
-  fireEvent.click(screen.getByRole('button', { name: 'Pause Pokémon' }));
+  expect(screen.queryByRole('button', { name: /Pause Pokémon|Resume Pokémon/ })).toBeNull();
   const position = container.querySelector('[data-pokemon="pikachu"]')!.getAttribute('style');
   act(() => vi.advanceTimersByTime(6000));
-  expect(container.querySelector('[data-pokemon="pikachu"]')).toHaveAttribute('style', position!);
+  expect(container.querySelector('[data-pokemon="pikachu"]')!.getAttribute('style')).not.toBe(position);
   fireEvent.click(screen.getByRole('button', { name: 'Charizard: breathe fire' }));
   act(() => vi.advanceTimersByTime(400));
   expect(container.querySelector('.fire-breath')).not.toBeNull();
-  expect(screen.getByRole('button', { name: 'Resume Pokémon' })).toBeVisible();
 });
 
 it('does not let touch-created focus permanently stop roaming', () => {

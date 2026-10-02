@@ -32,7 +32,7 @@ export default function PokemonPreview() {
       <CharacterSprite definition={definition} clip={clip} frameIndex={index} scale={2} label={pokemon[id].name} />
       {anchor && <span className="anchor-marker" style={{ left: anchor.x * 2, top: anchor.y * 2 }} aria-hidden="true" />}
       {clip === 'attack' && anchor && (inspect === 2 || (inspect === null && elapsed >= 240 && elapsed < 840))
-        && <FireBreath mouth={anchor} length={Math.max(8, Math.min(100, Math.floor((window.innerWidth - 280) / 4 - 16) * 2))}
+        && <FireBreath mouth={anchor} length={Math.max(44, Math.min(100, Math.floor((window.innerWidth - 280) / 4 - 16) * 2))}
           elapsed={inspect === null ? elapsed - 240 : 160} still={inspect !== null || reduced} />}
     </div></div>
     <div className="preview-controls">{Object.values(pokemon).map(species => <button key={species.id}

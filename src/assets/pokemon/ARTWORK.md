@@ -23,3 +23,8 @@ airborne frames. Chest registration keeps the head and mouth stable. Tail
 flames at the sheet's right edge provide the separate breath effect. Recolours,
 spare body parts and unrelated actions are excluded. Source artist information
 was not included with these files; these are supplied assets, not generated art.
+
+Compact flame rectangles follow each complete connected silhouette and exclude
+detached spark cells above it. The breath effect chooses cells that fit available
+space, without resizing their native pixels. A stepped mask narrows only the
+connection at the mouth; the distant flame tips retain their complete shape.

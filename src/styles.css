@@ -4,7 +4,7 @@
 body { margin: 0; }
 html { min-width: 280px; }
 button, input, select, textarea, a { font-family: inherit; }
-.hero { min-height: 100svh; min-height: max(740px, 100svh); position: relative; display: grid; place-items: center; overflow: hidden; background: #d2e7e3; }
+.hero { height: 100vh; height: 100dvh; min-height: 0; position: relative; display: grid; place-items: center; overflow: hidden; background: #d2e7e3; }
 .pixel-landscape { position: absolute; width: 100%; height: 100%; inset: 0; pointer-events: none; }
 .hero-scene { width: min(760px, calc(100% - 32px)); height: 660px; position: relative; isolation: isolate; }
 .pixel-shadow { position: absolute; height: 32px; z-index: 0; pointer-events: none; }
@@ -17,19 +17,17 @@ button { -webkit-tap-highlight-color: transparent; }
 .scene-desk-rear { z-index: 0; }
 .scene-desk-front { z-index: 3; }
 .scene-desk-rear, .scene-desk-front { transform: translateY(calc(2px * var(--sprite-scale))); }
-.anchor-marker { position: absolute; width: 6px; height: 6px; margin: -3px; background: #e55b93; pointer-events: none; }
+.anchor-marker { position: absolute; z-index: 2; width: 6px; height: 6px; margin: -3px; background: #e55b93; pointer-events: none; }
 .pokemon-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
 .pokemon-roamer { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; display: block; }
 .pokemon-charizard { pointer-events: auto; cursor: pointer; color: #334438; }
 .pokemon-pikachu { pointer-events: none; }
 .pokemon-facing { display: block; position: relative; width: 100%; height: 100%; }
-.pokemon-facing .character-sprite { display: block; }
-.fire-breath { position: absolute; pointer-events: none; image-rendering: pixelated; }
+.pokemon-facing .character-sprite, .preview-stage .character-sprite { display: block; position: relative; z-index: 1; }
+.fire-breath { position: absolute; z-index: 0; pointer-events: none; image-rendering: pixelated; }
 .pokemon-charizard:focus-visible { outline: 2px dashed #497c59; outline-offset: 4px; }
-.pokemon-hint { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 14px; white-space: nowrap; background: #fff9e7; padding: 3px 8px; opacity: 0; pointer-events: none; }
+.pokemon-hint { position: absolute; z-index: 2; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 14px; white-space: nowrap; background: #fff9e7; padding: 3px 8px; opacity: 0; pointer-events: none; }
 .pokemon-charizard:hover .pokemon-hint, .pokemon-charizard:focus-visible .pokemon-hint { opacity: 1; }
-.pokemon-pause { position: absolute; right: 16px; bottom: 16px; min-height: 44px; padding: 8px 12px; font-size: 15px; border: 2px solid #607d4d; background: #e9edc9; color: #334438; pointer-events: auto; cursor: pointer; }
-.pokemon-pause:focus-visible { outline: 3px solid #334438; outline-offset: 4px; }
 .hello-bubble { position: absolute; top: 348px; left: calc(50% - 250px); z-index: 40; width: 188px; min-height: 60px; border: 0; background: #fff9e7; color: #334438; box-shadow: 4px 0 #334438, -4px 0 #334438, 0 4px #334438, 0 -4px #334438; font: 400 21px Pixelify, monospace; text-align: center; cursor: pointer; padding: 14px 8px; }
 .hello-bubble::after { content: ''; position: absolute; right: -16px; bottom: 12px; width: 16px; height: 8px; background: #fff9e7; border-bottom: 4px solid #334438; box-shadow: 4px 0 #334438; }
 .hello-bubble:focus-visible { outline: 3px solid #497c59; outline-offset: 8px; }
@@ -59,8 +57,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .orbit-buttons .orbit-toggle { font-size: 17px; }
 .orbit-buttons button:hover { background: #f1f4d9; }
 .orbit-buttons button:focus-visible { outline: 2px solid #486e55; outline-offset: 3px; }
+@media (min-width: 532px) {
+  .hero-scene.is-compact .hello-bubble { left: calc(50% - 180px); width: 140px; font-size: 18px; }
+}
 @media (max-width: 531px) {
-  .hero { min-height: max(650px, 100svh); }
   .hero-scene { height: 540px; }
   .thought-card { height: 100px; padding: 10px 11px; gap: 6px; }
   .thought-label { font-size: 10px; letter-spacing: .5px; }

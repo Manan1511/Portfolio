@@ -62,3 +62,12 @@ it('recovers from fire through airborne poses and meets the resumed wing loop wi
   const final = attack.frames[frameAt(attack, 1199)], resumed = flight.frames[frameAt(flight, 0)];
   expect([final.x, final.y, final.target, final.anchors]).toEqual([resumed.x, resumed.y, resumed.target, resumed.anchors]);
 });
+
+it('attaches the exhale to the front lip, below the protruding upper muzzle', () => {
+  // Hand-checked sheet pixel (570,284): just ahead of the open lip at (571,284).
+  // The old point (576,282) sat farther inside the face and covered the nose.
+  const exhale = pokemon.charizard.sprite.clips.attack.frames[2];
+  const mouth = exhale.anchors!.mouth;
+  expect({ x: exhale.x + mouth.x - exhale.target!.x, y: exhale.y + mouth.y - exhale.target!.y })
+    .toEqual({ x: 570, y: 284 });
+});

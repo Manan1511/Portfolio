@@ -27,7 +27,7 @@ const flight = [
   frame([381, 168, 129, 61], { x: 434, y: 216 }, body, 100, { x: 396, y: 206 }),
   frame([511, 167, 126, 64], { x: 563, y: 214 }, body, 120, { x: 525, y: 204 }),
 ];
-const exhale = frame([563, 256, 116, 76], { x: 614, y: 292 }, body, 120, { x: 576, y: 282 });
+const exhale = frame([563, 256, 116, 76], { x: 614, y: 292 }, body, 120, { x: 570, y: 284 });
 // Keep the existing 240/600/360ms attack phases. Wind-up and recovery use
 // airborne poses; recovery ends on the exact pose that resumes the wing loop.
 const attack = [flight[0], exhale, { ...exhale, duration: 600 },
@@ -61,7 +61,8 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
 
 export const flameFrames = [
   { x: 1021, y: 432, width: 15, height: 30 },
-  { x: 1037, y: 431, width: 20, height: 31 },
-  { x: 1061, y: 431, width: 21, height: 31 },
-  { x: 1086, y: 430, width: 15, height: 32 },
+  // Complete compact flame silhouettes, excluding detached spark cells above.
+  { x: 1037, y: 439, width: 20, height: 23 },
+  { x: 1063, y: 440, width: 18, height: 22 },
+  { x: 1086, y: 438, width: 15, height: 24 },
 ];

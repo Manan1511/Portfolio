@@ -1,5 +1,32 @@
 # Hero verification — 2026-10-02
 
+## Contained fire and viewport fitting — 2026-10-03
+
+Flame packets previously crossed their canvas boundary, cutting off the tip.
+Packets now retain complete native bounds; narrow layouts select compact whole
+cells. A corrected exhale anchor sits just in front of the open lip. A stepped
+connection narrows the flame at the mouth, while the complete body draws above
+the effect so it cannot overpaint the muzzle. Original source PNGs are unchanged.
+
+Removed the Pause Pokémon control as requested. The hero now follows viewport
+height as well as width, with integer character enlargement. The clearing follows
+the desk floor, and habitat bounds remeasure after scene layout changes.
+
+- Regression checks first failed for packet clipping, the muzzle anchor, short
+  viewport sizing and the clearing position. All 13 files / 76 tests now pass;
+  fresh typecheck and production build also pass.
+- Packet drawing bounds verified at 44, 56 and 120 CSS px through animated and
+  reduced-motion rendering. Existing attack, mirroring, resize, hidden/offscreen
+  recovery and reduced-motion behavior tests remain green.
+- Production layouts inspected at 320x568, 390x650, 390x844, 844x480, 1440x640
+  and 1440x900. Document sizes match their viewports, full sprite bounds retain
+  padding, and the desk and clearing stay aligned. No pause button remains.
+- Production beneath `/revamped-portfolio/` inspected during Enter activation,
+  flame attachment and recovery; the console reported no errors. Nested mobile
+  iframe input was unavailable in browser automation; mobile attack containment
+  is covered by raster bounds tests and responsive geometry inspection.
+- Proof: ignored `.verification/fire-lip-fixed-viewport.jpg`.
+
 ## Charizard airborne frame correction — 2026-10-02
 
 The ambient flight/hover loop included a standing/takeoff pose, changing leg and

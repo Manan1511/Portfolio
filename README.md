@@ -26,12 +26,13 @@ See [character documentation](src/character/README.md) for poses, clip metadata,
 `PokemonRoamer` uses species definitions and an independent movement controller.
 One habitat clock drives body frames, travel and fire. Hover/keyboard focus holds
 Charizard for interaction; pointer-created touch focus does not lock roaming.
-The pause control stops ambient activity while explicit attacks remain available.
 Reduced motion provides stationary sprites and a short static attack. Hidden or
 offscreen heroes preserve elapsed time. See [Pokémon implementation](docs/pokemon.md)
 and [supplied-sheet provenance](src/assets/pokemon/ARTWORK.md).
 
 Character, furniture and scenery share 2 CSS pixels per native pixel, defined in `src/shared/pixelGrid.ts`. The landscape recalculates its native grid when the hero resizes instead of stretching its pixels. Furniture retains the character's 120px layout coordinates while snapping its drawing to the same display density.
+
+The hero fits the current viewport height and width. Manan uses whole-number enlargement at 1x, 2x or 3x depending on available space; Pokémon retain 2x enlargement. The desk's floor position also anchors the grass clearing, and roaming bounds update after scene layout changes.
 
 The desk uses original raster artwork with separate rear and forward depth passes; the character stays one complete sprite. Furniture generation and registration are documented in [scene artwork](src/assets/SCENE_ARTWORK.md). Follow the [development standards](docs/development-standards.md) for future components.
 

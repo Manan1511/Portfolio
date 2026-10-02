@@ -51,3 +51,10 @@ it('covers odd viewport dimensions without stretching pixels fractionally', () =
   expect(artwork.style.width).toBe('376px');
   expect(artwork.style.height).toBe('844px');
 });
+
+it('keeps the desk clearing at its supplied floor position when the viewport becomes shorter', () => {
+  const { container } = render(<PixelLandscape clearingY={470} />);
+  resizeTo(320, 568);
+  expect(container.querySelector('.landscape-terrain')).toHaveAttribute('transform', 'translate(0 12)');
+  expect(container.querySelector('svg')).toHaveAttribute('viewBox', '0 0 160 284');
+});

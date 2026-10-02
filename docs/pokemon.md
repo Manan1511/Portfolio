@@ -1,7 +1,8 @@
 # Roaming Pokémon implementation
 
 Approved scope: one ground Pikachu, one flying Charizard, bounded roaming with
-idle stops, click/tap/keyboard fire breath, manual pause and reduced motion.
+idle stops, click/tap/keyboard fire breath and reduced motion. The user later
+removed the manual pause control; hidden/offscreen and reduced-motion pauses remain.
 Original sheets receive exact colour background removal. Main hero, Manan,
 furniture and greeting retain their existing composition.
 
@@ -50,3 +51,16 @@ furniture and greeting retain their existing composition.
   fire attachment and resumed flight under the production repository subpath.
   Production layouts at 320/390/768/1440px retain 2x pixels without overflow.
   Pikachu, source artwork and movement/controller logic are unchanged.
+
+- Fire and viewport follow-up: complete flame cells stay within their canvas;
+  compact whole cells are selected when horizontal space is limited. The mouth
+  anchor is now just in front of the open lip, with a narrow stepped connection
+  and body-over-fire layering to keep flames off the muzzle. Detached source
+  sparks are excluded from compact cell rectangles; original PNGs stay untouched.
+- Removed the Pause Pokémon UI. The hero uses the actual viewport height and
+  integer character enlargement. Its desk floor anchors the grass clearing;
+  habitat bounds remeasure when the scene's position or scale changes.
+- Fresh verification: 76 tests, typecheck and production build passed. Six
+  portrait/landscape viewport layouts fit without document overflow. Enter
+  activation, flame connection and recovery were inspected on the production
+  page beneath `/revamped-portfolio/`; console errors were absent.

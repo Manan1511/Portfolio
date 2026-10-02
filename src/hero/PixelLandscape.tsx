@@ -49,11 +49,11 @@ function oval(grid: Grid, x: number, y: number, width: number, height: number) {
   return path;
 }
 
-export function PixelLandscape() {
+export function PixelLandscape({ clearingY }: { clearingY?: number } = {}) {
   const backdrop = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(() => ({
     width: window.innerWidth,
-    height: Math.max(window.innerHeight, window.innerWidth <= 531 ? 650 : 740),
+    height: window.innerHeight,
   }));
   useEffect(() => {
     if (!backdrop.current) return;
@@ -65,6 +65,9 @@ export function PixelLandscape() {
     return () => observer.disconnect();
   }, []);
   const grid = landscapeGrid(size.width, size.height);
+  const terrainShift = clearingY === undefined ? 0
+    : Math.round(clearingY / scenePixelSize) - Math.round(251 * grid.scale + grid.offsetY);
+  const terrainGrid = { ...grid, rows: grid.rows - terrainShift };
   const x = (value: number) => Math.round(value * grid.scale + grid.offsetX);
   const y = (value: number) => Math.round(value * grid.scale + grid.offsetY);
   const drawing = (path: string, left = 0, top = 0, scale = 1) => pixelPath(path, grid.scale * scale, grid.offsetX + left * grid.scale, grid.offsetY + top * grid.scale);
@@ -76,9 +79,10 @@ export function PixelLandscape() {
       {[{ x: 45, y: 52, scale: 1 }, { x: 358, y: 39, scale: 1 }, { x: 204, y: 23, scale: .8 }].map((cloud, i) => <g key={i}>
         {cloudDrawing.map(([fill, path]) => <path key={fill} fill={fill} d={drawing(path, cloud.x, cloud.y, cloud.scale)} />)}
       </g>)}
-      <path fill="#bbd5bc" d={hill(grid, 165, 14, 35)} />
-      <path fill="#a4c18d" d={hill(grid, 185, 9, 12)} />
-      <path fill="#94b875" d={`M0 ${y(198)}H${grid.columns}V${grid.rows}H0Z`} />
+      <g className="landscape-terrain" transform={`translate(0 ${terrainShift})`}>
+      <path fill="#bbd5bc" d={hill(terrainGrid, 165, 14, 35)} />
+      <path fill="#a4c18d" d={hill(terrainGrid, 185, 9, 12)} />
+      <path fill="#94b875" d={`M0 ${y(198)}H${grid.columns}V${terrainGrid.rows}H0Z`} />
       <path fill="#a0be7e" d={`M0 ${y(198)}H${grid.columns}V${y(213)}H0Z`} />
       <path fill="#bed090" d={oval(grid, 244, 251, 77, 32)} />
       <path fill="#c8d799" d={oval(grid, 244, 251, 72, 28)} />
@@ -92,6 +96,7 @@ export function PixelLandscape() {
         <path fill="#e9e1ac" d={`M${x(flower.x)} ${y(flower.y)}h1v-1h2v1h1v2h-1v1h-2v-1h-1Z`} />
         <path fill="#cd8e70" d={`M${x(flower.x) + 1} ${y(flower.y)}h2v2h-2Z`} />
       </g>)}
+      </g>
     </svg>
   </div>;
 }

@@ -7,11 +7,10 @@ import { advanceActor, beginAttack, createActor, reconcileActor, type Actor, typ
 type Population = Record<PokemonId, Actor>;
 const ids: PokemonId[] = ['pikachu', 'charizard'];
 
-export function PokemonHabitat() {
+export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
   const layer = useRef<HTMLDivElement>(null);
   const [world, setWorld] = useState<PokemonWorld | null>(null);
   const [actors, setActors] = useState<Population | null>(null);
-  const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(() => !document.hidden);
   const [onscreen, setOnscreen] = useState(true);
   const reduced = useReducedMotion();
@@ -29,11 +28,11 @@ export function PokemonHabitat() {
         return bounds ? { left: bounds.left - root.left, top: bounds.top - root.top,
           right: bounds.right - root.left, bottom: bounds.bottom - root.top } : null;
       };
-      const desk = rect('.desk-scene'), hello = rect('.hello-bubble'), control = rect('.pokemon-pause');
+      const desk = rect('.desk-scene'), hello = rect('.hello-bubble');
       if (!desk) return;
       const furniture = [rect('.scene-desk-front'), rect('.scene-chair'), rect('.desk-scene .character-sprite')]
         .filter((item): item is Rect => !!item);
-      const obstacles = [...furniture, desk, hello, control].filter((item): item is Rect => !!item);
+      const obstacles = [...furniture, desk, hello].filter((item): item is Rect => !!item);
       const next = { width: root.width, height: root.height,
         skyBottom: Math.min(desk.top + 24, hello?.top ?? desk.top + 24),
         floor: Math.max(desk.bottom + 6, ...furniture.map(item => item.bottom)), obstacles };
@@ -42,13 +41,13 @@ export function PokemonHabitat() {
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(hero);
-    for (const selector of ['.desk-scene', '.hello-bubble', '.pokemon-pause']) {
+    for (const selector of ['.desk-scene', '.hello-bubble']) {
       const target = hero.querySelector(selector);
       if (target) observer.observe(target);
     }
     window.addEventListener('resize', measure);
     return () => { observer.disconnect(); window.removeEventListener('resize', measure); };
-  }, []);
+  }, [layoutKey]);
 
   useEffect(() => {
     if (!world) return;
@@ -69,17 +68,17 @@ export function PokemonHabitat() {
 
   const hasAttack = actors?.charizard.attackElapsed != null;
   useEffect(() => {
-    if (!world || !visible || !onscreen || ((paused || reduced) && !hasAttack)) return;
+    if (!world || !visible || !onscreen || (reduced && !hasAttack)) return;
     let last = performance.now(), timer = 0;
     const tick = (now: number) => {
       const delta = Math.min(50, now - last); last = now;
       setActors(previous => previous && Object.fromEntries(ids.map(id => [id, advanceActor(previous[id], pokemon[id], world, delta,
-        { paused, reduced, held: id === 'charizard' && (holds.current.hover || holds.current.focus) })])) as Population);
+        { paused: false, reduced, held: id === 'charizard' && (holds.current.hover || holds.current.focus) })])) as Population);
       timer = requestAnimationFrame(tick);
     };
     timer = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(timer);
-  }, [world, visible, onscreen, paused, reduced, hasAttack]);
+  }, [world, visible, onscreen, reduced, hasAttack]);
 
   const attack = useCallback(() => {
     if (!world) return;
@@ -89,8 +88,5 @@ export function PokemonHabitat() {
   return <div className="pokemon-layer" ref={layer}>
     {world && actors && ids.map(id => <PokemonRoamer key={id} definition={pokemon[id]} actor={actors[id]} world={world}
       reduced={reduced} onAttack={attack} onHold={hold} />)}
-    <button className="pokemon-pause" type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>
-      {paused ? 'Resume Pokémon' : 'Pause Pokémon'}
-    </button>
   </div>;
 }

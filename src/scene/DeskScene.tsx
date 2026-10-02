@@ -7,7 +7,7 @@ import { DeskFurniture } from './DeskFurniture';
 
 const greeting = 'hey, I’m Manan';
 
-export function DeskScene({ scale }: { scale: number }) {
+export function DeskScene({ scale, top = 200 }: { scale: number; top?: number }) {
   const reduced = useReducedMotion();
   const [elapsed, setElapsed] = useState(0);
   const [greetingRun, setGreetingRun] = useState(0);
@@ -28,12 +28,12 @@ export function DeskScene({ scale }: { scale: number }) {
   const visibleText = reduced ? greeting : greeting.slice(0, Math.floor(elapsed / 75) + 1);
 
   return <>
-    <div className="desk-scene" style={{ '--sprite-scale': scale, left: `calc(50% - ${manan.anchors.head.x * scale}px)`, width: scale * manan.width, height: scale * manan.height } as CSSProperties}>
+    <div className="desk-scene" style={{ '--sprite-scale': scale, top, left: `calc(50% - ${manan.anchors.head.x * scale}px)`, width: scale * manan.width, height: scale * manan.height } as CSSProperties}>
       <CharacterSprite definition={manan} clip={activity} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
       <DeskFurniture scale={scale} />
     </div>
     <button className={`hello-bubble ${activity === 'talking' ? 'is-speaking' : ''}`}
-      style={{ top: 200 + manan.anchors.mouth.y * scale - 30 }}
+      style={{ top: top + manan.anchors.mouth.y * scale - 30 }}
       onClick={() => { setElapsed(0); setGreetingRun(run => run + 1); }} aria-label="Replay greeting: hey, I’m Manan">
       <span aria-hidden="true">{visibleText}<span className="greeting-cursor">{activity === 'talking' && !reduced ? '▌' : ''}</span></span>
     </button>
