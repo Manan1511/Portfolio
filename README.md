@@ -32,7 +32,7 @@ and [supplied-sheet provenance](src/assets/pokemon/ARTWORK.md).
 
 Character, furniture and scenery share 2 CSS pixels per native pixel, defined in `src/shared/pixelGrid.ts`. The landscape recalculates its native grid when the hero resizes instead of stretching its pixels. Furniture retains the character's 120px layout coordinates while snapping its drawing to the same display density.
 
-The hero fits the current viewport height and width. Manan uses whole-number enlargement at 1x, 2x or 3x depending on available space; Pokémon retain 2x enlargement. The table footprint is centered in the viewport and the clearing shares its floor anchor, while surrounding terrain keeps its existing position. Roaming bounds update after scene layout changes. The lowercase greeting uses white fill and black text/borders, sits to the right of Manan, and moves closer to his face on mobile.
+The hero fits the current viewport height and width. Manan uses whole-number enlargement at 1x, 2x or 3x depending on available space; Pokémon retain 2x enlargement. The table footprint and clearing share a floor anchor, shifted together 16px right of the viewport center, while surrounding terrain keeps its existing position. Roaming bounds update after scene layout changes. The lowercase greeting uses white fill and black text/borders, sits to the right of Manan, and moves closer to his face on mobile.
 
 The desk uses original raster artwork with separate rear and forward depth passes; the character stays one complete sprite. Furniture generation and registration are documented in [scene artwork](src/assets/SCENE_ARTWORK.md). Follow the [development standards](docs/development-standards.md) for future components.
 

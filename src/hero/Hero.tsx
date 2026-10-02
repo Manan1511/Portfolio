@@ -5,6 +5,8 @@ import { PixelLandscape } from './PixelLandscape';
 import { PokemonHabitat } from '../pokemon/PokemonHabitat';
 import { deskFloorAnchor } from '../scene/DeskFurniture';
 
+const sceneOffsetX = 16;
+
 export function Hero() {
   const hero = useRef<HTMLElement>(null);
   const [size, setSize] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }));
@@ -28,9 +30,9 @@ export function Hero() {
   return <main className="hero" ref={hero} aria-label="Manan's little pixel world">
     <h1 className="sr-only">hey, i’m manan</h1>
     <PixelLandscape clearingY={worldDeskTop + manan.anchors.feet.y * scale + 20 * scale}
-      clearingCenter={{ x: size.width / 2, y: worldDeskTop + deskFloorAnchor.y * scale }} />
+      clearingCenter={{ x: size.width / 2 + sceneOffsetX, y: worldDeskTop + deskFloorAnchor.y * scale }} />
     <PokemonHabitat layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
-    <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight,
+    <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight, left: sceneOffsetX,
       '--greeting-right': `${(manan.anchors.mouth.x - deskFloorAnchor.x) * scale + 40}px` } as CSSProperties}>
       <svg className="pixel-shadow" viewBox="0 0 96 16" aria-hidden="true" shapeRendering="crispEdges"
         style={{ width: scale * 96, left: `calc(50% - ${scale * (deskFloorAnchor.x - manan.anchors.feet.x + 48)}px)`, top: deskTop + manan.anchors.feet.y * scale - 4 }}>

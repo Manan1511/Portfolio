@@ -1,5 +1,19 @@
 # Hero verification — 2026-10-02
 
+## Wider desktop greeting and scene shift — 2026-10-03
+
+Expanded desktop greeting widths by 20px to the right (184px regular, 144px
+compact); the left edge and tail retain their registration. Mobile remains 114px.
+Shifted the complete desk scene, greeting, shadow and clearing 16px right together.
+Character/furniture offsets and keyboard contact are unchanged.
+
+- Scene-offset regression failed before implementation; all 77 tests now pass.
+  Production build, including TypeScript checking, and `git diff --check` pass.
+- Browser inspection at 1440x900, 1440x640 and 390x844 confirmed widths of
+  184/144/114px, the 16px shift, aligned desk/clearing centers and no horizontal
+  document overflow. Desktop composition inspected visually.
+- Proof: ignored `.verification/desk-scene-right-wider-bubble.jpg`.
+
 ## Desk centering and greeting refinement — 2026-10-03
 
 Centered the table footprint rather than Manan's head. The complete character,
