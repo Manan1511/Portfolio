@@ -90,3 +90,14 @@ button { -webkit-tap-highlight-color: transparent; }
 .demo-moving { animation: stroll 4s ease-in-out infinite alternate; }
 @keyframes stroll { from { translate: -80px 0; } to { translate: 80px 0; } }
 @media (prefers-reduced-motion: reduce) { .demo-moving { animation: none; } }
+.site-entry { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 24px; background: #d2e7e3; }
+.site-entry-panel { display: grid; justify-items: center; gap: 18px; color: #283a35; font-family: Pixelify, monospace; text-align: center; }
+.site-entry-ball { display: block; width: clamp(76px, 22vw, 112px); aspect-ratio: 1; image-rendering: pixelated; }
+.site-entry-ball.is-spinning { animation: pokeball-spin 1.2s linear infinite; transform-origin: center; }
+.site-entry-status { margin: 0; font-size: 18px; }
+.site-entry-button { min-width: 112px; min-height: 48px; padding: 8px 20px; border: 3px solid #111; background: #fff; color: #111; box-shadow: 4px 4px #111; font: 18px Pixelify, monospace; cursor: pointer; }
+.site-entry-button:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px #111; }
+.site-entry-button:active { transform: translate(3px, 3px); box-shadow: 1px 1px #111; }
+.site-entry-button:focus-visible { outline: 3px dashed #111; outline-offset: 6px; }
+@keyframes pokeball-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .site-entry-ball.is-spinning { animation: none; } }
