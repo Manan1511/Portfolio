@@ -1,5 +1,9 @@
 # Hero verification — 2026-10-02
 
+## Diagonal apron occlusion — 2026-10-02
+
+The preceding depth mask ended the desk's side apron at the horizontal front rail, exposing trouser pixels through its lower diagonal area. Extended the foreground clip along that side panel while retaining the far leg behind the chair. Browser close-up confirms the wood panel now covers the trousers; artwork and furniture offsets are unchanged. Proof: ignored `.verification/desk-side-occlusion.jpg`. Fresh 46 tests, typecheck and production build passed.
+
 ## Chair and desk clearance — 2026-10-02
 
 The desk's far left leg was drawn over the chair seat/base by the broad foreground mask. Separated the furniture horizontally (chair -10 logical px, desk +4 logical px), placed rear furniture behind the chair, and restricted the lower foreground mask to the near legs. The tabletop/apron retain their forward depth. Character artwork and animation are unchanged.
