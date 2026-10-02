@@ -40,6 +40,11 @@ Development preview: `/?sprite-preview=1`. Choose a pose, pause playback, or use
 Source: original generated artwork guided by the user's reference photos. The source photographs are not bundled or committed.
 
 Artwork files and generation prompts: [ARTWORK.md](../assets/character/ARTWORK.md).
+
+Additional walking and gesture PNG sheets are available in
+[action exports](../assets/character/actions/README.md), with exact 180px desktop
+and 120px logical/mobile cells. These are separate assets and are not yet mounted
+in the hero or registered in the active `manan` definition.
 # Controlled playback
 
 `CharacterSprite` also accepts optional `frameIndex` for an external animation
