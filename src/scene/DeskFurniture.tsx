@@ -5,6 +5,10 @@ import { scenePixelSize } from '../shared/pixelGrid';
 type Rect = { x: number; y: number; width: number; height: number };
 type FurniturePart = 'chair' | 'desk-rear' | 'desk-front';
 
+// Table footprint center and floor in the shared character layout, including
+// the desk's two-pixel vertical offset. Use this to position the whole scene.
+export const deskFloorAnchor = { x: 88, y: 116 };
+
 // Source artwork stays intact. Targets use the character's 120px layout:
 // CSS offsets separate the chair and desk; keyboard still spans hand contact
 // around (83, 74). Seat ~ y=87, common floor y=114.

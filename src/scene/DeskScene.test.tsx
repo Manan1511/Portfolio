@@ -25,11 +25,12 @@ it('shows complete greeting with static seated sprite for reduced motion', () =>
   }));
   render(<DeskScene scale={3} />);
   expect(screen.getByRole('img', { name: /Manan/ })).toHaveAttribute('data-clip', 'seated-idle');
-  expect(screen.getByText('hey, I’m Manan')).toBeVisible();
+  expect(screen.getByText('hey, i’m manan')).toBeVisible();
 });
 
 it.each([2, 3])('matches furniture and character pixel size at scale %i', scale => {
   const { container } = render(<DeskScene scale={scale} />);
+  expect(container.querySelector<HTMLElement>('.desk-scene')!.style.left).toBe(`calc(50% - ${88 * scale}px)`);
   const sprite = screen.getByRole('img', { name: /Manan/ }) as HTMLCanvasElement;
   const displayWidth = Number.parseFloat(sprite.style.width);
   const spritePixelSize = displayWidth / sprite.width;

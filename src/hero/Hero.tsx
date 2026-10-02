@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { DeskScene } from '../scene/DeskScene';
 import { manan } from '../character/manan';
 import { PixelLandscape } from './PixelLandscape';
 import { PokemonHabitat } from '../pokemon/PokemonHabitat';
+import { deskFloorAnchor } from '../scene/DeskFurniture';
 
 export function Hero() {
   const hero = useRef<HTMLElement>(null);
@@ -25,12 +26,14 @@ export function Hero() {
   const worldDeskTop = Math.round(Math.max(16, Math.min(sceneTop + 200, size.height - 120 * scale - 126)) / 2) * 2;
   const deskTop = worldDeskTop - sceneTop;
   return <main className="hero" ref={hero} aria-label="Manan's little pixel world">
-    <h1 className="sr-only">hey, I’m Manan</h1>
-    <PixelLandscape clearingY={worldDeskTop + manan.anchors.feet.y * scale + 20 * scale} />
+    <h1 className="sr-only">hey, i’m manan</h1>
+    <PixelLandscape clearingY={worldDeskTop + manan.anchors.feet.y * scale + 20 * scale}
+      clearingCenter={{ x: size.width / 2, y: worldDeskTop + deskFloorAnchor.y * scale }} />
     <PokemonHabitat layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
-    <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight }}>
+    <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight,
+      '--greeting-right': `${(manan.anchors.mouth.x - deskFloorAnchor.x) * scale + 40}px` } as CSSProperties}>
       <svg className="pixel-shadow" viewBox="0 0 96 16" aria-hidden="true" shapeRendering="crispEdges"
-        style={{ width: scale * 96, left: `calc(50% - ${scale * 24}px)`, top: deskTop + manan.anchors.feet.y * scale - 4 }}>
+        style={{ width: scale * 96, left: `calc(50% - ${scale * (deskFloorAnchor.x - manan.anchors.feet.x + 48)}px)`, top: deskTop + manan.anchors.feet.y * scale - 4 }}>
         <path fill="#527447" opacity=".3" d="M14 2H76V4H87V6H95V11H84V13H70V15H17V13H7V10H0V6H7V4H14Z" />
       </svg>
       <DeskScene scale={scale} top={deskTop} />

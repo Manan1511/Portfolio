@@ -58,3 +58,22 @@ it('keeps the desk clearing at its supplied floor position when the viewport bec
   expect(container.querySelector('.landscape-terrain')).toHaveAttribute('transform', 'translate(0 12)');
   expect(container.querySelector('svg')).toHaveAttribute('viewBox', '0 0 160 284');
 });
+
+it('centers the clearing on the desk floor without shifting the surrounding terrain', () => {
+  const { container, rerender } = render(<PixelLandscape clearingY={470} clearingCenter={{ x: 224, y: 434 }} />);
+  resizeTo(390, 844);
+  const terrain = container.querySelector('.landscape-terrain')!;
+  const shift = terrain.getAttribute('transform');
+  const clearing = container.querySelector('.desk-clearing')!;
+  // Read the center row's horizontal span from the actual pixel path.
+  const row = [...clearing.querySelector('path')!.getAttribute('d')!.matchAll(/M(-?\d+) (-?\d+)h(\d+)/g)]
+    .map(match => ({ x: Number(match[1]), y: Number(match[2]), width: Number(match[3]) }))
+    .sort((a, b) => b.width - a.width)[0];
+  const [dx, dy] = clearing.getAttribute('transform')!.match(/-?\d+/g)!.map(Number);
+  const terrainY = Number(shift!.match(/-?\d+/g)![1]);
+  expect((row.x + (row.width - 1) / 2 + dx) * 2).toBe(224);
+  expect((row.y + dy + terrainY) * 2).toBe(434);
+  rerender(<PixelLandscape clearingY={470} clearingCenter={{ x: 244, y: 414 }} />);
+  expect(terrain).toHaveAttribute('transform', shift!);
+  expect(clearing.getAttribute('transform')).not.toBe(`translate(${dx} ${dy})`);
+});

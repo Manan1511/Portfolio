@@ -1,5 +1,29 @@
 # Hero verification — 2026-10-02
 
+## Desk centering and greeting refinement — 2026-10-03
+
+Centered the table footprint rather than Manan's head. The complete character,
+chair and desk move together, preserving hand/keyboard registration. The clearing
+now shares the viewport's horizontal center and table floor position; only its
+pixel paths move, keeping hills and trees in place. The character shadow follows
+the shifted scene.
+
+The greeting reads `hey, i’m manan`, with white fill and black text, border and
+tail. Desktop boxes are smaller (164px, or 124px for compact scenes). Both desktop
+and mobile boxes sit to the right, with mobile brought closer to the face so
+the space above remains available for Charizard.
+
+- Clearing placement and lowercase greeting regressions failed before the change,
+  then passed. Furniture registration tests still pass with the centered origin.
+- Fresh 77 tests, typecheck and production build passed.
+- Production beneath `/revamped-portfolio/` checked at 320x568, 390x650,
+  390x844, 844x480, 1440x640 and 1440x900. Document sizes match viewports;
+  desk/clearing centers agree within one native pixel. Computed greeting fill is
+  white and text is black. Phone and desktop screenshots confirm right-side
+  placement, maintained keyboard contact and no greeting/body overlap.
+- Proof: ignored `.verification/mobile-greeting-right.jpg` and
+  `.verification/desk-centered-greeting.jpg`.
+
 ## Contained fire and viewport fitting — 2026-10-03
 
 Flame packets previously crossed their canvas boundary, cutting off the tip.

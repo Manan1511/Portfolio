@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { landscapeGrid, pixelPath, scenePixelSize } from '../shared/pixelGrid';
+import type { Point } from '../character/animation';
 
 const grass = Array.from({ length: 230 }, (_, index) => ({
   x: (index * 47 + 13) % 480,
@@ -49,7 +50,7 @@ function oval(grid: Grid, x: number, y: number, width: number, height: number) {
   return path;
 }
 
-export function PixelLandscape({ clearingY }: { clearingY?: number } = {}) {
+export function PixelLandscape({ clearingY, clearingCenter }: { clearingY?: number; clearingCenter?: Point } = {}) {
   const backdrop = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(() => ({
     width: window.innerWidth,
@@ -70,6 +71,12 @@ export function PixelLandscape({ clearingY }: { clearingY?: number } = {}) {
   const terrainGrid = { ...grid, rows: grid.rows - terrainShift };
   const x = (value: number) => Math.round(value * grid.scale + grid.offsetX);
   const y = (value: number) => Math.round(value * grid.scale + grid.offsetY);
+  // Move only the clearing onto the table's floor. Hills and trees retain their
+  // existing registration, and translations remain on the native pixel grid.
+  const clearingOffset = clearingCenter ? {
+    x: Math.round(clearingCenter.x / scenePixelSize) - x(244),
+    y: Math.round(clearingCenter.y / scenePixelSize) - terrainShift - y(251),
+  } : { x: 0, y: 0 };
   const drawing = (path: string, left = 0, top = 0, scale = 1) => pixelPath(path, grid.scale * scale, grid.offsetX + left * grid.scale, grid.offsetY + top * grid.scale);
 
   return <div className="pixel-landscape" ref={backdrop} aria-hidden="true">
@@ -84,8 +91,10 @@ export function PixelLandscape({ clearingY }: { clearingY?: number } = {}) {
       <path fill="#a4c18d" d={hill(terrainGrid, 185, 9, 12)} />
       <path fill="#94b875" d={`M0 ${y(198)}H${grid.columns}V${terrainGrid.rows}H0Z`} />
       <path fill="#a0be7e" d={`M0 ${y(198)}H${grid.columns}V${y(213)}H0Z`} />
-      <path fill="#bed090" d={oval(grid, 244, 251, 77, 32)} />
-      <path fill="#c8d799" d={oval(grid, 244, 251, 72, 28)} />
+      <g className="desk-clearing" transform={`translate(${clearingOffset.x} ${clearingOffset.y})`}>
+        <path fill="#bed090" d={oval(grid, 244, 251, 77, 32)} />
+        <path fill="#c8d799" d={oval(grid, 244, 251, 72, 28)} />
+      </g>
       {grass.map((blade, i) => <path key={i} fill={i % 3 === 0 ? '#afc887' : '#81a965'} opacity={i % 2 ? .8 : .55}
         d={`M${x(blade.x)} ${y(blade.y)}h1v-2h1v3h2v-2h1v3h-5Z`} />)}
       {trees.map((tree, i) => <g key={i}>
