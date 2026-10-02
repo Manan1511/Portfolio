@@ -1,5 +1,6 @@
 import poses from '../assets/character/manan-poses.png';
 import seatedSheet from '../assets/character/manan-seated.png';
+import { scenePixelSize } from '../shared/pixelGrid';
 import type { SpriteDefinition, SpriteFrame } from './animation';
 
 // Each source rectangle contains a complete, coherently drawn character.
@@ -24,7 +25,7 @@ const pose = (x: number, y: number, width: number, height: number, target: NonNu
 const standingTarget = { x: 38, y: 13, width: 39, height: 101 };
 
 export const manan: SpriteDefinition = {
-  image: poses, width: 120, height: 120, maxPixelSize: 2,
+  image: poses, width: 120, height: 120, maxPixelSize: scenePixelSize,
   anchors: { head: { x: 56, y: 30 }, mouth: { x: 62, y: 40 }, feet: { x: 80, y: 114 }, hands: { x: 83, y: 74 } },
   clips: {
     'standing-idle': { loop: true, anchors: { head: { x: 61, y: 27 } }, frames: [

@@ -30,7 +30,7 @@ export function DeskScene({ scale }: { scale: number }) {
   return <>
     <div className="desk-scene" style={{ '--sprite-scale': scale, left: `calc(50% - ${manan.anchors.head.x * scale}px)`, width: scale * manan.width, height: scale * manan.height } as CSSProperties}>
       <CharacterSprite definition={manan} clip={activity} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
-      <DeskFurniture />
+      <DeskFurniture scale={scale} />
     </div>
     <button className={`hello-bubble ${activity === 'talking' ? 'is-speaking' : ''}`}
       style={{ top: 200 + manan.anchors.mouth.y * scale - 30 }}

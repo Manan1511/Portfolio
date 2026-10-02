@@ -27,3 +27,19 @@ it('shows complete greeting with static seated sprite for reduced motion', () =>
   expect(screen.getByRole('img', { name: /Manan/ })).toHaveAttribute('data-clip', 'seated-idle');
   expect(screen.getByText('hey, I’m Manan')).toBeVisible();
 });
+
+it.each([2, 3])('matches furniture and character pixel size at scale %i', scale => {
+  const { container } = render(<DeskScene scale={scale} />);
+  const sprite = screen.getByRole('img', { name: /Manan/ }) as HTMLCanvasElement;
+  const displayWidth = Number.parseFloat(sprite.style.width);
+  const spritePixelSize = displayWidth / sprite.width;
+  for (const prop of container.querySelectorAll('.scene-prop')) {
+    const nativeWidth = Number(prop.getAttribute('viewBox')!.split(' ')[2]);
+    expect(displayWidth / nativeWidth).toBe(spritePixelSize);
+    // Fractional native coordinates would create finer steps than the grid.
+    for (const path of prop.querySelectorAll('path')) {
+      const coordinates = path.getAttribute('d')!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+      expect(coordinates.every(Number.isInteger)).toBe(true);
+    }
+  }
+});

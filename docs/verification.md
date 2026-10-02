@@ -1,6 +1,6 @@
-# Hero verification — 2026-10-01
+# Hero verification — 2026-10-02
 
-- `npm test`: 7 files, 40 tests passed after the orbit momentum and furniture correction.
+- `npm test`: 8 files, 45 tests passed after matching environment and sprite pixel density.
 - `npm run typecheck`: passed.
 - `npm run build`: passed, relative asset paths in `dist/index.html`.
 - Production hero inspected at 320, 390, 768 and 1440 CSS pixels wide. No horizontal document overflow or overflowing card content. Character enlargement uses whole-pixel multiples.
@@ -12,7 +12,19 @@
 
 The milestone contains only the hero and reusable character. Walking clips, audio, additional sections, backend and publishing remain outside the approved scope.
 
-## Orbit momentum and coherent furniture — latest correction
+## Matched environment pixel density — 2026-10-02
+
+User reported the environment's coarse blocks did not match the finer sprite. The old landscape stretched a fixed 480×320 drawing with the viewport, and desktop furniture enlarged its source pixels by 3 while the character used 2. Added a shared 2 CSS px grid: the landscape measures the hero, recalculates integer drawing coordinates and renders at exactly 2×. Partial cells overscan and are clipped by the hero. Furniture snaps shared path coordinates to the same density without changing its layout or attachment anchors.
+
+- Refined clouds and tree shading, added smaller grass and flower details, and replaced broad hill/clearing corners with single-cell stepped contours. Palette, character artwork, crown, greeting, animation and furniture placement retain their previous direction.
+- Preserved the chair's preceding four-logical-pixel left nudge: 8px mobile and 12px desktop, committed separately as `5056c82`.
+- New regression checks were observed failing against the fixed landscape and desktop furniture density. They cover responsive resizing, odd viewport dimensions and matching sprite/furniture pixels with integer path coordinates.
+- Fresh `npm test`: 8 files / 45 tests passed. `npm run typecheck`, `npm run build` and `git diff --check` passed.
+- Production served beneath `/revamped-portfolio/` and inspected at 320, 390, 375, 768 and 1440px. Background, character and all three furniture drawings measured exactly 2 CSS px per native pixel. The 375×843 viewport retained integer pixels with clipped overscan. No horizontal document overflow; Pixelify and all five cards loaded.
+- Direct 1280px production check confirmed the same density and no browser errors. Proof: ignored `.verification/environment-matched-production.jpg`. Responsive harness: `.verification/environment-layouts.html`, excluded from production.
+- Final independent read-only review found no material issue with ResizeObserver cleanup, integer path snapping, fixed 2× rendering, odd-dimension clipping or the preserved chair offset.
+
+## Orbit momentum and coherent furniture
 
 User reported reversed rotation, wanted speed from a swipe, and showed the table rail crossing the thighs. Earlier furniture alignment did not resolve that composition. The tabletop and laptop also used opposing perspective directions, while the chair was still stretched from its old 80px grid.
 

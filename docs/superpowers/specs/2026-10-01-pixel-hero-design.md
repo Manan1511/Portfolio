@@ -20,6 +20,8 @@ Approved in chat by user, then explicitly supplied as implementation request on 
 - Rebuilt sprite still felt too pixelated: use finer sampling of its existing complete drawings, limiting display pixels to 2px while retaining display size, integer enlargement, animation timing and attachment registration.
 - Align desk/laptop to the rebuilt seated pose. Furniture uses the same 120px logical grid, with keyboard contact at the hand anchor, connected screen/hinge/base, cup on the tabletop and legs on the floor. User clarified the first correction concerns desk/laptop alignment only.
 - Further furniture correction: chair, desk and laptop share one three-quarter perspective on the 120px grid. Fit the chair seat to the hips; keep the complete character in front of furniture so no table rail crosses the thighs.
+- Move the chair four logical pixels left, equivalent to 8px on mobile and 12px on desktop.
+- Environment pixelation must match the finer sprite. Use a shared 2 CSS px display grid for the character, furniture and responsive landscape. Refine cloud/tree detail and hill/clearing contours while retaining the daylight palette and scene placement.
 - Add swipe momentum proportional to recent gesture speed. Preserve the released angle and ease toward the slow orbit in the gesture's direction. Under hover/focus a deliberate flick eases to rest; subsequent focus/hover, a new press, explicit pause and reduced motion stop momentum. Correct mirrored input: front cards and keyboard arrows move in the indicated horizontal direction; a grabbed rear card uses its starting side of the ring.
 
 ## Approved complete sprite rebuild
