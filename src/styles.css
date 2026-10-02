@@ -21,7 +21,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .pokemon-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
 .pokemon-roamer { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; display: block; }
 .pokemon-charizard { pointer-events: auto; cursor: pointer; color: #334438; }
-.pokemon-pikachu { pointer-events: none; }
+.pokemon-decorative { pointer-events: none; }
 .pokemon-facing { display: block; position: relative; width: 100%; height: 100%; }
 .pokemon-facing .character-sprite, .preview-stage .character-sprite { display: block; position: relative; z-index: 1; }
 .fire-breath { position: absolute; z-index: 0; pointer-events: none; image-rendering: pixelated; }

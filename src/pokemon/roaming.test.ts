@@ -6,6 +6,25 @@ const world: PokemonWorld = { width: 390, height: 844, skyBottom: 312, floor: 59
   obstacles: [{ left: 90, top: 340, right: 330, bottom: 590 }, { left: 230, top: 794, right: 374, bottom: 836 }] };
 const rng = () => .3;
 
+it.each([1024, 1440, 1920])('keeps the new walkers in separate side grass areas at %ipx', width => {
+  const viewport = { ...world, width };
+  const left = habitatBounds(pokemon.bulbasaur, viewport), right = habitatBounds(pokemon.squirtle, viewport);
+  expect(left.maxX + pokemon.bulbasaur.sprite.width * 2).toBeLessThan(right.minX);
+});
+
+it('spawns desktop additions apart and lets a corrected furniture-adjacent spawn leave its rest', () => {
+  const desktop = { ...world, width: 1440 };
+  const bulbasaur = createActor(pokemon.bulbasaur, desktop, rng);
+  const squirtle = createActor(pokemon.squirtle, desktop, rng);
+  expect(Math.hypot(bulbasaur.position.x - squirtle.position.x, bulbasaur.position.y - squirtle.position.y)).toBeGreaterThan(400);
+  const obstructed = { ...desktop, floor: 560, obstacles: [{ left: 100, top: 310, right: 340, bottom: 554 }] };
+  let actor = createActor(pokemon.bulbasaur, obstructed, rng);
+  const start = actor.position;
+  for (let i = 0; i < 120; i++) actor = advanceActor(actor, pokemon.bulbasaur, obstructed, 50,
+    { paused: false, reduced: false, held: false }, () => .9);
+  expect(actor.position).not.toEqual(start);
+});
+
 it('does not resolve attack anchors using a longer ambient wing cycle', () => {
   const definition = pokemon.charizard;
   const actor = { ...createActor(definition, world, rng), animationElapsed: 600 };

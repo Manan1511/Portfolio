@@ -3,19 +3,75 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { PokemonHabitat } from './PokemonHabitat';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
-function setup(reduced = false) {
+function setup(reduced = false, width = 390) {
   vi.useFakeTimers();
   vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: reduced, media: '', onchange: null,
     addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => true });
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   const rect = (x: number, y: number, width: number, height: number) => ({ x, y, left: x, top: y, width, height, right: x + width, bottom: y + height, toJSON() {} });
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: HTMLElement) {
-    if (this.classList.contains('pokemon-layer') || this.classList.contains('hero')) return rect(0, 0, 390, 844);
+    if (this.classList.contains('pokemon-layer') || this.classList.contains('hero')) return rect(0, 0, width, 844);
     if (this.classList.contains('hello-bubble')) return rect(16, 320, 120, 65);
     return rect(100, 310, 240, 244);
   });
-  return render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button><PokemonHabitat /></main>);
+  return { ...render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button><PokemonHabitat /></main>),
+    resize(nextWidth: number) { width = nextWidth; fireEvent(window, new Event('resize')); } };
 }
+
+it('adds only Bulbasaur and Squirtle on desktop and removes them below 1024px', () => {
+  const { container, resize } = setup(true, 1440);
+  expect(Array.from(container.querySelectorAll('[data-pokemon]'), element => element.getAttribute('data-pokemon')))
+    .toEqual(['pikachu', 'charizard', 'bulbasaur', 'squirtle']);
+  for (const id of ['bulbasaur', 'squirtle']) {
+    expect(container.querySelector(`[data-pokemon="${id}"]`)).toHaveAttribute('aria-hidden', 'true');
+    expect(container.querySelector(`[data-pokemon="${id}"]`)!.tagName).toBe('DIV');
+  }
+  resize(1023);
+  expect(container.querySelectorAll('[data-pokemon]')).toHaveLength(2);
+  resize(390);
+  expect(container.querySelectorAll('[data-pokemon]')).toHaveLength(2);
+  resize(1024);
+  expect(container.querySelectorAll('[data-pokemon]')).toHaveLength(4);
+  expect(container.querySelector('[data-pokemon="gengar"]')).toBeNull();
+});
+
+it('animates new desktop walkers', () => {
+  vi.spyOn(Math, 'random').mockReturnValue(.9);
+  const { container } = setup(false, 1440);
+  const before = ['bulbasaur', 'squirtle'].map(id => container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style'));
+  act(() => vi.advanceTimersByTime(6000));
+  for (const [index, id] of ['bulbasaur', 'squirtle'].entries()) {
+    expect(container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style')).not.toBe(before[index]);
+  }
+});
+
+it('keeps desktop additions stationary when reduced motion is requested', () => {
+  const { container } = setup(true, 1440);
+  const before = ['bulbasaur', 'squirtle'].map(id => container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style'));
+  act(() => vi.advanceTimersByTime(6000));
+  for (const [index, id] of ['bulbasaur', 'squirtle'].entries()) {
+    expect(container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style')).toBe(before[index]);
+  }
+});
+
+it('preserves existing actors across a desktop breakpoint change and pauses every species when hidden', () => {
+  const { container, resize } = setup(false, 1023);
+  const charizard = screen.getByRole('button', { name: 'Charizard: breathe fire' });
+  const pikachu = container.querySelector('[data-pokemon="pikachu"]');
+  fireEvent.click(charizard);
+  resize(1024);
+  expect(container.querySelector('[data-pokemon="pikachu"]')).toBe(pikachu);
+  expect(charizard).toHaveAttribute('data-attacking', 'true');
+  Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+  fireEvent(document, new Event('visibilitychange'));
+  const before = Array.from(container.querySelectorAll('[data-pokemon]'), el => el.getAttribute('style'));
+  act(() => vi.advanceTimersByTime(6000));
+  expect(Array.from(container.querySelectorAll('[data-pokemon]'), el => el.getAttribute('style'))).toEqual(before);
+  Object.defineProperty(document, 'hidden', { configurable: true, value: false });
+  fireEvent(document, new Event('visibilitychange'));
+  act(() => vi.advanceTimersByTime(1250));
+  expect(charizard).toHaveAttribute('data-attacking', 'false');
+});
 
 it('allows click/keyboard-compatible attack, ignores repeat activation and returns to roaming', () => {
   const { container } = setup();

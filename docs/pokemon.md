@@ -6,6 +6,21 @@ removed the manual pause control; hidden/offscreen and reduced-motion pauses rem
 Original sheets receive exact colour background removal. Main hero, Manan,
 furniture and greeting retain their existing composition.
 
+Desktop expansion (2026-10-03): add one Bulbasaur and one Squirtle at hero
+widths of **1024px and above**. Gengar is deferred by the user. Below that
+breakpoint, retain the existing Pikachu/Charizard population and composition.
+Bulbasaur walks through the left grass area; Squirtle through the right. Both
+use complete source poses, 2× pixels, native left-facing artwork mirrored for
+rightward travel, and idle pauses. No new click action or control is added.
+
+Species metadata supplies eligibility, normalized spawn positions, horizontal
+roaming ranges and an optional ground inset. New walkers can reach grass beside
+the desk while measured obstacles exclude furniture, Manan and the greeting.
+Resize reconciliation finds the closest safe placement, including obstacle
+edges, instead of assuming the top-left corner is always clear. Existing actors
+retain their animation/attack state when the responsive population changes.
+All species share the existing clock, hidden/offscreen pauses and reduced motion.
+
 ## Milestones
 
 1. Transparent sheets, complete registered clips, controlled renderer playback
@@ -64,3 +79,17 @@ furniture and greeting retain their existing composition.
   portrait/landscape viewport layouts fit without document overflow. Enter
   activation, flame connection and recovery were inspected on the production
   page beneath `/revamped-portfolio/`; console errors were absent.
+
+- Desktop expansion: original RGB pixels, alpha removal and sheet coordinates
+  verified for every source pixel. Five Bulbasaur and six Squirtle walk crops
+  inspected together with floor registration; recolours, shell actions and
+  editing parts excluded. Asset milestone committed separately.
+- Regression coverage includes desktop eligibility at the 1024px breakpoint,
+  mobile population, resize continuity, separate side areas, independent walking,
+  furniture avoidance, hidden-page pause and reduced motion.
+- Final expansion verification: 86 tests across 13 files, typecheck, background
+  cleanup test and production build pass. Production served beneath
+  `/revamped-portfolio/`: 320, 390 and 768px retain two species; 1024 and 1440px
+  show four. Exact 2× dimensions and no document overflow confirmed. Desktop
+  and mobile compositions inspected; Enter still starts Charizard's attack.
+  No production console warnings or errors. Proof: `.verification/desktop-pokemon-final.png`.

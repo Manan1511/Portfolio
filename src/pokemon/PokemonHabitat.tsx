@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from '../shared/useReducedMotion';
-import { pokemon, type PokemonId } from './definitions';
+import { pokemon, populationForWidth, type PokemonId } from './definitions';
 import { PokemonRoamer } from './PokemonRoamer';
 import { advanceActor, beginAttack, createActor, reconcileActor, type Actor, type PokemonWorld, type Rect } from './roaming';
 
-type Population = Record<PokemonId, Actor>;
-const ids: PokemonId[] = ['pikachu', 'charizard'];
+type Population = Partial<Record<PokemonId, Actor>>;
 
 export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
   const layer = useRef<HTMLDivElement>(null);
   const [world, setWorld] = useState<PokemonWorld | null>(null);
+  const ids = useMemo(() => world ? populationForWidth(world.width) : [], [world]);
   const [actors, setActors] = useState<Population | null>(null);
   const [visible, setVisible] = useState(() => !document.hidden);
   const [onscreen, setOnscreen] = useState(true);
@@ -51,9 +51,11 @@ export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
 
   useEffect(() => {
     if (!world) return;
-    setActors(previous => Object.fromEntries(ids.map(id => [id, previous
-      ? reconcileActor(previous[id], pokemon[id], world) : createActor(pokemon[id], world)])) as Population);
-  }, [world]);
+    setActors(previous => Object.fromEntries(ids.map(id => {
+      const existing = previous?.[id];
+      return [id, existing ? reconcileActor(existing, pokemon[id], world) : createActor(pokemon[id], world)];
+    })) as Population);
+  }, [world, ids]);
 
   useEffect(() => {
     const visibility = () => setVisible(!document.hidden);
@@ -66,27 +68,31 @@ export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
     return () => document.removeEventListener('visibilitychange', visibility);
   }, []);
 
-  const hasAttack = actors?.charizard.attackElapsed != null;
+  const hasAttack = actors?.charizard?.attackElapsed != null;
   useEffect(() => {
     if (!world || !visible || !onscreen || (reduced && !hasAttack)) return;
     let last = performance.now(), timer = 0;
     const tick = (now: number) => {
       const delta = Math.min(50, now - last); last = now;
-      setActors(previous => previous && Object.fromEntries(ids.map(id => [id, advanceActor(previous[id], pokemon[id], world, delta,
-        { paused: false, reduced, held: id === 'charizard' && (holds.current.hover || holds.current.focus) })])) as Population);
+      setActors(previous => previous && Object.fromEntries(ids.flatMap(id => {
+        const actor = previous[id];
+        return actor ? [[id, advanceActor(actor, pokemon[id], world, delta,
+          { paused: false, reduced, held: id === 'charizard' && (holds.current.hover || holds.current.focus) })]] : [];
+      })) as Population);
       timer = requestAnimationFrame(tick);
     };
     timer = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(timer);
-  }, [world, visible, onscreen, reduced, hasAttack]);
+  }, [world, ids, visible, onscreen, reduced, hasAttack]);
 
   const attack = useCallback(() => {
     if (!world) return;
-    setActors(previous => previous && { ...previous, charizard: beginAttack(previous.charizard, pokemon.charizard, world) });
+    setActors(previous => previous?.charizard
+      ? { ...previous, charizard: beginAttack(previous.charizard, pokemon.charizard, world) } : previous);
   }, [world]);
 
   return <div className="pokemon-layer" ref={layer}>
-    {world && actors && ids.map(id => <PokemonRoamer key={id} definition={pokemon[id]} actor={actors[id]} world={world}
+    {world && actors && ids.map(id => actors[id] && <PokemonRoamer key={id} definition={pokemon[id]} actor={actors[id]} world={world}
       reduced={reduced} onAttack={attack} onHold={hold} />)}
   </div>;
 }

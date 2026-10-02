@@ -9,6 +9,12 @@ export interface PokemonDefinition {
   id: PokemonId; name: string; sprite: SpriteDefinition;
   habitat: 'ground' | 'sky'; speed: readonly [number, number]; rest: readonly [number, number];
   nativeFacing: -1;
+  minViewportWidth?: number;
+  spawn?: Point;
+  roamX?: readonly [number, number];
+  // Allows desktop walkers into grass beside the desk; measured obstacles
+  // still keep their complete bounds away from furniture and the greeting.
+  groundInset?: number;
 }
 
 // Native source pixels are never stretched. Pivots register entire frames.
@@ -67,6 +73,7 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
       },
     } },
   bulbasaur: { id: 'bulbasaur', name: 'Bulbasaur', habitat: 'ground', nativeFacing: -1,
+    minViewportWidth: 1024, spawn: { x: .42, y: .28 }, roamX: [0, .32], groundInset: 120,
     speed: [20, 30], rest: [1800, 3200], sprite: {
       image: bulbasaurSheet, width: 40, height: 36, sourceWidth: 296, sourceHeight: 159,
       anchors: { feet: bulbasaurFeet }, clips: {
@@ -76,6 +83,7 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
       },
     } },
   squirtle: { id: 'squirtle', name: 'Squirtle', habitat: 'ground', nativeFacing: -1,
+    minViewportWidth: 1024, spawn: { x: .55, y: .62 }, roamX: [.70, 1], groundInset: 120,
     speed: [24, 34], rest: [1500, 2800], sprite: {
       image: squirtleSheet, width: 52, height: 44, sourceWidth: 713, sourceHeight: 293,
       anchors: { feet: squirtleFeet }, clips: {
@@ -85,6 +93,11 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
       },
     } },
 };
+
+export function populationForWidth(width: number): PokemonId[] {
+  return Object.values(pokemon).filter(species => width >= (species.minViewportWidth ?? 0))
+    .map(species => species.id);
+}
 
 export const flameFrames = [
   { x: 1021, y: 432, width: 15, height: 30 },

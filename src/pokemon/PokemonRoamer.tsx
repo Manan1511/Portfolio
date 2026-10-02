@@ -29,7 +29,7 @@ export const PokemonRoamer = memo(function PokemonRoamer({ definition, actor, wo
     onFocus={event => onHold('focus', !pointerFocus.current && event.currentTarget.matches(':focus-visible'))}
     onBlur={() => { pointerFocus.current = false; onHold('focus', false); }}>
     {drawing}<span className="pokemon-hint" id="charizard-hint">click for fire</span>
-  </button> : <div aria-hidden="true" className="pokemon-roamer pokemon-pikachu" style={style} data-pokemon={definition.id} data-facing={actor.facing}>
+  </button> : <div aria-hidden="true" className={`pokemon-roamer pokemon-decorative pokemon-${definition.id}`} style={style} data-pokemon={definition.id} data-facing={actor.facing}>
     {drawing}
   </div>;
 });

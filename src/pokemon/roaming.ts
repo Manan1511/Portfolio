@@ -17,10 +17,13 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 export function habitatBounds(definition: PokemonDefinition, world: PokemonWorld) {
   const width = definition.sprite.width * 2, height = definition.sprite.height * 2;
   const horizontalPadding = Math.max(0, Math.min(16, (world.width - width) / 2));
-  const minY = definition.habitat === 'sky' ? 16 : world.floor + 16;
+  const minY = definition.habitat === 'sky' ? 16 : world.floor + 16 - (definition.groundInset ?? 0);
   const maxY = Math.max(16, Math.floor((definition.habitat === 'sky' ? world.skyBottom - 16 - height : world.height - 16 - height) / 2) * 2);
-  const minX = Math.ceil(horizontalPadding / 2) * 2;
-  return { minX, maxX: Math.max(minX, Math.floor((world.width - horizontalPadding - width) / 2) * 2),
+  const left = Math.ceil(horizontalPadding / 2) * 2;
+  const right = Math.max(left, Math.floor((world.width - horizontalPadding - width) / 2) * 2);
+  const range = definition.roamX ?? [0, 1];
+  const minX = Math.ceil((left + range[0] * (right - left)) / 2) * 2;
+  return { minX, maxX: Math.max(minX, Math.floor((left + range[1] * (right - left)) / 2) * 2),
     minY: Math.min(Math.ceil(minY / 2) * 2, maxY), maxY };
 }
 
@@ -46,6 +49,25 @@ function clampPoint(point: Point, definition: PokemonDefinition, world: PokemonW
   const bounds = habitatBounds(definition, world);
   return { x: clamp(point.x, bounds.minX, bounds.maxX), y: clamp(point.y, bounds.minY, bounds.maxY) };
 }
+function safePosition(point: Point, definition: PokemonDefinition, world: PokemonWorld): Point {
+  const bounds = habitatBounds(definition, world), obstacles = forbidden(definition, world);
+  const preferred = clampPoint(point, definition, world);
+  const blocked = (candidate: Point) => obstacles.some(rect => inside(candidate, rect));
+  if (!blocked(preferred)) return preferred;
+  // A corner alone can intersect the desk on a smaller viewport. Also consider
+  // obstacle edges and choose the nearest valid location when bounds change.
+  const candidates = [
+    { x: bounds.minX, y: bounds.minY }, { x: bounds.maxX, y: bounds.minY },
+    { x: bounds.minX, y: bounds.maxY }, { x: bounds.maxX, y: bounds.maxY },
+    ...obstacles.flatMap(rect => [
+      { x: rect.left - 2, y: preferred.y }, { x: rect.right + 2, y: preferred.y },
+      { x: preferred.x, y: rect.top - 2 }, { x: preferred.x, y: rect.bottom + 2 },
+    ]).map(candidate => clampPoint(candidate, definition, world)),
+  ];
+  return candidates.filter(candidate => !blocked(candidate))
+    .sort((a, b) => Math.hypot(a.x - preferred.x, a.y - preferred.y)
+      - Math.hypot(b.x - preferred.x, b.y - preferred.y))[0] ?? preferred;
+}
 function destination(origin: Point, definition: PokemonDefinition, world: PokemonWorld, rng: () => number): Point {
   const bounds = habitatBounds(definition, world), obstacles = forbidden(definition, world);
   const candidates = Array.from({ length: 24 }, () => ({ x: bounds.minX + rng() * (bounds.maxX - bounds.minX),
@@ -58,19 +80,15 @@ function destination(origin: Point, definition: PokemonDefinition, world: Pokemo
 
 export function createActor(definition: PokemonDefinition, world: PokemonWorld, rng = Math.random): Actor {
   const bounds = habitatBounds(definition, world);
-  let position = { x: bounds.minX + (definition.habitat === 'sky' ? .68 : .22) * (bounds.maxX - bounds.minX),
-    y: bounds.minY + .45 * (bounds.maxY - bounds.minY) };
-  if (forbidden(definition, world).some(rect => inside(position, rect))) position = { x: bounds.minX, y: bounds.minY };
+  const spawn = definition.spawn ?? { x: definition.habitat === 'sky' ? .68 : .22, y: .45 };
+  const position = safePosition({ x: bounds.minX + spawn.x * (bounds.maxX - bounds.minX),
+    y: bounds.minY + spawn.y * (bounds.maxY - bounds.minY) }, definition, world);
   return { position, origin: position, target: position, facing: -1, mode: 'rest', modeElapsed: 0,
     duration: randomBetween(definition.rest, rng), animationElapsed: 0, attackElapsed: null };
 }
 
 export function reconcileActor(actor: Actor, definition: PokemonDefinition, world: PokemonWorld): Actor {
-  let position = clampPoint(actor.position, definition, world);
-  if (forbidden(definition, world).some(rect => inside(position, rect))) {
-    const bounds = habitatBounds(definition, world);
-    position = { x: bounds.minX, y: bounds.minY };
-  }
+  const position = safePosition(actor.position, definition, world);
   return { ...actor, position, origin: position, target: position, mode: 'rest', modeElapsed: 0 };
 }
 
