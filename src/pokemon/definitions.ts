@@ -56,7 +56,7 @@ const bulbasaurFeet = { x: 20, y: 34 }, squirtleFeet = { x: 24, y: 40 };
 
 export const pokemon: Record<PokemonId, PokemonDefinition> = {
   pikachu: { id: 'pikachu', name: 'Pikachu', habitat: 'ground', nativeFacing: -1,
-    speed: [24, 36], rest: [1500, 3000], sprite: {
+    speed: [24, 36], rest: [3500, 5500], sprite: {
       image: pikachuSheet, width: 48, height: 44, sourceWidth: 512, sourceHeight: 254,
       anchors: { feet }, clips: {
         idle: { loop: true, frames: [frame([1, 1, 37, 39], { x: 23, y: 40 }, feet, 1000)] },
@@ -65,7 +65,7 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
       },
     } },
   charizard: { id: 'charizard', name: 'Charizard', habitat: 'sky', nativeFacing: -1,
-    speed: [28, 44], rest: [1000, 2000], sprite: {
+    speed: [28, 44], rest: [2800, 4200], sprite: {
       image: charizardSheet, width: 140, height: 96, sourceWidth: 1102, sourceHeight: 587,
       anchors: { body, mouth: { x: 24, y: 34 } }, clips: {
         flight: { loop: true, frames: wingCycle }, hover: { loop: true, frames: wingCycle },
@@ -74,7 +74,7 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
     } },
   bulbasaur: { id: 'bulbasaur', name: 'Bulbasaur', habitat: 'ground', nativeFacing: -1,
     minViewportWidth: 1024, spawn: { x: .42, y: .28 }, roamX: [0, .32], groundInset: 120,
-    speed: [20, 30], rest: [1800, 3200], sprite: {
+    speed: [20, 30], rest: [5000, 8000], sprite: {
       image: bulbasaurSheet, width: 40, height: 36, sourceWidth: 296, sourceHeight: 159,
       anchors: { feet: bulbasaurFeet }, clips: {
         idle: { loop: true, frames: [frame([1, 1, 34, 31], { x: 19, y: 32 }, bulbasaurFeet, 1000)] },
@@ -84,7 +84,7 @@ export const pokemon: Record<PokemonId, PokemonDefinition> = {
     } },
   squirtle: { id: 'squirtle', name: 'Squirtle', habitat: 'ground', nativeFacing: -1,
     minViewportWidth: 1024, spawn: { x: .55, y: .62 }, roamX: [.70, 1], groundInset: 120,
-    speed: [24, 34], rest: [1500, 2800], sprite: {
+    speed: [24, 34], rest: [4200, 6500], sprite: {
       image: squirtleSheet, width: 52, height: 44, sourceWidth: 713, sourceHeight: 293,
       anchors: { feet: squirtleFeet }, clips: {
         idle: { loop: true, frames: [frame([7, 2, 42, 39], { x: 27, y: 41 }, squirtleFeet, 1000)] },

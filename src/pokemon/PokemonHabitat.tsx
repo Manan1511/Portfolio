@@ -23,30 +23,40 @@ export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
     const measure = () => {
       const root = element.getBoundingClientRect();
       if (!root.width || !root.height) return;
+      const relative = (bounds: DOMRect): Rect => ({ left: bounds.left - root.left, top: bounds.top - root.top,
+        right: bounds.right - root.left, bottom: bounds.bottom - root.top });
       const rect = (selector: string): Rect | null => {
         const bounds = hero.querySelector<HTMLElement>(selector)?.getBoundingClientRect();
-        return bounds ? { left: bounds.left - root.left, top: bounds.top - root.top,
-          right: bounds.right - root.left, bottom: bounds.bottom - root.top } : null;
+        return bounds ? relative(bounds) : null;
       };
       const desk = rect('.desk-scene'), hello = rect('.hello-bubble');
       if (!desk) return;
       const furniture = [rect('.scene-desk-front'), rect('.scene-chair'), rect('.desk-scene .character-sprite')]
         .filter((item): item is Rect => !!item);
       const obstacles = [...furniture, desk, hello].filter((item): item is Rect => !!item);
+      const groundObstacles = Array.from(hero.querySelectorAll('.tree-footprint'), target => relative(target.getBoundingClientRect()))
+        .filter(item => item.right > item.left && item.bottom > item.top && item.right > 0 && item.left < root.width
+          && item.bottom > 0 && item.top < root.height);
       const next = { width: root.width, height: root.height,
         skyBottom: Math.min(desk.top + 24, hello?.top ?? desk.top + 24),
-        floor: Math.max(desk.bottom + 6, ...furniture.map(item => item.bottom)), obstacles };
+        floor: Math.max(desk.bottom + 6, ...furniture.map(item => item.bottom)), obstacles, groundObstacles };
       setWorld(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next);
     };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(hero);
-    for (const selector of ['.desk-scene', '.hello-bubble']) {
+    for (const selector of ['.desk-scene', '.hello-bubble', '.pixel-landscape']) {
       const target = hero.querySelector(selector);
       if (target) observer.observe(target);
     }
+    // A viewport resize can move paths without changing their bounding-box
+    // size. Remeasure after the landscape's pixel geometry actually commits.
+    const treeObserver = new MutationObserver(measure);
+    for (const tree of hero.querySelectorAll('.tree-artwork')) {
+      treeObserver.observe(tree, { attributes: true, subtree: true, attributeFilter: ['d', 'transform'] });
+    }
     window.addEventListener('resize', measure);
-    return () => { observer.disconnect(); window.removeEventListener('resize', measure); };
+    return () => { observer.disconnect(); treeObserver.disconnect(); window.removeEventListener('resize', measure); };
   }, [layoutKey]);
 
   useEffect(() => {

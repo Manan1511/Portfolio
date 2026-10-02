@@ -21,6 +21,24 @@ edges, instead of assuming the top-left corner is always clear. Existing actors
 retain their animation/attack state when the responsive population changes.
 All species share the existing clock, hidden/offscreen pauses and reduced motion.
 
+Depth/idle refinement (2026-10-03): ground Pokémon and individual trees share
+the hero's stacking context. Their foot/ground-contact Y coordinates determine
+depth, so a walker can pass behind a tree or in front and Pokémon crossings
+follow position rather than render order. Charizard has a separate sky depth.
+Keep the landscape and Pokémon parent layers free of stacking contexts.
+The right-edge tree moves from x=462 to x=454 for an off-center partial crop.
+
+Ambient rest ranges: Pikachu 3.5–5.5s; Charizard 2.8–4.2s; Bulbasaur 5–8s;
+Squirtle 4.2–6.5s. Idle playback, flight wings and the 1.2s manual attack retain
+their existing frame timing.
+
+Tree trunks are solid ground obstacles. Transparent base footprints follow the
+actual transformed pixel artwork; the habitat measures them after layout and
+after tree geometry changes. Ground walkers use a small foot collider with a
+2px clearance. Both destination checks and the entire movement segment reject
+trunk crossings. Spawn/resize reconciliation also checks these obstacles.
+Canopies remain visual depth layers, and Charizard ignores ground collisions.
+
 ## Milestones
 
 1. Transparent sheets, complete registered clips, controlled renderer playback
@@ -93,3 +111,14 @@ All species share the existing clock, hidden/offscreen pauses and reduced motion
   show four. Exact 2× dimensions and no document overflow confirmed. Desktop
   and mobile compositions inspected; Enter still starts Charizard's attack.
   No production console warnings or errors. Proof: `.verification/desktop-pokemon-final.png`.
+
+- Depth, idle and trunk refinement: 95 tests across 14 files, typecheck and
+  production build pass. Regressions cover crossings by feet, tree occlusion,
+  longer rests, swept trunk avoidance, mirrored foot registration, safe spawn
+  and resize recovery, and remeasurement after SVG tree geometry changes.
+  Browser inspected behind/in-front tree poses and the production scene under
+  the repository subpath at 320/390/768/1024/1440px. No horizontal overflow or
+  observed foot/trunk intersections. The right tree shows about 68% of its crown
+  on desktop, instead of a midpoint cut. Portrait favicon resolves under the
+  subpath and returns HTTP 200. Proof: `.verification/tree-depth-fixed.png` and
+  `.verification/world-trunks-final.png`.

@@ -1,5 +1,6 @@
 import { memo, useRef } from 'react';
 import { CharacterSprite } from '../character/CharacterSprite';
+import { groundDepth, skyDepth } from '../shared/pixelGrid';
 import { FireBreath } from './FireBreath';
 import type { PokemonDefinition } from './definitions';
 import { actorClip, actorFrame, fireGeometry, type Actor, type PokemonWorld } from './roaming';
@@ -19,6 +20,7 @@ export const PokemonRoamer = memo(function PokemonRoamer({ definition, actor, wo
     {fire?.visible && <FireBreath mouth={fire.mouth} length={fire.length} elapsed={actor.attackElapsed! - 240} still={reduced} />}
   </span>;
   const style = { width: definition.sprite.width * 2, height: definition.sprite.height * 2,
+    zIndex: definition.habitat === 'sky' ? skyDepth : groundDepth(y + definition.sprite.anchors.feet.y * 2),
     transform: `translate3d(${x}px, ${y}px, 0)` };
   return definition.id === 'charizard' ? <button type="button" className="pokemon-roamer pokemon-charizard"
     style={style} data-pokemon={definition.id} data-attacking={attack} data-facing={actor.facing}

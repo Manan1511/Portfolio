@@ -1,6 +1,11 @@
 // One native pixel occupies two CSS pixels throughout Manan's hero.
 export const scenePixelSize = 2;
 
+// Objects sharing the ground plane sort by their contact point, not their top
+// edge or sprite height. One depth step per scene pixel keeps ties stable.
+export const groundDepth = (feetY: number) => Math.max(1, Math.round(feetY / scenePixelSize));
+export const skyDepth = 100000;
+
 // Our pixel drawings use absolute M/L/H/V/Z paths. Snap shared coordinates,
 // rather than individual lengths, so adjoining fills meet on the same cell.
 export function pixelPath(path: string, scale: number, offsetX = 0, offsetY = 0) {

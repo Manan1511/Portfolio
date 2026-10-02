@@ -2,6 +2,16 @@ import { expect, it } from 'vitest';
 import { pokemon, flameFrames } from './definitions';
 import { frameAt } from '../character/animation';
 
+it('gives each species a distinct longer ambient rest range', () => {
+  const ranges = Object.values(pokemon).map(species => species.rest);
+  expect(new Set(ranges.map(range => range.join(':'))).size).toBe(ranges.length);
+  for (const [minimum, maximum] of ranges) {
+    expect(minimum).toBeGreaterThanOrEqual(2800);
+    expect(maximum).toBeGreaterThan(minimum);
+  }
+  expect(pokemon.bulbasaur.rest[0]).toBeGreaterThan(pokemon.squirtle.rest[0]);
+});
+
 it('maps Bulbasaur and Squirtle whole walking rows without recolours or editing parts', () => {
   const bulbasaur = Object.values(pokemon).find(species => species.id === 'bulbasaur');
   const squirtle = Object.values(pokemon).find(species => species.id === 'squirtle');

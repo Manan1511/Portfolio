@@ -1,22 +1,49 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { PokemonHabitat } from './PokemonHabitat';
+import { groundFootprint } from './roaming';
+import { pokemon } from './definitions';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
-function setup(reduced = false, width = 390) {
+function setup(reduced = false, width = 390, withTree = false) {
   vi.useFakeTimers();
   vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: reduced, media: '', onchange: null,
     addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => true });
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   const rect = (x: number, y: number, width: number, height: number) => ({ x, y, left: x, top: y, width, height, right: x + width, bottom: y + height, toJSON() {} });
+  let trunkX = 1190, trunkY = 708;
+  vi.spyOn(SVGElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: SVGElement) {
+    return this.classList.contains('tree-footprint') ? rect(trunkX, trunkY, 20, 10) : rect(0, 0, 0, 0);
+  });
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function(this: HTMLElement) {
     if (this.classList.contains('pokemon-layer') || this.classList.contains('hero')) return rect(0, 0, width, 844);
     if (this.classList.contains('hello-bubble')) return rect(16, 320, 120, 65);
     return rect(100, 310, 240, 244);
   });
-  return { ...render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button><PokemonHabitat /></main>),
-    resize(nextWidth: number) { width = nextWidth; fireEvent(window, new Event('resize')); } };
+  const view = render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button>
+    {withTree && <svg><g className="tree-artwork"><path className="tree-footprint" d="M0 0H20V10H0Z" /></g></svg>}
+    <PokemonHabitat /></main>);
+  return { ...view,
+    resize(nextWidth: number) { width = nextWidth; fireEvent(window, new Event('resize')); },
+    moveTrunk(x: number, y: number) { trunkX = x; trunkY = y; view.container.querySelector('.tree-footprint')!.setAttribute('d', `M${x} ${y}h20v10h-20Z`); } };
 }
+
+it('measures trunk bases and reconciles walkers after tree geometry moves', async () => {
+  const { container, moveTrunk } = setup(true, 1440, true);
+  const feet = () => {
+    const element = container.querySelector<HTMLElement>('[data-pokemon="squirtle"]')!;
+    const [, x, y] = element.style.transform.match(/translate3d\(([-\d.]+)px, ([-\d.]+)px/)!;
+    return groundFootprint(pokemon.squirtle, { x: Number(x), y: Number(y) });
+  };
+  const overlaps = (x: number, y: number) => {
+    const footprint = feet();
+    return footprint.left < x + 20 && footprint.right > x && footprint.top < y + 10 && footprint.bottom > y;
+  };
+  expect(overlaps(1190, 708)).toBe(false);
+  const before = feet(), x = (before.left + before.right) / 2 - 10, y = before.top;
+  await act(async () => moveTrunk(x, y));
+  expect(overlaps(x, y)).toBe(false);
+});
 
 it('adds only Bulbasaur and Squirtle on desktop and removes them below 1024px', () => {
   const { container, resize } = setup(true, 1440);
@@ -39,7 +66,7 @@ it('animates new desktop walkers', () => {
   vi.spyOn(Math, 'random').mockReturnValue(.9);
   const { container } = setup(false, 1440);
   const before = ['bulbasaur', 'squirtle'].map(id => container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style'));
-  act(() => vi.advanceTimersByTime(6000));
+  act(() => vi.advanceTimersByTime(12000));
   for (const [index, id] of ['bulbasaur', 'squirtle'].entries()) {
     expect(container.querySelector(`[data-pokemon="${id}"]`)!.getAttribute('style')).not.toBe(before[index]);
   }

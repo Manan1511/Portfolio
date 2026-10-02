@@ -1,10 +1,62 @@
 import { expect, it } from 'vitest';
 import { pokemon } from './definitions';
-import { advanceActor, beginAttack, createActor, habitatBounds, reconcileActor, fireGeometry, type PokemonWorld } from './roaming';
+import { advanceActor, beginAttack, createActor, habitatBounds, reconcileActor, fireGeometry, groundFootprint, type PokemonWorld } from './roaming';
 
 const world: PokemonWorld = { width: 390, height: 844, skyBottom: 312, floor: 590,
   obstacles: [{ left: 90, top: 340, right: 330, bottom: 590 }, { left: 230, top: 794, right: 374, bottom: 836 }] };
 const rng = () => .3;
+
+it('keeps both mirrored foot registrations inside the ground collider', () => {
+  const definition = pokemon.squirtle, position = { x: 900, y: 700 };
+  const bounds = groundFootprint(definition, position);
+  for (const feetX of [definition.sprite.anchors.feet.x, definition.sprite.width - definition.sprite.anchors.feet.x]) {
+    expect(bounds.left).toBeLessThanOrEqual(position.x + feetX * 2 - definition.sprite.width / 2);
+    expect(bounds.right).toBeGreaterThanOrEqual(position.x + feetX * 2 + definition.sprite.width / 2);
+  }
+});
+
+it('rejects walking paths through trunk bases while leaving sky travel unaffected', () => {
+  const viewport: PokemonWorld = { width: 1440, height: 900, floor: 660, skyBottom: 320,
+    obstacles: [], groundObstacles: [{ left: 1110, top: 772, right: 1130, bottom: 788 }] };
+  let actor = { ...createActor(pokemon.squirtle, viewport, rng), position: { x: 970, y: 700 }, duration: 0 };
+  let sample = 0;
+  for (let i = 0; i < 1600; i++) {
+    actor = advanceActor(actor, pokemon.squirtle, viewport, 50,
+      { paused: false, reduced: false, held: false }, () => ++sample % 2 ? .9 : .6);
+    const feet = groundFootprint(pokemon.squirtle, actor.position), trunk = viewport.groundObstacles![0];
+    expect(feet.left < trunk.right && feet.right > trunk.left && feet.top < trunk.bottom && feet.bottom > trunk.top).toBe(false);
+  }
+  expect(createActor(pokemon.charizard, { ...viewport, groundObstacles: [{ left: 0, top: 0, right: 1440, bottom: 400 }] }, rng))
+    .toEqual(createActor(pokemon.charizard, { ...viewport, groundObstacles: [] }, rng));
+});
+
+it('moves a blocked spawn or resized actor to a nearby safe place outside a trunk', () => {
+  const viewport: PokemonWorld = { ...world, width: 1440, height: 900, floor: 660, obstacles: [] };
+  const original = createActor(pokemon.bulbasaur, viewport, rng);
+  const feet = groundFootprint(pokemon.bulbasaur, original.position);
+  const trunk = { left: (feet.left + feet.right) / 2 - 6, right: (feet.left + feet.right) / 2 + 6,
+    top: feet.top - 2, bottom: feet.bottom + 2 };
+  const updated = { ...viewport, groundObstacles: [trunk] };
+  for (const actor of [createActor(pokemon.bulbasaur, updated, rng), reconcileActor(original, pokemon.bulbasaur, updated)]) {
+    const footprint = groundFootprint(pokemon.bulbasaur, actor.position);
+    expect(footprint.left < trunk.right && footprint.right > trunk.left && footprint.top < trunk.bottom && footprint.bottom > trunk.top).toBe(false);
+    expect(Math.hypot(actor.position.x - original.position.x, actor.position.y - original.position.y)).toBeLessThan(80);
+  }
+});
+
+it('holds every species at its assigned idle position until its longer rest expires', () => {
+  const viewport = { ...world, width: 1440, obstacles: [] };
+  for (const species of Object.values(pokemon)) {
+    const original = createActor(species, viewport, () => 0);
+    const waiting = advanceActor(original, species, viewport, original.duration - 1,
+      { paused: false, reduced: false, held: false }, () => .9);
+    expect(waiting.mode).toBe('rest');
+    expect(waiting.position).toEqual(original.position);
+    const departing = advanceActor(waiting, species, viewport, 1,
+      { paused: false, reduced: false, held: false }, () => .9);
+    expect(departing.mode).toBe('move');
+  }
+});
 
 it.each([1024, 1440, 1920])('keeps the new walkers in separate side grass areas at %ipx', width => {
   const viewport = { ...world, width };
@@ -68,7 +120,7 @@ it.each([320, 390, 768, 1440])('contains mirrored fire on both sides at %ipx', w
 it('eases into a trip, faces its direction and freezes ambient time on pause', () => {
   const definition = pokemon.pikachu;
   let actor = createActor(definition, world, rng);
-  for (let i = 0; i < 70 && actor.mode !== 'move'; i++) actor = advanceActor(actor, definition, world, 50,
+  for (let i = 0; i < 140 && actor.mode !== 'move'; i++) actor = advanceActor(actor, definition, world, 50,
     { paused: false, reduced: false, held: false }, () => .9);
   expect(actor.mode).toBe('move');
   const start = actor.position;

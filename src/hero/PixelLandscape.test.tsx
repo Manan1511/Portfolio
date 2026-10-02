@@ -43,6 +43,19 @@ it('keeps scenery pixels at two pixels when the hero grows to desktop', () => {
   expect(artwork.style.height).toBe('900px');
 });
 
+it('gives each tree its own depth layer and crops the rightmost crown off-center', () => {
+  const { container } = render(<PixelLandscape clearingY={702} />);
+  resizeTo(1920, 900);
+  const trees = container.querySelectorAll<SVGElement>('.scene-tree');
+  expect(trees).toHaveLength(6);
+  const edge = trees[3];
+  expect(edge).toHaveAttribute('data-tree-x', '454');
+  expect(edge.getAttribute('data-ground-y')).not.toBeNull();
+  expect(Number(edge.style.zIndex)).toBeGreaterThan(0);
+  expect(Number(trees[5].style.zIndex)).toBeGreaterThan(Number(trees[2].style.zIndex));
+  expect(container.querySelector('.landscape-terrain .tree-artwork')).toBeNull();
+});
+
 it('covers odd viewport dimensions without stretching pixels fractionally', () => {
   const { container } = render(<PixelLandscape />);
   resizeTo(375, 843);

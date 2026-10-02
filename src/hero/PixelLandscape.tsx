@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { landscapeGrid, pixelPath, scenePixelSize } from '../shared/pixelGrid';
+import { groundDepth, landscapeGrid, pixelPath, scenePixelSize } from '../shared/pixelGrid';
 import type { Point } from '../character/animation';
 
 const grass = Array.from({ length: 230 }, (_, index) => ({
   x: (index * 47 + 13) % 480,
   y: 204 + (index * 31) % 116,
 })).filter(({ x, y }) => !(x > 169 && x < 319 && y > 217 && y < 280));
-const trees = [{ x: 13, y: 161 }, { x: 55, y: 170 }, { x: 425, y: 161 }, { x: 462, y: 177 }, { x: 98, y: 203 }, { x: 365, y: 209 }];
+const trees = [{ x: 13, y: 161 }, { x: 55, y: 170 }, { x: 425, y: 161 }, { x: 454, y: 177 }, { x: 98, y: 203 }, { x: 365, y: 209 }];
 const treeDrawing = [
   ['#866645', 'M17 35H23V54H21V55H16V54H17Z'],
   ['#b2925e', 'M18 38H20V53H18Z'],
@@ -99,7 +99,6 @@ export function PixelLandscape({ clearingY, clearingCenter }: { clearingY?: numb
         d={`M${x(blade.x)} ${y(blade.y)}h1v-2h1v3h2v-2h1v3h-5Z`} />)}
       {trees.map((tree, i) => <g key={i}>
         <path fill="#527447" opacity=".2" d={oval(grid, tree.x + 19, tree.y + 54, 13, 2)} />
-        {treeDrawing.map(([fill, path], layer) => <path key={layer} fill={fill} d={drawing(path, tree.x, tree.y)} />)}
       </g>)}
       {[{ x: 150, y: 278 }, { x: 334, y: 252 }, { x: 90, y: 263 }].map((flower, i) => <g key={i}>
         <path fill="#e9e1ac" d={`M${x(flower.x)} ${y(flower.y)}h1v-1h2v1h1v2h-1v1h-2v-1h-1Z`} />
@@ -107,5 +106,16 @@ export function PixelLandscape({ clearingY, clearingCenter }: { clearingY?: numb
       </g>)}
       </g>
     </svg>
+    {trees.map((tree, i) => {
+      const feetY = (y(tree.y + 55) + terrainShift) * scenePixelSize;
+      return <svg key={i} className="scene-tree" data-tree-x={tree.x} data-ground-y={feetY}
+        viewBox={`0 0 ${grid.columns} ${grid.rows}`} shapeRendering="crispEdges"
+        style={{ width: grid.columns * scenePixelSize, height: grid.rows * scenePixelSize, zIndex: groundDepth(feetY) }}>
+        <g className="tree-artwork" transform={`translate(0 ${terrainShift})`}>
+          {treeDrawing.map(([fill, path], layer) => <path key={layer} fill={fill} d={drawing(path, tree.x, tree.y)} />)}
+          <path className="tree-footprint" fill="transparent" d={drawing('M16 51H24V55H16Z', tree.x, tree.y)} />
+        </g>
+      </svg>;
+    })}
   </div>;
 }

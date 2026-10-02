@@ -4,6 +4,20 @@ import type { PokemonDefinition } from './definitions';
 export interface Rect { left: number; top: number; right: number; bottom: number }
 export interface PokemonWorld {
   width: number; height: number; skyBottom: number; floor: number; obstacles: Rect[];
+  groundObstacles?: Rect[];
+}
+
+// Ground-plane collision stays at the feet so a walker can pass behind a
+// canopy without treating the entire visual tree as a solid rectangle.
+export function groundFootprint(definition: PokemonDefinition, position: Point): Rect {
+  const feet = definition.sprite.anchors.feet;
+  const nativeX = feet.x * 2, mirroredX = (definition.sprite.width - feet.x) * 2;
+  const y = position.y + feet.y * 2;
+  const halfWidth = definition.sprite.width / 2;
+  // Register a conservative union of both facings. An off-center foot anchor
+  // must not slip into a trunk when the same sprite flips during departure.
+  return { left: position.x + Math.min(nativeX, mirroredX) - halfWidth,
+    right: position.x + Math.max(nativeX, mirroredX) + halfWidth, top: y - 4, bottom: y + 4 };
 }
 export interface Actor {
   position: Point; origin: Point; target: Point; facing: -1 | 1;
@@ -28,8 +42,14 @@ export function habitatBounds(definition: PokemonDefinition, world: PokemonWorld
 }
 
 function forbidden(definition: PokemonDefinition, world: PokemonWorld): Rect[] {
-  return world.obstacles.map(rect => ({ left: rect.left - definition.sprite.width * 2 - 8,
+  const obstacles = world.obstacles.map(rect => ({ left: rect.left - definition.sprite.width * 2 - 8,
     right: rect.right + 8, top: rect.top - definition.sprite.height * 2 - 8, bottom: rect.bottom + 8 }));
+  if (definition.habitat !== 'ground') return obstacles;
+  const feet = groundFootprint(definition, { x: 0, y: 0 });
+  return [...obstacles, ...(world.groundObstacles ?? []).map(rect => ({
+    left: rect.left - feet.right - 2, right: rect.right - feet.left + 2,
+    top: rect.top - feet.bottom - 2, bottom: rect.bottom - feet.top + 2,
+  }))];
 }
 function inside(point: Point, rect: Rect) {
   return point.x > rect.left && point.x < rect.right && point.y > rect.top && point.y < rect.bottom;
