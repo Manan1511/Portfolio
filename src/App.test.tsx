@@ -34,8 +34,9 @@ it('waits for every hero image and explicit entry before mounting the scene', as
   await act(async () => imageDecodes.at(-1)?.());
   const enter = await screen.findByRole('button', { name: /enter/i });
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
-  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-parked');
+  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright');
   expect(enter).toHaveClass('is-pixelating');
+  expect(enter.querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(40);
   expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
   fireEvent.click(enter);
@@ -52,7 +53,8 @@ it('offers a retry when a required asset fails to decode', async () => {
 
   expect(await screen.findByRole('alert')).toHaveTextContent('loading failed');
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
-  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-grayscale');
+  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright', 'is-grayscale');
+  expect(screen.getByRole('alert').querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(20);
   expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
   vi.stubGlobal('Image', class {
@@ -61,6 +63,7 @@ it('offers a retry when a required asset fails to decode', async () => {
   });
   const retry = screen.getByRole('button', { name: /retry/i });
   expect(retry).toHaveClass('is-pixelating');
+  expect(retry.querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(40);
   fireEvent.click(retry);
 
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-spinning');
