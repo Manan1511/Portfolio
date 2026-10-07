@@ -11,6 +11,7 @@ vi.mock('./hero/Hero', () => ({
 afterEach(() => {
   imageDecodes.length = 0;
   vi.unstubAllGlobals();
+  vi.useRealTimers();
   window.history.replaceState({}, '', '/');
 });
 
@@ -31,13 +32,22 @@ it('waits for every hero image and explicit entry before mounting the scene', as
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-spinning');
   expect(screen.queryByRole('button', { name: /enter/i })).not.toBeInTheDocument();
 
+  vi.useFakeTimers();
   await act(async () => imageDecodes.at(-1)?.());
-  const enter = await screen.findByRole('button', { name: /enter/i });
+  const enter = screen.getByRole('button', { name: /enter/i });
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright');
-  expect(enter).toHaveClass('is-pixelating');
+  expect(enter).toHaveClass('is-pixelating', 'is-enter');
+  expect(enter).not.toHaveClass('is-revealed');
+  expect(enter).toBeDisabled();
   expect(enter.querySelector('.site-entry-button-surface')).toBeInTheDocument();
-  expect(enter.querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(100);
+  const enterTiles = enter.querySelectorAll('.site-entry-pixel-mask > span');
+  expect(enterTiles.length).toBeGreaterThan(100);
+  fireEvent.mouseEnter(enter);
+  expect(enter).not.toHaveClass('is-revealed');
+  await act(async () => vi.advanceTimersByTime(1500));
+  expect(enter).toHaveClass('is-revealed');
+  expect(enter).toBeEnabled();
   expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
   fireEvent.click(enter);
@@ -45,6 +55,7 @@ it('waits for every hero image and explicit entry before mounting the scene', as
 });
 
 it('offers a retry when a required asset fails to decode', async () => {
+  vi.useFakeTimers();
   vi.stubGlobal('Image', class {
     set src(_value: string) {}
     decode() { return Promise.reject(new Error('asset unavailable')); }
@@ -52,7 +63,8 @@ it('offers a retry when a required asset fails to decode', async () => {
 
   render(<App />);
 
-  expect(await screen.findByRole('alert')).toHaveTextContent('loading failed');
+  await act(async () => { await Promise.resolve(); await Promise.resolve(); });
+  expect(screen.getByRole('alert')).toHaveTextContent('loading failed');
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright', 'is-grayscale');
   expect(screen.getByRole('alert').querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(100);
@@ -64,10 +76,22 @@ it('offers a retry when a required asset fails to decode', async () => {
   });
   const retry = screen.getByRole('button', { name: /retry/i });
   expect(retry).toHaveClass('is-pixelating');
+  expect(retry).not.toHaveClass('is-revealed');
+  expect(retry).toBeDisabled();
   expect(retry.querySelector('.site-entry-button-surface')).toBeInTheDocument();
-  expect(retry.querySelectorAll('.site-entry-pixel-mask > span').length).toBeGreaterThan(100);
-  fireEvent.click(retry);
+  const retryTiles = retry.querySelectorAll('.site-entry-pixel-mask > span');
+  expect(retryTiles.length).toBeGreaterThan(100);
+  fireEvent.mouseEnter(retry);
+  expect(retry).not.toHaveClass('is-revealed');
+  await act(async () => vi.advanceTimersByTime(1600));
+  expect(retry).toHaveClass('is-revealed');
+  expect(retry).toBeEnabled();
+  await act(async () => {
+    fireEvent.click(retry);
+    await Promise.resolve();
+    await Promise.resolve();
+  });
 
-  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-spinning');
-  expect(await screen.findByRole('button', { name: /enter/i })).toBeVisible();
+  expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright');
+  expect(screen.getByRole('button', { name: /enter/i })).toBeVisible();
 });

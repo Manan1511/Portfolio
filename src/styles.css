@@ -101,15 +101,17 @@ button { -webkit-tap-highlight-color: transparent; }
 .site-entry-message-slot, .site-entry-action-slot { width: 100%; min-width: 140px; display: grid; place-items: center; }
 .site-entry-failure { position: relative; margin: 0; font-size: 18px; }
 .site-entry-button { position: relative; isolation: isolate; min-width: 112px; min-height: 48px; padding: 8px 20px; border: 3px solid #111; background: #fff; color: #111; box-shadow: 4px 4px #111; font: 18px Pixelify, monospace; cursor: pointer; }
+.site-entry-button.is-enter { translate: 0 -20px; }
 .site-entry-button.is-pixelating { border-color: transparent; background: transparent; box-shadow: none; visibility: hidden; animation: entry-button-appear 1ms steps(1, end) 880ms forwards; }
 .site-entry-button-surface { position: absolute; z-index: 0; inset: -3px; border: 3px solid #111; background: #fff; box-shadow: 4px 4px #111; pointer-events: none; transition: transform 80ms ease, box-shadow 80ms ease; }
 .site-entry-button-label { position: relative; z-index: 1; }
-.site-entry-button.is-pixelating:hover, .site-entry-button.is-pixelating:active { transform: none; box-shadow: none; }
-.site-entry-button.is-pixelating:hover .site-entry-button-surface { transform: translate(-1px, -1px); box-shadow: 5px 5px #111; }
-.site-entry-button.is-pixelating:active .site-entry-button-surface { transform: translate(3px, 3px); box-shadow: 1px 1px #111; }
+.site-entry-button.is-pixelating:not(.is-revealed):hover, .site-entry-button.is-pixelating:not(.is-revealed):active { transform: none; box-shadow: none; }
+.site-entry-button.is-revealed:hover .site-entry-button-surface { transform: translate(-1px, -1px); box-shadow: 5px 5px #111; }
+.site-entry-button.is-revealed:active .site-entry-button-surface { transform: translate(3px, 3px); box-shadow: 1px 1px #111; }
 .site-entry-pixel-mask { position: absolute; z-index: 10; inset: -5px; display: grid; grid-template-columns: repeat(28, 1fr); grid-template-rows: repeat(12, 1fr); overflow: hidden; pointer-events: none; }
 .site-entry-pixel-mask.is-text-mask { grid-template-rows: repeat(6, 1fr); }
 .site-entry-pixel-mask > span { min-width: 0; min-height: 0; background: #d2e7e3; animation: entry-pixel-tile-out 55ms steps(1, end) both; }
+.site-entry-pixel-mask.is-complete > span { animation: none; opacity: 0; }
 .site-entry-button.is-retry { animation-delay: 1160ms; }
 .site-entry-button:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px #111; }
 .site-entry-button:active { transform: translate(3px, 3px); box-shadow: 1px 1px #111; }
