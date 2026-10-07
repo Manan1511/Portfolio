@@ -22,22 +22,24 @@ export function EntryGate({ children }: { children: ReactNode }) {
 
   if (state === 'entered') return children;
 
-  return <main className="site-entry" aria-busy={state === 'loading'}>
+  const hasSettled = state === 'ready' || state === 'error';
+
+  return <main className="site-entry" data-state={state} aria-busy={state === 'loading'}>
     <div className="site-entry-panel">
-      <img className={`site-entry-ball${state === 'loading' ? ' is-spinning' : ''}`}
-        src={pokeballSpinner} alt="" aria-hidden="true" />
-      {state === 'loading' && <p className="site-entry-status" role="status" aria-live="polite">loading assets…</p>}
-      {state === 'ready' && <>
-        <p className="site-entry-status" role="status" aria-live="polite">the world is ready</p>
-        <button className="site-entry-button" type="button" onClick={() => setState('entered')}>enter</button>
-      </>}
-      {state === 'error' && <>
-        <p className="site-entry-status" role="alert">couldn’t load all assets</p>
-        <button className="site-entry-button" type="button" onClick={() => {
+      <div className={`site-entry-ball-motion${hasSettled ? ' is-raised' : ''}`}>
+        <img className={`site-entry-ball${state === 'loading' ? ' is-spinning' : ''}${hasSettled ? ' is-parked' : ''}${state === 'error' ? ' is-grayscale' : ''}`}
+          src={pokeballSpinner} alt="" aria-hidden="true" />
+      </div>
+      <div className="site-entry-message-slot">
+        {state === 'error' && <p className="site-entry-failure" role="alert">loading failed</p>}
+      </div>
+      <div className="site-entry-action-slot">
+        {state === 'ready' && <button className="site-entry-button is-pixelating" type="button" onClick={() => setState('entered')}>enter</button>}
+        {state === 'error' && <button className="site-entry-button is-pixelating is-retry" type="button" onClick={() => {
           setState('loading');
           setAttempt(value => value + 1);
-        }}>retry</button>
-      </>}
+        }}>retry</button>}
+      </div>
     </div>
   </main>;
 }
