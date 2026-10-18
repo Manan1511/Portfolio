@@ -6,6 +6,7 @@ import pikachu from '../assets/pokemon/pikachu.png';
 import pokeball from '../assets/pokemon/pokeball-spinner.png';
 import squirtle from '../assets/pokemon/squirtle.png';
 import furniture from '../assets/scene-furniture.png';
+import { loadSpriteImage } from '../character/CharacterSprite';
 
 export const pokeballSpinner = pokeball;
 
@@ -20,24 +21,10 @@ const heroImages = [
   pokeball,
 ];
 
-function decodeImage(source: string): Promise<void> {
-  const image = new Image();
-  image.decoding = 'async';
-
-  if (typeof image.decode === 'function') {
-    image.src = source;
-    return image.decode();
-  }
-
-  return new Promise((resolve, reject) => {
-    image.onload = () => resolve();
-    image.onerror = () => reject(new Error(`Could not load hero image: ${source}`));
-    image.src = source;
-  });
-}
-
 export async function preloadHeroAssets(): Promise<void> {
-  await Promise.all(heroImages.map(decodeImage));
+  // Use the same decoded image objects the character and furniture canvases
+  // draw from, so mounting the prepared scene does not trigger another load.
+  await Promise.all(heroImages.map(loadSpriteImage));
 
   if (document.fonts) {
     await document.fonts.load('400 16px Pixelify');

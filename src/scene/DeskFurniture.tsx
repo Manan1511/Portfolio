@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef } from 'react';
 import atlas from '../assets/scene-furniture.png';
+import { loadSpriteImage } from '../character/CharacterSprite';
 import { scenePixelSize } from '../shared/pixelGrid';
 
 type Rect = { x: number; y: number; width: number; height: number };
@@ -18,17 +19,8 @@ const artwork = {
 };
 const width = 132;
 const height = 120;
-let picture: Promise<HTMLImageElement> | undefined;
-
 function loadArtwork() {
-  if (!picture) picture = new Promise((resolve, reject) => {
-    const image = new Image();
-    image.decoding = 'async';
-    image.onload = () => resolve(image);
-    image.onerror = () => { picture = undefined; reject(new Error('Could not load furniture artwork')); };
-    image.src = atlas;
-  });
-  return picture;
+  return loadSpriteImage(atlas);
 }
 
 function snapRect(rect: Rect, density: number) {

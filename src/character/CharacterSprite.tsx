@@ -8,9 +8,14 @@ export function loadSpriteImage(url: string) {
   if (!pending) {
     pending = new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
-      image.onload = () => resolve(image);
       image.onerror = () => { pictures.delete(url); reject(new Error(`Could not load sprite: ${url}`)); };
+      image.decoding = 'async';
       image.src = url;
+      if (typeof image.decode === 'function') {
+        image.decode().then(() => resolve(image), error => { pictures.delete(url); reject(error); });
+      } else {
+        image.onload = () => resolve(image);
+      }
     });
     pictures.set(url, pending);
   }

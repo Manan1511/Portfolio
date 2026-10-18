@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { EntrySceneActiveContext } from './EntrySceneActiveContext';
 import { preloadHeroAssets, pokeballSpinner } from './siteAssets';
 
 type EntryState = 'loading' | 'ready' | 'error' | 'entered';
@@ -58,37 +59,44 @@ export function EntryGate({ children }: { children: ReactNode }) {
     return () => { active = false; };
   }, [attempt]);
 
-  if (state === 'entered') return children;
-
+  const isEntered = state === 'entered';
+  const hasPreparedScene = state === 'ready' || isEntered;
   const hasSettled = state === 'ready' || state === 'error';
 
-  return <main className="site-entry" data-state={state} aria-busy={state === 'loading'}>
-    <div className="site-entry-panel">
-      <div className={`site-entry-ball-motion${hasSettled ? ' is-raised' : ''}`}>
-        <img className={`site-entry-ball${state === 'loading' ? ' is-spinning' : ''}${hasSettled ? ' is-upright' : ''}${state === 'error' ? ' is-grayscale' : ''}`}
-          src={pokeballSpinner} alt="" aria-hidden="true" />
+  return <>
+    {hasPreparedScene && <EntrySceneActiveContext.Provider value={isEntered}>
+      <div className="site-entry-preloaded-scene" aria-hidden={!isEntered} inert={!isEntered}>
+        {children}
       </div>
-      <div className="site-entry-message-slot">
-        {state === 'error' && <p className="site-entry-failure" role="alert">loading failed<PixelReveal rows={pixelGrid.textRows} delay={880} /></p>}
+    </EntrySceneActiveContext.Provider>}
+    {!isEntered && <main className="site-entry" data-state={state} aria-busy={state === 'loading'}>
+      <div className="site-entry-panel">
+        <div className={`site-entry-ball-motion${hasSettled ? ' is-raised' : ''}`}>
+          <img className={`site-entry-ball${state === 'loading' ? ' is-spinning' : ''}${hasSettled ? ' is-upright' : ''}${state === 'error' ? ' is-grayscale' : ''}`}
+            src={pokeballSpinner} alt="" aria-hidden="true" />
+        </div>
+        <div className="site-entry-message-slot">
+          {state === 'error' && <p className="site-entry-failure" role="alert">loading failed<PixelReveal rows={pixelGrid.textRows} delay={880} /></p>}
+        </div>
+        <div className="site-entry-action-slot">
+          {state === 'ready' && <button className={`site-entry-button is-pixelating is-enter${actionRevealed ? ' is-revealed' : ''}`}
+            type="button" disabled={!actionRevealed} onClick={() => setState('entered')}>
+            <span className="site-entry-button-surface" aria-hidden="true" />
+            <span className="site-entry-button-label">enter</span>
+            <PixelReveal rows={pixelGrid.buttonRows} delay={880} onComplete={() => setActionRevealed(true)} />
+          </button>}
+          {state === 'error' && <button className={`site-entry-button is-pixelating is-retry${actionRevealed ? ' is-revealed' : ''}`}
+            type="button" disabled={!actionRevealed} onClick={() => {
+            setState('loading');
+            setActionRevealed(false);
+            setAttempt(value => value + 1);
+          }}>
+            <span className="site-entry-button-surface" aria-hidden="true" />
+            <span className="site-entry-button-label">retry</span>
+            <PixelReveal rows={pixelGrid.buttonRows} delay={1160} onComplete={() => setActionRevealed(true)} />
+          </button>}
+        </div>
       </div>
-      <div className="site-entry-action-slot">
-        {state === 'ready' && <button className={`site-entry-button is-pixelating is-enter${actionRevealed ? ' is-revealed' : ''}`}
-          type="button" disabled={!actionRevealed} onClick={() => setState('entered')}>
-          <span className="site-entry-button-surface" aria-hidden="true" />
-          <span className="site-entry-button-label">enter</span>
-          <PixelReveal rows={pixelGrid.buttonRows} delay={880} onComplete={() => setActionRevealed(true)} />
-        </button>}
-        {state === 'error' && <button className={`site-entry-button is-pixelating is-retry${actionRevealed ? ' is-revealed' : ''}`}
-          type="button" disabled={!actionRevealed} onClick={() => {
-          setState('loading');
-          setActionRevealed(false);
-          setAttempt(value => value + 1);
-        }}>
-          <span className="site-entry-button-surface" aria-hidden="true" />
-          <span className="site-entry-button-label">retry</span>
-          <PixelReveal rows={pixelGrid.buttonRows} delay={1160} onComplete={() => setActionRevealed(true)} />
-        </button>}
-      </div>
-    </div>
-  </main>;
+    </main>}
+  </>;
 }

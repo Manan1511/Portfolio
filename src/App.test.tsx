@@ -1,6 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { App } from './App';
 
 const imageDecodes: Array<() => void> = [];
 
@@ -13,6 +12,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.useRealTimers();
   window.history.replaceState({}, '', '/');
+  vi.resetModules();
 });
 
 it('waits for every hero image and explicit entry before mounting the scene', async () => {
@@ -21,6 +21,7 @@ it('waits for every hero image and explicit entry before mounting the scene', as
     decode() { return new Promise<void>(resolve => imageDecodes.push(resolve)); }
   });
 
+  const { App } = await import('./App');
   render(<App />);
 
   expect(screen.queryByText(/loading assets/i)).not.toBeInTheDocument();
@@ -37,6 +38,17 @@ it('waits for every hero image and explicit entry before mounting the scene', as
   const enter = screen.getByRole('button', { name: /enter/i });
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright');
+  const [{ manan }, { loadSpriteImage }] = await Promise.all([
+    import('./character/manan'),
+    import('./character/CharacterSprite'),
+  ]);
+  const decodedImageCount = imageDecodes.length;
+  await loadSpriteImage(manan.image);
+  expect(imageDecodes).toHaveLength(decodedImageCount);
+  const preparedHero = screen.getByTestId('hero');
+  const preparedScene = preparedHero.closest('.site-entry-preloaded-scene');
+  expect(preparedScene).toHaveAttribute('aria-hidden', 'true');
+  expect(preparedScene).toHaveAttribute('inert');
   expect(enter).toHaveClass('is-pixelating', 'is-enter');
   expect(enter).not.toHaveClass('is-revealed');
   expect(enter).toBeDisabled();
@@ -48,10 +60,11 @@ it('waits for every hero image and explicit entry before mounting the scene', as
   await act(async () => vi.advanceTimersByTime(1500));
   expect(enter).toHaveClass('is-revealed');
   expect(enter).toBeEnabled();
-  expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
   fireEvent.click(enter);
-  expect(screen.getByTestId('hero')).toBeVisible();
+  expect(screen.getByTestId('hero')).toBe(preparedHero);
+  expect(preparedScene).toHaveAttribute('aria-hidden', 'false');
+  expect(preparedScene).not.toHaveAttribute('inert');
 });
 
 it('offers a retry when a required asset fails to decode', async () => {
@@ -61,6 +74,7 @@ it('offers a retry when a required asset fails to decode', async () => {
     decode() { return Promise.reject(new Error('asset unavailable')); }
   });
 
+  const { App } = await import('./App');
   render(<App />);
 
   await act(async () => { await Promise.resolve(); await Promise.resolve(); });

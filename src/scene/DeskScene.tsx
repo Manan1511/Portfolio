@@ -7,13 +7,13 @@ import { DeskFurniture, deskFloorAnchor } from './DeskFurniture';
 
 const greeting = 'hey, i’m manan';
 
-export function DeskScene({ scale, top = 200 }: { scale: number; top?: number }) {
+export function DeskScene({ scale, top = 200, active = true }: { scale: number; top?: number; active?: boolean }) {
   const reduced = useReducedMotion();
   const [elapsed, setElapsed] = useState(0);
   const [greetingRun, setGreetingRun] = useState(0);
   useEffect(() => {
     setElapsed(0);
-    if (reduced) return;
+    if (!active || reduced) return;
     let previous = performance.now();
     let accumulated = 0;
     const interval = window.setInterval(() => {
@@ -23,13 +23,13 @@ export function DeskScene({ scale, top = 200 }: { scale: number; top?: number })
       setElapsed(accumulated);
     }, 40);
     return () => window.clearInterval(interval);
-  }, [reduced, greetingRun]);
-  const activity = reduced ? 'seated-idle' : activityAt(elapsed);
-  const visibleText = reduced ? greeting : greeting.slice(0, Math.floor(elapsed / 75) + 1);
+  }, [active, reduced, greetingRun]);
+  const activity = !active || reduced ? 'seated-idle' : activityAt(elapsed);
+  const visibleText = !active ? '' : reduced ? greeting : greeting.slice(0, Math.floor(elapsed / 75) + 1);
 
   return <>
     <div className="desk-scene" style={{ '--sprite-scale': scale, top, left: `calc(50% - ${deskFloorAnchor.x * scale}px)`, width: scale * manan.width, height: scale * manan.height } as CSSProperties}>
-      <CharacterSprite definition={manan} clip={activity} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
+      <CharacterSprite definition={manan} clip={activity} playing={active && !reduced} scale={scale} key={greetingRun} label={`Manan ${activity === 'talking' ? 'saying hello' : activity === 'typing' ? 'typing on his laptop' : 'taking a little break'}`} />
       <DeskFurniture scale={scale} />
     </div>
     <button className={`hello-bubble ${activity === 'talking' ? 'is-speaking' : ''}`}

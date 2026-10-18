@@ -90,6 +90,8 @@ button { -webkit-tap-highlight-color: transparent; }
 .demo-moving { animation: stroll 4s ease-in-out infinite alternate; }
 @keyframes stroll { from { translate: -80px 0; } to { translate: 80px 0; } }
 @media (prefers-reduced-motion: reduce) { .demo-moving { animation: none; } }
+.site-entry-preloaded-scene { position: fixed; inset: 0; z-index: 0; }
+.site-entry-preloaded-scene[aria-hidden="true"] { pointer-events: none; }
 .site-entry { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 24px; background: #d2e7e3; }
 .site-entry-panel { --entry-ball-size: clamp(76px, 22vw, 112px); display: grid; grid-template-rows: var(--entry-ball-size) 24px 48px; justify-items: center; row-gap: 14px; color: #283a35; font-family: Pixelify, monospace; text-align: center; }
 .site-entry-ball-motion { width: var(--entry-ball-size); height: var(--entry-ball-size); display: grid; place-items: center; transition: transform 520ms cubic-bezier(.2, .75, .25, 1) 360ms; }

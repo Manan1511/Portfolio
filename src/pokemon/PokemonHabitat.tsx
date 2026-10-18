@@ -6,7 +6,7 @@ import { advanceActor, beginAttack, createActor, reconcileActor, type Actor, typ
 
 type Population = Partial<Record<PokemonId, Actor>>;
 
-export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
+export function PokemonHabitat({ layoutKey, active = true }: { layoutKey?: string; active?: boolean } = {}) {
   const layer = useRef<HTMLDivElement>(null);
   const [world, setWorld] = useState<PokemonWorld | null>(null);
   const ids = useMemo(() => world ? populationForWidth(world.width) : [], [world]);
@@ -80,7 +80,7 @@ export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
 
   const hasAttack = actors?.charizard?.attackElapsed != null;
   useEffect(() => {
-    if (!world || !visible || !onscreen || (reduced && !hasAttack)) return;
+    if (!active || !world || !visible || !onscreen || (reduced && !hasAttack)) return;
     let last = performance.now(), timer = 0;
     const tick = (now: number) => {
       const delta = Math.min(50, now - last); last = now;
@@ -93,7 +93,7 @@ export function PokemonHabitat({ layoutKey }: { layoutKey?: string } = {}) {
     };
     timer = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(timer);
-  }, [world, ids, visible, onscreen, reduced, hasAttack]);
+  }, [active, world, ids, visible, onscreen, reduced, hasAttack]);
 
   const attack = useCallback(() => {
     if (!world) return;
