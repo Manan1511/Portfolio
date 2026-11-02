@@ -26,7 +26,7 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
   const pressTimer = useRef<number | null>(null);
 
   const clearTimers = useCallback(() => {
-    timers.current.forEach(window.clearTimeout);
+    timers.current.forEach(timer => window.clearTimeout(timer));
     timers.current.clear();
     if (pressTimer.current !== null) {
       window.clearTimeout(pressTimer.current);
@@ -150,6 +150,7 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
   };
 
   const current = contactEntries[entryIndex]!;
+  const screensVisible = frame >= 3;
   const position = pokedexFramePosition(frame);
   const sheetStyle = {
     backgroundImage: `url("${pokedexSpriteSheet}")`,
@@ -162,13 +163,13 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
     <h2 id="pokedex-title" className="sr-only">pokedex contact entries</h2>
     <div className="pokedex-device" data-testid="pokedex-device">
       <div className="pokedex-device-art" aria-hidden="true" style={sheetStyle} />
-      <div className="pokedex-screen pokedex-screen-portrait" aria-label="manan portrait">
+      <div className="pokedex-screen pokedex-screen-portrait" aria-label="manan portrait" hidden={!screensVisible}>
         <CharacterSprite definition={manan} clip="portrait" playing={false} scale={1} label="manan portrait"
           className="pokedex-portrait" style={{ width: '72%', height: 'auto' }} />
         <span className="pokedex-portrait-caption">manan · trainer</span>
       </div>
       <section className="pokedex-screen pokedex-screen-contact" aria-label="contact entry" aria-live="polite"
-        data-testid="pokedex-contact-screen" data-entry-index={entryIndex}>
+        data-testid="pokedex-contact-screen" data-entry-index={entryIndex} hidden={!screensVisible}>
         <div className="pokedex-screen-topline"><span>contact dex</span><span>{String(entryIndex + 1).padStart(2, '0')} / 04</span></div>
         <div className="pokedex-screen-rule" />
         <p className="pokedex-entry-eyebrow">{current.eyebrow}</p>

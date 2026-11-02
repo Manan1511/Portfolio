@@ -29,6 +29,7 @@ beforeEach(() => {
 afterEach(() => {
   if (showModalDescriptor) Object.defineProperty(HTMLDialogElement.prototype, 'showModal', showModalDescriptor);
   else delete (HTMLDialogElement.prototype as unknown as { showModal?: () => void }).showModal;
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 
@@ -36,11 +37,21 @@ describe('Pokédex contact device', () => {
   it('plays the opening frames in order and settles on the open device', async () => {
     const { dialog } = await renderPokedex();
     expect(dialog).toHaveAttribute('data-frame', '0');
+    const portraitScreen = dialog.querySelector('.pokedex-screen-portrait');
+    const contactScreen = dialog.querySelector('.pokedex-screen-contact');
+    expect(portraitScreen).toHaveAttribute('hidden');
+    expect(contactScreen).toHaveAttribute('hidden');
 
     for (const frame of [1, 2, 3]) {
       await act(async () => { vi.advanceTimersByTime(90); });
       expect(dialog).toHaveAttribute('data-frame', String(frame));
+      if (frame < 3) {
+        expect(portraitScreen).toHaveAttribute('hidden');
+        expect(contactScreen).toHaveAttribute('hidden');
+      }
     }
+    expect(portraitScreen).not.toHaveAttribute('hidden');
+    expect(contactScreen).not.toHaveAttribute('hidden');
   });
 
   it('moves entries in both directions and wraps at either end', async () => {
@@ -72,8 +83,10 @@ describe('Pokédex contact device', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'close pokedex' }));
     expect(dialog).toHaveAttribute('data-frame', '7');
+    expect(dialog.querySelector('.pokedex-screen-contact')).not.toHaveAttribute('hidden');
     await act(async () => { vi.advanceTimersByTime(90); });
     expect(dialog).toHaveAttribute('data-frame', '2');
+    expect(dialog.querySelector('.pokedex-screen-contact')).toHaveAttribute('hidden');
     await act(async () => { vi.advanceTimersByTime(90); });
     expect(dialog).toHaveAttribute('data-frame', '1');
     await act(async () => { vi.advanceTimersByTime(90); });
@@ -103,5 +116,41 @@ describe('Pokédex contact device', () => {
     expect(dialog).toHaveAttribute('data-frame', '3');
     fireEvent.click(screen.getByRole('button', { name: 'close pokedex' }));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('interrupts opening cleanly, ignores repeated close, and returns once', async () => {
+    const { dialog, onClose } = await renderPokedex();
+    const close = screen.getByRole('button', { name: 'close pokedex' });
+    fireEvent.click(close);
+    fireEvent.click(close);
+    expect(dialog).toHaveAttribute('data-frame', '7');
+
+    await act(async () => { vi.advanceTimersByTime(360); });
+    expect(dialog).toHaveAttribute('data-frame', '0');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('clears a pending animation timer when the device unmounts', async () => {
+    const originalSetTimeout = window.setTimeout;
+    const scheduledTimers: Array<{ id: ReturnType<typeof window.setTimeout>; stack: string }> = [];
+    const setTimer = vi.spyOn(window, 'setTimeout').mockImplementation((handler, timeout, ...args) => {
+      const id = originalSetTimeout.call(window, handler, timeout, ...args);
+      scheduledTimers.push({ id, stack: new Error().stack ?? '' });
+      return id;
+    });
+    const clearTimer = vi.spyOn(window, 'clearTimeout');
+    const { unmount, onClose } = await renderPokedex();
+    const animationTimer = scheduledTimers.find(timer => timer.stack.includes('advance') && timer.stack.includes('PokedexDialog.tsx'));
+    expect(animationTimer).toBeDefined();
+    if (!animationTimer) throw new Error('PokedexDialog must schedule its opening animation');
+
+    unmount();
+
+    // jsdom also leaves a separate selection-restoration timer after the close
+    // button receives focus; assert the device's own animation timer was cleared.
+    expect(clearTimer.mock.calls.some(([id]) => id === animationTimer.id)).toBe(true);
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(onClose).not.toHaveBeenCalled();
   });
 });
