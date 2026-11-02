@@ -5,11 +5,13 @@ import { PixelLandscape } from './PixelLandscape';
 import { PokemonHabitat } from '../pokemon/PokemonHabitat';
 import { deskFloorAnchor } from '../scene/DeskFurniture';
 import { EntrySceneActiveContext } from '../loading/EntrySceneActiveContext';
+import { BagNavigation, type NavigationView } from '../navigation/BagNavigation';
 
 const sceneOffsetX = 16;
 
 export function Hero() {
   const active = useContext(EntrySceneActiveContext);
+  const [navigationView, setNavigationView] = useState<NavigationView>('closed');
   const hero = useRef<HTMLElement>(null);
   const [size, setSize] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }));
   useEffect(() => {
@@ -33,7 +35,8 @@ export function Hero() {
     <h1 className="sr-only">hey, i’m manan</h1>
     <PixelLandscape clearingY={worldDeskTop + manan.anchors.feet.y * scale + 20 * scale}
       clearingCenter={{ x: size.width / 2, y: worldDeskTop + deskFloorAnchor.y * scale }} />
-    <PokemonHabitat active={active} layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
+    <PokemonHabitat active={active && navigationView === 'closed'} layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
+    {active && <BagNavigation view={navigationView} onViewChange={setNavigationView} active={active} />}
     <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight, left: sceneOffsetX,
       '--greeting-right': `${(manan.anchors.mouth.x - deskFloorAnchor.x) * scale + 40}px` } as CSSProperties}>
       <svg className="pixel-shadow" viewBox="0 0 96 16" aria-hidden="true" shapeRendering="crispEdges"

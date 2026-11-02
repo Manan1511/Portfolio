@@ -92,4 +92,16 @@ describe('Pokédex contact device', () => {
     await act(async () => { vi.advanceTimersByTime(360); });
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('uses the settled device frame and closes immediately with reduced motion', async () => {
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true, media: '(prefers-reduced-motion: reduce)', onchange: null,
+      addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => true });
+    const { dialog, onClose } = await renderPokedex();
+    expect(dialog).toHaveAttribute('data-frame', '3');
+
+    await act(async () => { vi.advanceTimersByTime(500); });
+    expect(dialog).toHaveAttribute('data-frame', '3');
+    fireEvent.click(screen.getByRole('button', { name: 'close pokedex' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });

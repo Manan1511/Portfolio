@@ -38,12 +38,13 @@ it('waits for every hero image and explicit entry before mounting the scene', as
   const enter = screen.getByRole('button', { name: /enter/i });
   expect(document.querySelector('.site-entry-ball-motion')).toHaveClass('is-raised');
   expect(document.querySelector('.site-entry-ball')).toHaveClass('is-upright');
-  const [{ manan }, { loadSpriteImage }] = await Promise.all([
+  const [{ manan }, { loadSpriteImage }, { pokedexSpriteSheet }] = await Promise.all([
     import('./character/manan'),
     import('./character/CharacterSprite'),
+    import('./navigation/pokedexFrames'),
   ]);
   const decodedImageCount = imageDecodes.length;
-  await loadSpriteImage(manan.image);
+  await Promise.all([loadSpriteImage(manan.image), loadSpriteImage(pokedexSpriteSheet)]);
   expect(imageDecodes).toHaveLength(decodedImageCount);
   const preparedHero = screen.getByTestId('hero');
   const preparedScene = preparedHero.closest('.site-entry-preloaded-scene');

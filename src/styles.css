@@ -183,12 +183,17 @@ button { -webkit-tap-highlight-color: transparent; }
   .pokedex-progress { gap: 3px; width: 45px; }
   .pokedex-progress-cursor { width: 9px; transform: translateX(calc(var(--pokedex-entry-index) * 12px)); }
 }
+@media (max-width: 400px) {
+  .pokedex-key-previous { --key-x: 55%; }
+  .pokedex-key-next { --key-x: 70%; }
+  .pokedex-key-select { --key-x: 85%; }
+}
 @media (prefers-reduced-motion: reduce) {
   .pokedex-progress-cursor { transition: none; }
 }
 
 /* The Bag is the hero's only navigation control until more items are added. */
-.bag-navigation { position: fixed; z-index: 80; top: calc(16px + env(safe-area-inset-top)); left: calc(16px + env(safe-area-inset-left)); color: #111; font-family: Pixelify, monospace; }
+.bag-navigation { position: fixed; z-index: 100001; top: calc(16px + env(safe-area-inset-top)); left: calc(16px + env(safe-area-inset-left)); color: #111; font-family: Pixelify, monospace; }
 .bag-trigger { display: flex; min-width: 84px; min-height: 44px; align-items: center; justify-content: center; gap: 7px; padding: 5px 10px; border: 3px solid #111; background: #fff9e7; color: #111; box-shadow: 3px 3px #111; font-size: 17px; line-height: 1; cursor: pointer; }
 .bag-trigger:hover { translate: -1px -1px; box-shadow: 4px 4px #111; }
 .bag-trigger:active { translate: 2px 2px; box-shadow: 1px 1px #111; }

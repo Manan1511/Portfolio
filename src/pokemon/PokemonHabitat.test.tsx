@@ -20,11 +20,13 @@ function setup(reduced = false, width = 390, withTree = false) {
     if (this.classList.contains('hello-bubble')) return rect(16, 320, 120, 65);
     return rect(100, 310, 240, 244);
   });
-  const view = render(<main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button>
+  const habitat = (active = true) => <main className="hero"><div className="desk-scene" /><button className="hello-bubble">hello</button>
     {withTree && <svg><g className="tree-artwork"><path className="tree-footprint" d="M0 0H20V10H0Z" /></g></svg>}
-    <PokemonHabitat /></main>);
+    <PokemonHabitat active={active} /></main>;
+  const view = render(habitat());
   return { ...view,
     resize(nextWidth: number) { width = nextWidth; fireEvent(window, new Event('resize')); },
+    setActive(active: boolean) { view.rerender(habitat(active)); },
     moveTrunk(x: number, y: number) { trunkX = x; trunkY = y; view.container.querySelector('.tree-footprint')!.setAttribute('d', `M${x} ${y}h20v10h-20Z`); } };
 }
 
@@ -123,6 +125,24 @@ it('roams without a pause button and still permits an explicit attack', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Charizard: breathe fire' }));
   act(() => vi.advanceTimersByTime(400));
   expect(container.querySelector('.fire-breath')).not.toBeNull();
+});
+
+it('freezes every Pokémon in place while a menu is open and resumes from those positions', () => {
+  vi.spyOn(Math, 'random').mockReturnValue(.9);
+  const { container, setActive } = setup();
+  const positions = () => Array.from(container.querySelectorAll('[data-pokemon]'), actor => actor.getAttribute('style'));
+  act(() => vi.advanceTimersByTime(6000));
+  const beforePause = positions();
+  setActive(false);
+  const atMenuOpen = positions();
+  expect(atMenuOpen).toEqual(beforePause);
+
+  act(() => vi.advanceTimersByTime(6000));
+  expect(positions()).toEqual(atMenuOpen);
+
+  setActive(true);
+  act(() => vi.advanceTimersByTime(6000));
+  expect(positions()).not.toEqual(atMenuOpen);
 });
 
 it('does not let touch-created focus permanently stop roaming', () => {
