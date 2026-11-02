@@ -50,7 +50,7 @@ it('fits the scene to viewport height and recalculates integer scale and desk pl
   expect(sprite().style.width).toBe('120px');
 });
 
-it('shows Bag only after entry and pauses Pokémon until both menus close', async () => {
+it('shows Bag after entry while Pokémon keep roaming through both menus', async () => {
   vi.useFakeTimers();
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   showModalDescriptor = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, 'showModal');
@@ -69,15 +69,15 @@ it('shows Bag only after entry and pauses Pokémon until both menus close', asyn
   expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'true');
 
   fireEvent.click(screen.getByRole('button', { name: 'bag' }));
-  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'false');
+  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'true');
   fireEvent.click(screen.getByRole('button', { name: 'pokedex' }));
   expect(screen.getByTestId('pokedex-dialog')).toBeInTheDocument();
-  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'false');
+  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'true');
 
   fireEvent.click(screen.getByRole('button', { name: 'close pokedex' }));
   await act(async () => { vi.advanceTimersByTime(360); });
   expect(screen.getByRole('button', { name: 'pokedex' })).toHaveFocus();
-  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'false');
+  expect(screen.getByTestId('pokemon-habitat')).toHaveAttribute('data-active', 'true');
 
   fireEvent.click(screen.getByRole('button', { name: 'bag' }));
   expect(screen.queryByRole('navigation', { name: 'bag' })).not.toBeInTheDocument();

@@ -1,4 +1,5 @@
 import sheetUrl from '../assets/pokedex/pokedex-spritesheet.png';
+import underlayUrl from '../assets/pokedex/pokedex-screen-underlay.png';
 
 export type PokedexFrameIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type PokedexScreen = 'portrait' | 'contact';
@@ -7,6 +8,7 @@ type PixelRect = { x: number; y: number; width: number; height: number };
 export const pokedexFrameSize = { width: 512, height: 341 } as const;
 
 export const pokedexSpriteSheet = sheetUrl;
+export const pokedexScreenUnderlay = underlayUrl;
 export const pokedexOpenSequence: readonly PokedexFrameIndex[] = [0, 1, 2, 3];
 export const pokedexCloseSequence: readonly PokedexFrameIndex[] = [3, 2, 1, 0];
 

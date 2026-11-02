@@ -1,6 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { createElement, type ComponentType } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { playMenuCue } from './menuAudio';
+
+vi.mock('./menuAudio', () => ({ playMenuCue: vi.fn() }));
 
 type DialogProps = { onClose: () => void };
 type DialogModule = { PokedexDialog: ComponentType<DialogProps> };
@@ -36,7 +39,10 @@ afterEach(() => {
 describe('Pokédex contact device', () => {
   it('plays the opening frames in order and settles on the open device', async () => {
     const { dialog } = await renderPokedex();
+    const underlay = dialog.querySelector('[data-testid="pokedex-screen-underlay"]');
     expect(dialog).toHaveAttribute('data-frame', '0');
+    expect(underlay).toBeInTheDocument();
+    expect(underlay).toHaveStyle({ backgroundPosition: '0% 0%' });
     const portraitScreen = dialog.querySelector('.pokedex-screen-portrait');
     const contactScreen = dialog.querySelector('.pokedex-screen-contact');
     expect(portraitScreen).toHaveAttribute('hidden');
@@ -45,6 +51,7 @@ describe('Pokédex contact device', () => {
     for (const frame of [1, 2, 3]) {
       await act(async () => { vi.advanceTimersByTime(90); });
       expect(dialog).toHaveAttribute('data-frame', String(frame));
+      expect(underlay).toHaveStyle({ backgroundPosition: `${frame * 50}% 0%` });
       if (frame < 3) {
         expect(portraitScreen).toHaveAttribute('hidden');
         expect(contactScreen).toHaveAttribute('hidden');
@@ -69,6 +76,17 @@ describe('Pokédex contact device', () => {
     expect(screenContent).toHaveAttribute('data-entry-index', '3');
   });
 
+  it('plays a direction cue for pointer and keyboard navigation', async () => {
+    const { dialog } = await renderPokedex();
+    await act(async () => { vi.advanceTimersByTime(270); });
+    vi.mocked(playMenuCue).mockClear();
+
+    fireEvent.click(screen.getByRole('button', { name: 'next entry' }));
+    expect(playMenuCue).toHaveBeenLastCalledWith('navigate-right');
+    fireEvent.keyDown(dialog, { key: 'ArrowLeft' });
+    expect(playMenuCue).toHaveBeenLastCalledWith('navigate-left');
+  });
+
   it('shows local selection feedback without inventing an external link', async () => {
     const { dialog } = await renderPokedex();
     await act(async () => { vi.advanceTimersByTime(270); });
@@ -89,9 +107,12 @@ describe('Pokédex contact device', () => {
     expect(dialog.querySelector('.pokedex-screen-contact')).not.toHaveAttribute('hidden');
     await act(async () => { vi.advanceTimersByTime(90); });
     expect(dialog).toHaveAttribute('data-frame', '2');
+    const underlay = dialog.querySelector('[data-testid="pokedex-screen-underlay"]');
+    expect(underlay).toHaveStyle({ backgroundPosition: '100% 0%' });
     expect(dialog.querySelector('.pokedex-screen-contact')).toHaveAttribute('hidden');
     await act(async () => { vi.advanceTimersByTime(90); });
     expect(dialog).toHaveAttribute('data-frame', '1');
+    expect(underlay).toHaveStyle({ backgroundPosition: '50% 0%' });
     await act(async () => { vi.advanceTimersByTime(90); });
     expect(dialog).toHaveAttribute('data-frame', '0');
     expect(onClose).not.toHaveBeenCalled();

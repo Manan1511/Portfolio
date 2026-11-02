@@ -1,4 +1,4 @@
-type MenuCue = 'bag-open' | 'bag-close' | 'device-open' | 'device-close' | 'select';
+type MenuCue = 'bag-open' | 'bag-close' | 'device-open' | 'device-close' | 'navigate-left' | 'navigate-right' | 'select';
 
 type CueShape = { startHz: number; endHz: number; seconds: number; wave: OscillatorType };
 
@@ -7,6 +7,8 @@ const cues: Record<MenuCue, CueShape> = {
   'bag-close': { startHz: 880, endHz: 620, seconds: 0.075, wave: 'triangle' },
   'device-open': { startHz: 392, endHz: 784, seconds: 0.16, wave: 'square' },
   'device-close': { startHz: 784, endHz: 392, seconds: 0.16, wave: 'square' },
+  'navigate-left': { startHz: 720, endHz: 520, seconds: 0.055, wave: 'triangle' },
+  'navigate-right': { startHz: 520, endHz: 720, seconds: 0.055, wave: 'triangle' },
   select: { startHz: 988, endHz: 740, seconds: 0.06, wave: 'triangle' },
 };
 

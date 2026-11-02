@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 type FramesModule = {
   pokedexFramePosition(index: number): { column: number; row: number };
   pokedexFrameSize: { width: number; height: number };
+  pokedexScreenUnderlay: string;
   pokedexOpenSequence: readonly number[];
   pokedexCloseSequence: readonly number[];
   pokedexScreenCutoutStyle(index: number, side: 'portrait' | 'contact'): Record<string, string> | undefined;
@@ -35,6 +36,7 @@ describe('Pokédex sprite sheet mapping', () => {
   it('matches the approved 512 by 341 frame grid and screen cutouts', async () => {
     const frames = await loadFrames();
     expect(frames?.pokedexFrameSize).toEqual({ width: 512, height: 341 });
+    expect(frames?.pokedexScreenUnderlay).toEqual(expect.any(String));
     expect(frames?.pokedexScreenCutoutStyle(0, 'portrait')).toBeUndefined();
     expect(frames?.pokedexScreenCutoutStyle(3, 'portrait')).toEqual({
       left: '17.3828%', top: '34.3109%', width: '27.3438%', height: '26.6862%',

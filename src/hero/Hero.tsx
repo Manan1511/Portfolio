@@ -35,7 +35,7 @@ export function Hero() {
     <h1 className="sr-only">hey, i’m manan</h1>
     <PixelLandscape clearingY={worldDeskTop + manan.anchors.feet.y * scale + 20 * scale}
       clearingCenter={{ x: size.width / 2, y: worldDeskTop + deskFloorAnchor.y * scale }} />
-    <PokemonHabitat active={active && navigationView === 'closed'} layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
+    <PokemonHabitat active={active} layoutKey={`${size.width}:${size.height}:${scale}:${deskTop}`} />
     {active && <BagNavigation view={navigationView} onViewChange={setNavigationView} active={active} />}
     <div className={`hero-scene${scale < 3 ? ' is-compact' : ''}`} style={{ height: sceneHeight, left: sceneOffsetX,
       '--greeting-right': `${(manan.anchors.mouth.x - deskFloorAnchor.x) * scale + 40}px` } as CSSProperties}>

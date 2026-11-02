@@ -6,7 +6,7 @@ import pikachu from '../assets/pokemon/pikachu.png';
 import pokeball from '../assets/pokemon/pokeball-spinner.png';
 import squirtle from '../assets/pokemon/squirtle.png';
 import furniture from '../assets/scene-furniture.png';
-import { pokedexSpriteSheet } from '../navigation/pokedexFrames';
+import { pokedexScreenUnderlay, pokedexSpriteSheet } from '../navigation/pokedexFrames';
 import { loadSpriteImage } from '../character/CharacterSprite';
 
 export const pokeballSpinner = pokeball;
@@ -21,6 +21,7 @@ const heroImages = [
   squirtle,
   pokeball,
   pokedexSpriteSheet,
+  pokedexScreenUnderlay,
 ];
 
 export async function preloadHeroAssets(): Promise<void> {
