@@ -1,13 +1,24 @@
 {
-  "image": "pokedex-spritesheet.svg",
-  "frameWidth": 256,
-  "frameHeight": 192,
+  "image": "pokedex-spritesheet.png",
+  "sourceImage": "pokedex-approved-original.png",
+  "frameWidth": 512,
+  "frameHeight": 341,
   "columns": 3,
   "rows": 3,
-  "pngScale": 2,
-  "pngFrameWidth": 512,
-  "pngFrameHeight": 384,
-  "registration": "device bottom-center at y=160 in every cell",
+  "sheetWidth": 1536,
+  "sheetHeight": 1023,
+  "registration": "device horizontal center x=265 and open-device bottom y=302 in every cell",
+  "sourceRegistrationOffsets": [
+    { "index": 0, "x": -5, "y": -16 },
+    { "index": 1, "x": 15, "y": -31 },
+    { "index": 2, "x": 16, "y": -30 },
+    { "index": 3, "x": 0, "y": 0 },
+    { "index": 4, "x": 8, "y": 0 },
+    { "index": 5, "x": 18, "y": 0 },
+    { "index": 6, "x": 0, "y": 25 },
+    { "index": 7, "x": 8, "y": 25 },
+    { "index": 8, "x": 18, "y": 25 }
+  ],
   "frames": [
     { "index": 0, "name": "closed" },
     { "index": 1, "name": "opening-early" },
@@ -21,5 +32,5 @@
   ],
   "openSequence": [0, 1, 2, 3],
   "closeSequence": [3, 2, 1, 0],
-  "screenCutouts": "Transparent. Render portrait and contact content as live layers above the sprite."
+  "screenCutouts": "Transparent. Frame-specific portrait and contact bounds are in src/navigation/pokedexFrames.ts."
 }

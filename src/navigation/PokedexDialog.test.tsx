@@ -55,12 +55,14 @@ describe('Pokédex contact device', () => {
   });
 
   it('moves entries in both directions and wraps at either end', async () => {
-    await renderPokedex();
+    const { dialog } = await renderPokedex();
     await act(async () => { vi.advanceTimersByTime(270); });
     const screenContent = screen.getByTestId('pokedex-contact-screen');
 
     fireEvent.click(screen.getByRole('button', { name: 'next entry' }));
     expect(screenContent).toHaveAttribute('data-entry-index', '1');
+    expect(dialog.querySelector('.pokedex-screen-portrait')).toHaveStyle({ left: '17.3828%', top: '34.3109%' });
+    expect(screenContent).toHaveStyle({ left: '59.1797%', top: '34.3109%' });
     fireEvent.click(screen.getByRole('button', { name: 'previous entry' }));
     expect(screenContent).toHaveAttribute('data-entry-index', '0');
     fireEvent.click(screen.getByRole('button', { name: 'previous entry' }));
@@ -68,12 +70,13 @@ describe('Pokédex contact device', () => {
   });
 
   it('shows local selection feedback without inventing an external link', async () => {
-    await renderPokedex();
+    const { dialog } = await renderPokedex();
     await act(async () => { vi.advanceTimersByTime(270); });
 
     fireEvent.click(screen.getByRole('button', { name: 'select entry' }));
 
     expect(screen.getByRole('status')).toHaveTextContent('entry selected');
+    expect(dialog.querySelector('.pokedex-screen-contact')).toHaveStyle({ top: '34.0176%' });
     expect(screen.getByTestId('pokedex-dialog').querySelector('a[href]')).toBeNull();
   });
 

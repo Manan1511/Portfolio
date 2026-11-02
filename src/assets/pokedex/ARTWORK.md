@@ -1,7 +1,7 @@
 # Pokédex sprite sheet
 
-`pokedex-spritesheet.svg` is a 3×3 sprite sheet with 256×192 frame cells. `pokedex-spritesheet.png` is the crisp 2× export, with 512×384 pixel frames. The screen interiors are intentionally transparent so the portrait and contact entry can render as live page content.
+`pokedex-approved-original.png` preserves the exact 1536×1024 transparent sprite sheet Manan approved. `pokedex-spritesheet.png` is the browser-ready 3×3 atlas derived from it: each original frame is cropped without resampling into a 512×341 cell, then translated by whole source pixels to keep the device centered and its bottom edge registered across animation and pressed states. No colors or sprite pixels are repainted.
 
-Frame order and the opening/closing sequence are in `pokedex-spritesheet.json`. Frames 0–3 open the device; the same poses run in reverse to close it. The remaining frames show the neutral device and pressed states for previous, next, select, close, and the D-pad.
+Frame order and open/close sequences are recorded in `pokedex-spritesheet.json`. Frames 0–3 open the device, and the same poses play in reverse when closing. Frames 4–8 show the previous, next, select, close, and D-pad pressed states. Transparent screen interiors remain live page layers; `pokedexFrames.ts` records the frame-specific cutouts for the portrait and contact screens.
 
-The artwork uses crisp pixel blocks, a solid one-piece blue D-pad, and the blue circular lens. It contains no portrait, contact text, or background.
+Render the atlas with `image-rendering: pixelated`. The device component uses the 512:341 frame aspect ratio so the source art keeps its shape.
