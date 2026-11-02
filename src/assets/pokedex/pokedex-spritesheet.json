@@ -1,0 +1,25 @@
+{
+  "image": "pokedex-spritesheet.svg",
+  "frameWidth": 256,
+  "frameHeight": 192,
+  "columns": 3,
+  "rows": 3,
+  "pngScale": 2,
+  "pngFrameWidth": 512,
+  "pngFrameHeight": 384,
+  "registration": "device bottom-center at y=160 in every cell",
+  "frames": [
+    { "index": 0, "name": "closed" },
+    { "index": 1, "name": "opening-early" },
+    { "index": 2, "name": "opening-late" },
+    { "index": 3, "name": "open-neutral" },
+    { "index": 4, "name": "open-previous-pressed" },
+    { "index": 5, "name": "open-next-pressed" },
+    { "index": 6, "name": "open-select-pressed" },
+    { "index": 7, "name": "open-close-pressed" },
+    { "index": 8, "name": "open-dpad-pressed" }
+  ],
+  "openSequence": [0, 1, 2, 3],
+  "closeSequence": [3, 2, 1, 0],
+  "screenCutouts": "Transparent. Render portrait and contact content as live layers above the sprite."
+}
