@@ -1,6 +1,6 @@
 # Bag Navigation — Design
 
-**Status:** Draft for approval
+**Status:** Approved
 
 **Scope:** One reusable navigation component added to the existing hero.
 
@@ -61,4 +61,4 @@ The site is React, Vite, and TypeScript. `App` renders `EntryGate` around `Hero`
 - Bag open and close produce the subtle menu blip; missing browser audio support does not block navigation.
 - Inspect at 320, 390, 768, and 1440px widths for overflow, readable controls, and the anchored panel’s fit.
 
-**Next step:** approve or revise this design. Product code and the implementation plan follow approval.
+**Next step:** implementation plan: `docs/superpowers/plans/2026-11-02-bag-navigation.md`. Product code follows plan review.
