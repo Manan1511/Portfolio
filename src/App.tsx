@@ -3,8 +3,12 @@ import { Hero } from './hero/Hero';
 import { EntryGate } from './loading/EntryGate';
 const SpritePreview = import.meta.env.DEV ? lazy(() => import('./character/SpritePreview')) : null;
 const PokemonPreview = import.meta.env.DEV ? lazy(() => import('./pokemon/PokemonPreview')) : null;
+const PokedexPreview = import.meta.env.DEV ? lazy(() => import('./navigation/PokedexPreview')) : null;
 
 export function App() {
+  if (PokedexPreview && new URLSearchParams(window.location.search).has('pokedex-preview')) {
+    return <Suspense fallback={<p>Loading pixels…</p>}><PokedexPreview /></Suspense>;
+  }
   if (PokemonPreview && new URLSearchParams(window.location.search).has('pokemon-preview')) {
     return <Suspense fallback={<p>Loading Pokémon…</p>}><PokemonPreview /></Suspense>;
   }
