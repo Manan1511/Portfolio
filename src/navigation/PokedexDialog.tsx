@@ -141,6 +141,9 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
     playMenuCue('select');
     setSelected(true);
     pressFrame(6);
+    const entry = contactEntries[entryIndex]!;
+    if (entry.openInNewTab) window.open(entry.href, '_blank', 'noopener,noreferrer');
+    else window.location.href = entry.href;
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
@@ -180,7 +183,7 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
         <p className="pokedex-entry-eyebrow">{current.eyebrow}</p>
         <h3 className="pokedex-entry-title">{current.title}</h3>
         <p className="pokedex-entry-description">{current.description}</p>
-        {selected && <p className="pokedex-entry-status" role="status">entry selected · destination not set yet</p>}
+        {selected && <p className="pokedex-entry-status" role="status">entry selected · {current.label}</p>}
         <div className="pokedex-progress" aria-hidden="true" style={progressStyle}>
           {contactEntries.map(entry => <span className="pokedex-progress-segment" key={entry.id} />)}
           <span className="pokedex-progress-cursor" />
