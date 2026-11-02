@@ -48,10 +48,10 @@ describe('Pokédex contact device', () => {
     expect(portraitScreen).toHaveAttribute('hidden');
     expect(contactScreen).toHaveAttribute('hidden');
 
-    for (const frame of [1, 2, 3]) {
+    for (const [frame, backgroundPosition] of [[1, '50% 0%'], [2, '100% 0%'], [3, '0% 50%']] as const) {
       await act(async () => { vi.advanceTimersByTime(90); });
       expect(dialog).toHaveAttribute('data-frame', String(frame));
-      expect(underlay).toHaveStyle({ backgroundPosition: `${frame * 50}% 0%` });
+      expect(underlay).toHaveStyle({ backgroundPosition });
       if (frame < 3) {
         expect(portraitScreen).toHaveAttribute('hidden');
         expect(contactScreen).toHaveAttribute('hidden');
