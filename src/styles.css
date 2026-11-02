@@ -158,6 +158,8 @@ button { -webkit-tap-highlight-color: transparent; }
 .pokedex-device { position: relative; width: 100%; height: 100%; isolation: isolate; container-type: inline-size; }
 .pokedex-screen-underlay { position: absolute; inset: 0; background-repeat: no-repeat; background-size: 300% 300%; image-rendering: pixelated; }
 .pokedex-device-art { position: absolute; inset: 0; background-repeat: no-repeat; background-size: 300% 300%; image-rendering: pixelated; }
+.pokedex-indicator-lights { position: absolute; z-index: 2; inset: 0; opacity: 0; background-repeat: no-repeat; background-size: 300% 300%; image-rendering: pixelated; pointer-events: none; transition: opacity 220ms ease-out; }
+.pokedex-dialog[data-phase="open"] .pokedex-indicator-lights { opacity: 1; }
 .pokedex-screen { position: absolute; overflow: hidden; z-index: 1; }
 .pokedex-screen[hidden] { display: none !important; }
 .pokedex-screen-portrait { background: #0b1010; color: #d4f0e7; }
@@ -192,6 +194,7 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pokedex-progress-cursor { transition: none; }
+  .pokedex-indicator-lights { transition: none; }
 }
 
 /* The Bag is the hero's only navigation control until more items are added. */

@@ -4,7 +4,7 @@ import { manan } from '../character/manan';
 import { useReducedMotion } from '../shared/useReducedMotion';
 import { contactEntries } from './contactEntries';
 import { playMenuCue } from './menuAudio';
-import { pokedexCloseSequence, pokedexFramePosition, pokedexOpenSequence, pokedexScreenCutoutStyle, pokedexScreenUnderlay, pokedexSpriteSheet, type PokedexFrameIndex } from './pokedexFrames';
+import { pokedexCloseSequence, pokedexFramePosition, pokedexIndicatorLights, pokedexOpenSequence, pokedexScreenCutoutStyle, pokedexScreenUnderlay, pokedexSpriteSheet, type PokedexFrameIndex } from './pokedexFrames';
 
 const frameDuration = 90;
 const pressDuration = 120;
@@ -163,6 +163,7 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
     backgroundPosition: `${position.column * 50}% ${position.row * 50}%`,
   } as CSSProperties;
   const underlayStyle = { ...sheetStyle, backgroundImage: `url("${pokedexScreenUnderlay}")` };
+  const indicatorLightStyle = { ...sheetStyle, backgroundImage: `url("${pokedexIndicatorLights}")` };
   const progressStyle = { '--pokedex-entry-index': entryIndex } as CSSProperties;
 
   return <dialog ref={dialog} className="pokedex-dialog" aria-labelledby="pokedex-title" data-testid="pokedex-dialog"
@@ -171,6 +172,7 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
     <div className="pokedex-device" data-testid="pokedex-device">
       <div className="pokedex-screen-underlay" data-testid="pokedex-screen-underlay" aria-hidden="true" style={underlayStyle} />
       <div className="pokedex-device-art" aria-hidden="true" style={sheetStyle} />
+      <div className="pokedex-indicator-lights" data-testid="pokedex-indicator-lights" aria-hidden="true" style={indicatorLightStyle} />
       <div className="pokedex-screen pokedex-screen-portrait" aria-label="manan portrait" style={portraitStyle} hidden={!screensVisible}>
         <CharacterSprite definition={manan} clip="portrait" playing={false} scale={1} label="manan portrait"
           className="pokedex-portrait" style={{ width: '72%', height: 'auto' }} />
