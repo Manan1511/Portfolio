@@ -189,7 +189,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .pokedex-key-previous { --key-x: 60.5%; --key-y: 74.5%; --key-width: clamp(44px, 9.5cqw, 110px); --key-height: clamp(44px, 6.7cqw, 78px); }
 .pokedex-key-next { --key-x: 71%; --key-y: 74.5%; --key-width: clamp(44px, 9.5cqw, 110px); --key-height: clamp(44px, 6.7cqw, 78px); }
 .pokedex-key-select { --key-x: 83%; --key-y: 74.5%; --key-width: clamp(44px, 13cqw, 150px); --key-height: clamp(44px, 6.7cqw, 78px); }
-.pokedex-key-select span { visibility: hidden; color: #30220b; font: 600 clamp(7px, 1.6cqw, 16px)/1 Pixelify, monospace; }
+.pokedex-key-select span { display: inline-block; visibility: hidden; color: #30220b; font: 600 clamp(7px, 1.6cqw, 16px)/1 Pixelify, monospace; }
 .pokedex-dialog[data-phase="open"] .pokedex-key-select span { visibility: visible; }
 @media (max-width: 380px) {
   .pokedex-dialog { width: min(calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)), calc((100dvh - 40px) * 1.50147)); }
@@ -201,6 +201,7 @@ button { -webkit-tap-highlight-color: transparent; }
   .pokedex-key-previous { --key-x: 55%; }
   .pokedex-key-next { --key-x: 70%; }
   .pokedex-key-select { --key-x: 85%; }
+  .pokedex-key-select span { transform: translateX(-2cqw); }
 }
 @media (prefers-reduced-motion: reduce) {
   .pokedex-progress-cursor { transition: none; }
