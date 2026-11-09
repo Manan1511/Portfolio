@@ -198,7 +198,6 @@ export function PokedexDialog({ onClose }: { onClose: () => void }) {
         onClick={() => changeEntry(-1, 4)} />
       <button className="pokedex-key pokedex-key-next" type="button" aria-label="next entry"
         onClick={() => changeEntry(1, 5)} />
-      <span className="pokedex-select-label" aria-hidden="true">submit</span>
       <button className="pokedex-key pokedex-key-select" type="button" aria-label="select entry" onClick={selectEntry} />
     </div>
   </dialog>;
